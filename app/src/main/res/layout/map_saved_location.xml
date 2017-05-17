@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/lay_map_saved_location"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_bottom"
+        android:layout_marginLeft="@dimen/margin_left"
+        android:layout_marginRight="@dimen/margin_right"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/select_loaction"
+        android:elevation="6dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="6dp"
+                android:layout_weight="1.7"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="2">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_circle"
+                    android:tint="@color/colorGreen" />
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_location_bridge"
+                    android:tint="@color/colorGreen" />
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_location"
+                    android:tint="@color/colorPrimary" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="2">
+
+                <LinearLayout
+                    android:id="@+id/lay_pickup_from"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center|start"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_saved_pickup_from"
+                        android:layout_width="match_parent"
+                        android:maxLines="1"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|start"
+                        android:hint="@string/action_pickup"
+                        android:textSize="12dp"
+                        android:textColor="@color/colorBlack"
+                        android:textColorHint="@color/colorGrey" />
+
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginRight="@dimen/margin_right"
+                    android:background="@color/colorGrey" />
+
+                <LinearLayout
+                    android:id="@+id/lay_drop_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center|start">
+
+                    <TextView
+                        android:id="@+id/tv_saved_drop_location"
+                        android:layout_width="match_parent"
+                        android:maxLines="1"
+                        android:textSize="12dp"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/action_drop"
+                        android:textColor="@color/colorBlack"
+                        android:textColorHint="@color/colorGrey" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.crest.goyo.CompleteRide">
+
+    <include layout="@layout/action_bar_home"></include>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/layout_margin"
+            android:layout_weight="0.7"
+            android:gravity="top"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="PAYABLE AMOUNT"
+                android:textAllCaps="true"
+                android:textColor="@color/colorGrey"
+                android:textSize="@dimen/text_title" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=" Rs.148.50"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/text_detail" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_top"
+                android:text="PROMOCODE OFFER"
+
+                android:textAllCaps="true"
+                android:textColor="@color/colorGrey"
+                android:textSize="@dimen/text_title" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="You got Rs. 30 off."
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/text_detail" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Your promocode GET30 was sucessfully applied."
+                android:textColor="@color/colorGreen"
+                android:textSize="12dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_top"
+                android:text="PAYMENT DONE BY WALLET"
+                android:textAllCaps="true"
+
+                android:textColor="@color/colorGrey"
+                android:textSize="@dimen/text_title" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="100 rs."
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/text_detail" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_top"
+                android:text="DUE AMOUNT"
+                android:textAllCaps="true"
+
+                android:textColor="@color/colorGrey"
+                android:textSize="@dimen/text_title" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="18.50 rs."
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/text_detail" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

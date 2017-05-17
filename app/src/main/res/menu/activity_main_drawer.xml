@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_book_my_ride"
+            android:icon="@drawable/ic_book_my_ride"
+            android:title="@string/nav_book_my_ride" />
+        <item
+            android:id="@+id/nav_my_rides"
+            android:icon="@drawable/ic_my_ride"
+            android:title="@string/nav_my_rides" />
+        <item
+            android:id="@+id/nav_tariff_card"
+            android:icon="@drawable/ic_tariff_card"
+            android:title="@string/nav_tariff_card" />
+        <item
+            android:id="@+id/nav_promotion_code"
+            android:icon="@drawable/ic_promotion_code"
+            android:title="@string/nav_promotion_code" />
+        <item
+            android:id="@+id/nav_referral_code"
+            android:icon="@drawable/ic_promotion_code"
+            android:title="@string/nav_referral_code" />
+        <item
+            android:id="@+id/nav_my_wallet"
+            android:icon="@drawable/ic_my_wallet"
+            android:title="@string/nav_my_wallet" />
+
+        <item
+            android:id="@+id/nav_notifications"
+            android:icon="@drawable/ic_notification"
+            android:title="@string/nav_notifications" />
+
+        <item
+            android:id="@+id/nav_feedback"
+            android:icon="@drawable/ic_feedback"
+            android:title="@string/nav_Feedback" />
+        <item
+            android:id="@+id/nav_terms_conditions"
+            android:icon="@drawable/ic_terms"
+            android:title="@string/nav_terms" />
+    </group>
+
+
+</menu>

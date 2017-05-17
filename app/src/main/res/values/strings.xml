@@ -1,0 +1,123 @@
+<resources>
+    <string name="app_name">GoYo</string>
+
+    <string name="actionbar_login">Login</string>
+    <string name="actionbar_signup">Sign Up</string>
+    <string name="actionbar_password_recovery">Password Recovery</string>
+    <string name="actionbar_reset_password">Reset Password</string>
+    <string name="actionbar_change_password">change Password</string>
+    <string name="actionbar_edit_profile">Edit Profile</string>
+    <string name="actionbar_complete_ride">Complete Ride</string>
+    <string name="actionbar_payment_detail">Payment Detail</string>
+    <string name="actionbar_rate_ride">Rate This Ride</string>
+
+    <string name="Rs">\u20B9</string>
+    <string name="hint_login_email">MOBILE NUMBER OR EMAIL</string>
+    <string name="hint_login_password">PASSWORD</string>
+    <string name="hint_login_forgot_password">FORGOT PASSWORD?</string>
+    <string name="hint_signup_fullname">FULL NAME</string>
+    <string name="hint_signup_email">EMAIL ADDRESS</string>
+    <string name="hint_sognup_mo_no">MOBILE NUMBER</string>
+    <string name="hint_signup_password">PASSWORD</string>
+    <string name="hint_signup_conf_password">CONFIRM PASSWORD</string>
+    <string name="hint_forgot_password_email">MOBILE NUMBER OR EMAIL</string>
+    <string name="hint_reset_password_auth">AUTHENTICATION CODE</string>
+    <string name="hint_reset_password_password">NEW PASSWORD</string>
+    <string name="hint_reset_password_conf_password">RETRY NEW PASSWORD</string>
+    <string name="hint_edit_profile_first_name">FIRST NAME</string>
+    <string name="hint_edit_profile_email">EMAIL</string>
+    <string name="hint_edit_profile_mobile">MOBILE NUMBER</string>
+    <string name="hint_edit_profile_password">PASSWORD</string>
+    <string name="hint_change_password_old">OLD PASSWORD</string>
+    <string name="hint_chabge_password_new">NEW PASSWORD</string>
+    <string name="hint_promo_code">Promo Code</string>
+    <string name="hint_change_password_confirm">CONFIRM NEW PASSWORD</string>
+
+
+    <string name="button_login_login">Login</string>
+    <string name="button_login_signup">Sign Up</string>
+    <string name="button_signup_submit">Submit</string>
+    <string name="button_forgot_password_submit">Submit</string>
+    <string name="button_edit_profile_save">Save</string>
+    <string name="button_change_password_save">Save</string>
+    <string name="button_complete_ride_payment">Make Payment</string>
+    <string name="button_rate_now">Rate Now</string>
+    <string name="button_add_money">Add Money</string>
+    <string name="button_invite_friends">INVITE FRIENDS</string>
+
+    <string name="permission_title_rationale">Permission needed</string>
+    <string name="label_cancel">Cancel</string>
+    <string name="label_ok">OK</string>
+    <string name="permission_read_storage_rationale">Storage read permission is needed to pick files.</string>
+
+
+    <string name="user_edit_profile">Edit profile</string>
+    <string name="user_logout">Logout</string>
+
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="openDrawer">open_drawer</string>
+    <string name="closeDrawer">close_drawer</string>
+
+    <!-- Navigation Drawer menu labels -->
+    <string name="nav_book_my_ride">Book Your Ride</string>
+    <string name="nav_my_rides">My Rides</string>
+    <string name="nav_tariff_card">Tariff Card</string>
+    <string name="nav_promotion_code">Promotion Code</string>
+    <string name="nav_referral_code">Referral Code</string>
+    <string name="nav_my_wallet">My Wallet</string>
+    <string name="nav_notifications">Notifications</string>
+    <string name="nav_Feedback">Feedback</string>
+    <string name="nav_terms">Terms and Conditions</string>
+
+    <!-- Toolbar titles when navigation menu item is selected -->
+    <string-array name="nav_item_activity_titles">
+        <item>Book Your Ride</item>
+        <item>My Rides</item>
+        <item>Tariff Card</item>
+        <item>Promotion Code</item>
+        <item>Referral Code</item>
+        <item>My Wallet</item>
+        <item>Notifications</item>
+        <item>Feedback</item>
+        <item>Terms and Conditions</item>
+    </string-array>
+    <string name="place_details">
+    <![CDATA[
+        <b>%1$s</b>
+        <br/>
+        <i>Place Id: %2$s</i>
+        <br/>
+        Address: %3$s
+        <br/>
+        Phone: %4$s
+        <br/>
+        Website: %5$s
+    ]]>
+    </string>
+    <string name="activity_title_about_us">About Us</string>
+    <string name="activity_title_privacy_policy">Privacy Policy</string>
+    <string name="action_clear_all">Clear All</string>
+    <string name="action_logout">Logout</string>
+    <string name="action_ride_now">RIDE NOW</string>
+    <string name="action_schedule_now">SCHEDULE NOW</string>
+    <string name="action_schedule_cancel">CANCEL</string>
+    <string name="action_ride_later">RIDE LATER</string>
+    <string name="action_pickup">Pickup from</string>
+    <string name="action_drop">Enter drop location</string>
+    <string name="action_confirm_booking">Confirm Booking</string>
+    <string name="action_cancel_booking">Cancel Booking</string>
+    <string name="action_mark_all_read">Mark All as Read</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="title_activity_maps">Map</string>
+
+
+    <string name="heading_vehicle_type">Vehicle type</string>
+    <string name="heading_promocode">Have you Promotion Code?</string>
+    <string name="heading_applicable_surcharge">Applicable surcharge.</string>
+    <string name="trip_confirm_pin">Your trip confirmation PIN : 123456</string>
+    <string name="actionbar_schedule_detail">Schedule Ride Detail</string>
+    <string name="actionbar_referralcode">Referral code</string>
+    <string name="actionbar_add_money">Add Money</string>
+</resources>
