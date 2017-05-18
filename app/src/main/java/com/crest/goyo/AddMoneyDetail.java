@@ -133,16 +133,16 @@ public class AddMoneyDetail extends AppCompatActivity {
 
 
 
-    private void addMoneyAPI() {
+    private void addMoneyAPI(String paymentId) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_ADD_MONEY).newBuilder();
         urlBuilder.addQueryParameter("device", "ANDROID");
         urlBuilder.addQueryParameter("lang", "en");
         urlBuilder.addQueryParameter("login_id", Preferences.getValue_String(getApplicationContext(), Preferences.USER_ID));
         urlBuilder.addQueryParameter("v_token", Preferences.getValue_String(getApplicationContext(), Preferences.USER_AUTH_TOKEN));
-        urlBuilder.addQueryParameter("f_amount", Preferences.getValue_String(getApplicationContext(), Preferences.ADD_MONEY));
-        urlBuilder.addQueryParameter("v_payment_mode", "");
-        urlBuilder.addQueryParameter("v_card_no", et_card.getText().toString());
-        urlBuilder.addQueryParameter("v_expiry_date", et_exp_date.getText().toString());
+        urlBuilder.addQueryParameter("f_amount",mAmount);
+        urlBuilder.addQueryParameter("v_payment_mode", "payu");
+        urlBuilder.addQueryParameter("transaction_id", paymentId);
+
 
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
@@ -335,6 +335,7 @@ public class AddMoneyDetail extends AppCompatActivity {
                 Log.i(TAG, "Success - Payment ID : " + data.getStringExtra(SdkConstants.PAYMENT_ID));
                 String paymentId = data.getStringExtra(SdkConstants.PAYMENT_ID);
                 showDialogMessage("Payment Success Id : " + paymentId);
+                addMoneyAPI(paymentId);
             } else if (resultCode == RESULT_CANCELED) {
                 Log.i(TAG, "failure");
                 showDialogMessage("cancelled");
