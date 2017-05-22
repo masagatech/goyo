@@ -14,8 +14,12 @@ import com.crest.goyo.CompleteRide;
 import com.crest.goyo.MainActivity;
 import com.crest.goyo.R;
 import com.crest.goyo.StartRideActivity;
+import com.crest.goyo.school.clnt_tripview;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import java.util.HashMap;
+
 /**
  * Created by brittany on 4/3/17.
  */
@@ -30,7 +34,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static final String MESSAGE_NOTIFICATION = "MessageNotification";
     @Override
     public void onMessageReceived(final RemoteMessage remoteMessage) {
-        notifData= String.valueOf(remoteMessage);
+        //notifData= String.valueOf(remoteMessage);
 
 //        if(mType!=null & !mType.isEmpty()){
             ride_id = remoteMessage.getData().get("i_ride_id");
@@ -39,6 +43,23 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.e(TAG, "TAG : remoteMessage = " + remoteMessage);
             Log.e(TAG, "TAG : data = " + remoteMessage.getData());
             Log.e(TAG, "TAG : messageType = " + remoteMessage.getMessageType());
+
+            //this is added by pratik
+            if(mType != null){
+                if(mType.equals("driver_tracking")){
+                    String mSubType = remoteMessage.getData().get("subtype");
+                   if(mSubType.equals("start_trip")){
+                       java.util.Map<java.lang.String,java.lang.String> m = remoteMessage.getData();
+                       sendNotificationTrackStartTrip(m);
+                   }
+
+
+
+                    return;
+                }
+            }
+            //end
+
             if (mType != null) {
                 if (mType.equalsIgnoreCase("user_ride_start")) {
                     SendMessageToDeitician(ride_id);
@@ -185,6 +206,30 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             registrationComplete = new Intent(MESAGE_ERROR);
         }
         LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
+    }
+
+
+    /*####################################Code By pratik (Don't touch)#######################################*/
+    private void sendNotificationTrackStartTrip(java.util.Map<java.lang.String,java.lang.String> getData) {
+        try {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("tripid",getData.get("tripid"));
+            intent.putExtra("status",getData.get("status"));
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT);
+            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.ic_taxi)
+                    .setContentTitle(getData.get("title"))
+                    .setContentText(getData.get("body"))
+                    .setAutoCancel(false)
+                    .setSound(defaultSoundUri)
+                    .setContentIntent(pendingIntent);
+            NotificationManager notificationManager =(NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(11 /* ID of notification */, notificationBuilder.build());
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 }
 

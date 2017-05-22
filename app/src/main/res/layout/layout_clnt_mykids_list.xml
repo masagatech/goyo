@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/txtBorder"
+        android:background="#ccc"
+        android:visibility="gone" />
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:id="@+id/layout"
+            android:background="#ffffff">
+
+        <TextView
+                android:layout_width="4dp"
+                android:layout_height="match_parent"
+                android:id="@+id/txtSideColor"
+                android:background="@color/colorPrimaryDark" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:id="@+id/header">
+
+                    <TextView
+                        android:id="@+id/titleTxt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:textSize="15sp"
+                        android:layout_toLeftOf="@+id/Date"
+                        android:singleLine="true"
+                        android:text="Large Text"
+                        android:textColor="#000000"
+                        android:textStyle="bold" />
+
+
+
+
+                    <TextView
+                        android:id="@+id/povTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/titleTxt"
+                        android:layout_marginTop="5dp"
+                        android:text="POV"
+                        android:textColor="#000000"
+                        android:textSize="11dp" />
+                    <TextView
+                        android:id="@+id/Date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="5dp"
+
+                        android:text="Date"
+                        android:layout_marginRight="10dp"
+                        android:textColor="#000000"
+                        android:textSize="9dp" />
+
+                    <TextView
+                        android:id="@+id/uploadonRes"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_below="@+id/Date"
+                        android:textAllCaps="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_alignParentRight="true"
+                        android:textColor="#ff0000"
+
+                        />
+                    <TextView
+                        android:id="@+id/uploadon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:text="Uploaded on Server:"
+                        android:textColor="#000000"
+                        android:visibility="gone"
+                        android:layout_alignTop="@+id/uploadonRes"
+                        android:layout_toLeftOf="@+id/uploadonRes"
+                        android:layout_toStartOf="@+id/uploadonRes" />
+
+                    <TextView
+                        android:id="@+id/hidid"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:focusableInTouchMode="false"
+                    android:clickable="false"
+                    android:focusable="false"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp" >
+
+                    <TextView
+                        android:id="@+id/txtkidName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:textSize="15sp"
+                        android:singleLine="true"
+                        android:layout_marginTop="5dp"
+                        android:text="Large Text"
+                        android:textColor="#000000" />
+
+                    <TextView
+                        android:id="@+id/txtKidStatus"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="5dp"
+                        android:textAllCaps="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_alignParentRight="true"
+                        android:textColor="#ff0000" />
+
+                    <TextView
+                        android:id="@+id/textView26"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:text="Uploaded on Server:"
+                        android:textColor="#000000"
+                        android:visibility="gone"
+                        android:layout_alignTop="@+id/txtKidStatus"
+                        android:layout_toLeftOf="@+id/txtKidStatus"
+                        android:layout_toStartOf="@+id/txtKidStatus" />
+
+                    <TextView
+                        android:id="@+id/textView27"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone" />
+                </RelativeLayout>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+</LinearLayout>
