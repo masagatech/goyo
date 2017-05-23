@@ -1,36 +1,46 @@
 package com.crest.goyo;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crest.goyo.ModelClasses.CityModel;
 import com.crest.goyo.Utils.Constant;
 import com.crest.goyo.Utils.CustomDialog;
 import com.crest.goyo.VolleyLibrary.RequestInterface;
-import com.crest.goyo.VolleyLibrary.ServiceHandler;
 import com.crest.goyo.VolleyLibrary.VolleyRequestClass;
 import com.crest.goyo.VolleyLibrary.VolleyTAG;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import okhttp3.HttpUrl;
-import okhttp3.Request;
 
 public class SignUp extends AppCompatActivity implements View.OnClickListener {
     private TextView actionbar_title;
     private Button bt_submit;
     private EditText et_full_name, et_email, et_mo_no, et_pasword, et_confirm_password;
     private CustomDialog customDialog;
-
+    private RadioGroup mGenderGrup;
+    private RadioButton mGender;
+    private Spinner spinner_city_list;
+    private ArrayAdapter<String> cityListAdapter;
+    private List<CityModel> cityList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +48,13 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         setContentView(R.layout.activity_signup);
 
         initUI();
+
+        cityListAdapter = new ArrayAdapter<String>(this, R.layout.spinner_list_item);
+        cityListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_city_list.setAdapter(cityListAdapter);
+
+
+        getCitiesAPI();
     }
 
     private void initUI() {
@@ -49,6 +66,8 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         et_mo_no = (EditText) findViewById(R.id.et_mo_no);
         et_pasword = (EditText) findViewById(R.id.et_pasword);
         et_confirm_password = (EditText) findViewById(R.id.et_confirm_password);
+        mGenderGrup = (RadioGroup) findViewById(R.id.g1);
+        spinner_city_list = (Spinner) findViewById(R.id.spinner_city_list);
 
         bt_submit.setOnClickListener(this);
 
@@ -69,18 +88,21 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void userSignup() {
-
         if (et_full_name.getText().toString().equals("")) {
             et_full_name.setError("Please enter full name.");
         } else {
             if (et_email.getText().toString().equals("")) {
+                et_email.setError("Please enter email.");
+            } else {
                 if (et_email.getText().toString().matches(Constant.emailPattern)) {
                     if (et_mo_no.getText().toString().length() == 10) {
                         if (et_pasword.getText().toString().length() >= 6) {
                             if (et_pasword.getText().toString().matches(et_confirm_password.getText().toString())) {
                                 if (Constant.isOnline(getApplicationContext())) {
-                                    userSignupAPI();
-//                                userSignUp();
+                                    int selectedId = mGenderGrup.getCheckedRadioButtonId();
+                                    mGender = (RadioButton) findViewById(selectedId);
+                                    String gender = mGender.getText().toString();
+                                    userSignupAPI(gender);
                                 }
                             } else {
                                 et_confirm_password.setError("Please enter same password");
@@ -95,39 +117,53 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                     et_email.setError("Please enter valid email.");
 
                 }
-            } else {
-                et_email.setError("Please enter email.");
             }
-
         }
     }
-
-    private void userSignUp() {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_SIGNUP).newBuilder();
+    private void getCitiesAPI() {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.GET_CITIES).newBuilder();
         urlBuilder.addQueryParameter("device", "ANDROID");
-        urlBuilder.addQueryParameter("v_name", et_full_name.getText().toString());
-        urlBuilder.addQueryParameter("v_email", "" + et_email.getText().toString());
-        urlBuilder.addQueryParameter("v_phone", et_mo_no.getText().toString());
-        urlBuilder.addQueryParameter("v_password", et_pasword.getText().toString());
-        urlBuilder.addQueryParameter("v_device_token", FirebaseInstanceId.getInstance().getToken());
+        urlBuilder.addQueryParameter("lang", "");
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
-        Request request = new Request.Builder()
-                .url(newurl)
-                .build();
-        Log.e("#########", "device :" + url);
-
-        new getSignUp().execute(newurl);
+        okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
+        VolleyRequestClass.allRequest(SignUp.this, newurl, new RequestInterface() {
+            @Override
+            public void onResult(JSONObject response) {
+                try {
+                    int responce_status = response.getInt(VolleyTAG.status);
+                    String message = response.getString(VolleyTAG.message);
+                    if (responce_status == VolleyTAG.response_status) {
+                        JSONArray data = response.getJSONArray("data");
+                        Log.e("TAG","City length = "+data.length());
+                        for (int i = 0; i <data.length(); i++) {
+                            JSONObject objData = data.getJSONObject(i);
+                            CityModel cityModel = new CityModel(objData.getString("id"),objData.getString("v_name"));
+                            cityList.add(cityModel);
+                            cityListAdapter.add(cityModel.getName());
+                        }
+                        cityListAdapter.notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(SignUp.this, message, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, true);
     }
 
-    private void userSignupAPI() {
+    private void userSignupAPI(String gender) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_SIGNUP).newBuilder();
         urlBuilder.addQueryParameter("device", "ANDROID");
         urlBuilder.addQueryParameter("v_name", et_full_name.getText().toString());
+        urlBuilder.addQueryParameter("v_gender", gender);
         urlBuilder.addQueryParameter("v_email", et_email.getText().toString().trim());
         urlBuilder.addQueryParameter("v_phone", et_mo_no.getText().toString().trim());
         urlBuilder.addQueryParameter("v_password", et_pasword.getText().toString());
         urlBuilder.addQueryParameter("v_device_token", FirebaseInstanceId.getInstance().getToken());
+        urlBuilder.addQueryParameter("i_city_id", cityList.get(spinner_city_list.getSelectedItemPosition()).getId());
+
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
@@ -139,10 +175,12 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                     String message = response.getString(VolleyTAG.message);
                     if (responce_status == VolleyTAG.response_status) {
                         Toast.makeText(SignUp.this, message, Toast.LENGTH_LONG).show();
-
-                        Intent intent = new Intent(getApplicationContext(), Login.class);
+                        JSONObject data = response.getJSONObject("data");
+                        Intent intent = new Intent(getApplicationContext(), VerifyAccountActivity.class);
+                        intent.putExtra("id", data.getString("id"));
+                        intent.putExtra("phone", data.getString("v_phone"));
                         startActivity(intent);
-
+                        finish();
                     } else {
                         Toast.makeText(SignUp.this, message, Toast.LENGTH_LONG).show();
                     }
@@ -153,100 +191,4 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
             }
         }, true);
     }
-
-    private class getSignUp extends AsyncTask<String, Void, Void> {
-        @Override
-        protected void onPreExecute() {
-            // TODO Auto-generated method stub
-            super.onPreExecute();
-            customDialog = new CustomDialog(SignUp.this);
-            customDialog.show();
-
-        }
-
-        @Override
-        protected Void doInBackground(String... url) {
-
-            ServiceHandler sh = new ServiceHandler();
-            String jsonStr = sh.makeServiceCall(url[0], ServiceHandler.GET);
-            Log.e("sign in", "    " + jsonStr);
-            if (jsonStr != null) {
-                try {
-                    JSONObject jsonObj = new JSONObject(jsonStr);
-                    Log.e("json obj ", "    " + jsonObj);
-                    final String success = jsonObj.optString("status").toString();
-                    Log.e("success", "    " + success);
-                    final String message = jsonObj.optString("message").toString();
-                    String value = String.valueOf(success);
-                    Log.e("value", "    " + value);
-                    if (value.equals("0")) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(SignUp.this, message, Toast.LENGTH_LONG).show();
-                            }
-                        });
-
-                    } else {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(SignUp.this, message, Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(getApplicationContext(), Login.class);
-                                startActivity(intent);
-                            }
-                        });
-
-                    }
-                } catch (JSONException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            } else {
-                Log.e("ServiceHandler", "Couldn't get any data from the url");
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            // TODO Auto-generated method stub
-            super.onPostExecute(result);
-            customDialog.hide();
-        }
-    }
-
-//    private void userSignupAPI() {
-//        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_SIGNUP).newBuilder();
-//        urlBuilder.addQueryParameter("device", "ANDROID");
-//        urlBuilder.addQueryParameter("v_name", et_full_name.getText().toString());
-//        urlBuilder.addQueryParameter("v_email", et_email.getText().toString());
-//        urlBuilder.addQueryParameter("v_phone", et_mo_no.getText().toString());
-//        urlBuilder.addQueryParameter("v_password", et_pasword.getText().toString());
-//        urlBuilder.addQueryParameter("v_device_token", FirebaseInstanceId.getInstance().getToken());
-//        String url = urlBuilder.build().toString();
-//        String newurl = url.replaceAll(" ", "%20");
-//
-//        VolleyRequestClass.allRequest(SignUp.this, newurl, new RequestInterface() {
-//            @Override
-//            public void onResult(JSONObject response) {
-//                Log.d("#####","request : "+response);
-//                final String success = response.optString("status").toString();
-//                Log.e("success", "    " + success);
-//                final String message = response.optString("message").toString();
-//                String value = String.valueOf(success);
-//                Log.e("value", "    " + value);
-//                if (value.equals("0")) {
-//                    Toast.makeText(SignUp.this, message, Toast.LENGTH_LONG).show();
-//                } else {
-//                    Toast.makeText(SignUp.this, message, Toast.LENGTH_LONG).show();
-//                    Intent intent = new Intent(getApplicationContext(), Login.class);
-//                    startActivity(intent);
-//                }
-//
-//            }
-//        }, true);
-//    }
-
-
 }

@@ -1226,10 +1226,8 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                         JSONArray data = response.getJSONArray("data");
                         for (int i = 0; i < data.length(); i++) {
                             JSONObject objData = data.getJSONObject(i);
-                            String id = objData.getString("id");
                             String lati = objData.getString("l_latitude");
                             String longi = objData.getString("l_longitude");
-                            String latlng = objData.getString("latlong");
                             final LatLng point = new LatLng(Double.parseDouble(lati), Double.parseDouble(longi));
                             MarkerPoints.clear();
                             MarkerPoints.add(point);

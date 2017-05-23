@@ -17,6 +17,8 @@ public class Constant {
     public static String BASE_URL = "http://35.154.230.244:8081/api/";
     public static final String URL_SIGNUP = BASE_URL + "userSignUp";
     public static final String URL_LOGIN = BASE_URL + "userLogin";
+    public static final String VERIFY_ACCOUNT = BASE_URL + "verifyAccount";
+    public static final String RESEND_OTP = BASE_URL + "resendOtp";
     public static final String URL_CHANGE_PASSWORD = BASE_URL + "userPasswordUpdate";
     public static final String URL_GET_USER_PROFILE = BASE_URL + "userProfileGet";
     public static final String URL_UPDATE_USER_PROFILE = BASE_URL + "userProfileUpdate";
@@ -48,6 +50,7 @@ public class Constant {
     public static final String URL_RIDE_SOS = BASE_URL + "rideSOS";
     public static final String URL_RIDE_PAYMENT = BASE_URL + "ridePayment";
     public static final String URL_TERMS_COND = BASE_URL + "getCms";
+    public static final String GET_CITIES = BASE_URL + "getCities";
     public static final String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     public static boolean CHECK_GPS = true;
 
@@ -68,10 +71,5 @@ public class Constant {
         Bitmap bitmap = bitmapdraw.getBitmap();
         return Bitmap.createScaledBitmap(bitmap, 70, 70, false);
     }
-
-
-
-
-
 }
 

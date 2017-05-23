@@ -26,8 +26,8 @@ public class NotificationInfo extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_notification_info);
 
-
         initUI();
+
         if (getIntent().getExtras() != null) {
             notifId = getIntent().getStringExtra("notifId");
         } else {
@@ -39,7 +39,6 @@ public class NotificationInfo extends AppCompatActivity {
     }
 
     private void getNotifInfoAPI() {
-
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_GET_NOTIF_INFO).newBuilder();
         urlBuilder.addQueryParameter("device", "ANDROID");
         urlBuilder.addQueryParameter("lang", "en");
@@ -61,7 +60,6 @@ public class NotificationInfo extends AppCompatActivity {
                     } else {
 
                     }
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -70,13 +68,10 @@ public class NotificationInfo extends AppCompatActivity {
     }
 
     private void initUI() {
-
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_detail = (TextView) findViewById(R.id.tv_detail);
         actionbar_title = (TextView) findViewById(R.id.actionbar_title);
 
-
         actionbar_title.setText("Notification info");
-
     }
 }

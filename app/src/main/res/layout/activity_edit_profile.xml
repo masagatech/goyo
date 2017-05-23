@@ -9,7 +9,9 @@
     tools:context="com.crest.goyo.Login">
 
     <include layout="@layout/action_bar_home"></include>
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -55,7 +57,48 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/colorGrey"></View>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="Gender"
+                    android:textColor="@color/colorBlack" />
+
+                <RadioGroup
+                    android:id="@+id/g1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/r1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="Male" />
+
+                    <RadioButton
+                        android:id="@+id/r2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Female" />
+
+                </RadioGroup>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorGrey"></View>
             <EditText
                 android:id="@+id/et_email"
                 android:layout_width="match_parent"
@@ -93,11 +136,38 @@
                 android:layout_marginBottom="@dimen/margin_bottom"
                 android:layout_marginTop="10dp"
                 android:background="@color/colorGrey"></View>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:weightSum="2">
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Select city :"
+                    android:textColor="@color/colorButton"
+                    android:textSize="10dp" />
+
+                <Spinner
+                    android:id="@+id/spinner_city_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_weight="0.5"
+                    android:layout_marginBottom="8dp"
+                    android:background="@color/colorWhite"></Spinner>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorGrey"></View>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginTop="10dp"
                 android:weightSum="2">
 
                 <TextView
@@ -149,5 +219,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
+</ScrollView>
 </LinearLayout>

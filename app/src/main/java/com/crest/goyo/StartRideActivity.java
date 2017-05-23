@@ -84,7 +84,6 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
     private double pickup_latitude, pickup_longitude, destination_latitude, destination_longitude;
     private String  TAG="StartRideActivity";
     private BroadcastReceiver mReceiveMessageFromNotification;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,10 +91,9 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_start_ride);
         if (getIntent().getExtras() != null) {
             mRideid = getIntent().getExtras().getString("i_ride_id","ANNIE");
-            Log.e(TAG," TAG ride id : "+mRideid);
         }else {
-            Log.e(TAG," TAG NotFound");
         }
+
         initUI();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -107,8 +105,6 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void initUI() {
-
-
         actionbar_title = (TextView) findViewById(R.id.actionbar_title);
         iv_share = (ImageView) findViewById(R.id.iv_share);
         img_profile = (ImageView) findViewById(R.id.img_profile);
@@ -117,9 +113,6 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
         tv_pin = (TextView) findViewById(R.id.tv_pin);
         bt_sos = (ImageButton) findViewById(R.id.bt_sos);
         actionbar_title.setText("START RIDING");
-
-
-
     }
 
     private void getDriverLocationAPI() {
@@ -161,7 +154,6 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                 }
             }
         });
-
     }
 
     private void updateDriverLocation() {
@@ -204,7 +196,6 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                                 .position(loc)
                                 .flat(true)
                                 .icon(BitmapDescriptorFactory.fromBitmap(resizeMarker)));
-
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
                         cameraPosition = new CameraPosition.Builder()
                                 .target(loc)
@@ -262,7 +253,6 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                         dropLatLng = new LatLng(destination_latitude, destination_longitude);
                         drawRoot(googleMap, pickupLatLng, dropLatLng);
                         getDriverLocationAPI();
-
                     }
 
 
@@ -272,63 +262,31 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
             }
         }, true);
     }
-
     private void drawRoot(GoogleMap googleMap, LatLng picup, LatLng drop) {
         LatLng origin = picup;
         LatLng dest = drop;
-        // Getting URL to the Google Directions API
         String url = getUrl(origin, dest);
         Log.d("onMapClick", url.toString());
         FetchUrl FetchUrl = new FetchUrl();
-
-        // Start downloading json data from Google Directions API
         FetchUrl.execute(url);
-        //move map camera
-        /*mMap.moveCamera(CameraUpdateFactory.newLatLng(origin));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(12));*/
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(origin, 19));
-        // Zoom in, animating the camera.
         googleMap.animateCamera(CameraUpdateFactory.zoomIn());
-        // Zoom out to zoom level 10, animating with a duration of 2 seconds.
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(19), 2000, null);
     }
-
     private String getUrl(LatLng origin, LatLng dest) {
-
-        // Origin of route
         String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-
-        // Destination of route
         String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-
-
-        // Sensor enabled
         String sensor = "sensor=false";
-
-        // Building the parameters to the web service
         String parameters = str_origin + "&" + str_dest + "&" + sensor;
-
-        // Output format
         String output = "json";
-
-        // Building the url to the web service
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
-
-
         return url;
     }
-
-
     private class FetchUrl extends AsyncTask<String, Void, String> {
-
         @Override
         protected String doInBackground(String... url) {
-
-            // For storing data from web service
             String data = "";
-
             try {
-                // Fetching the data from web service
                 data = downloadUrl(url[0]);
                 Log.d("Background Task data", data.toString());
             } catch (Exception e) {
@@ -337,48 +295,31 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
             Log.e("TAG", "DATA = " + data);
             return data;
         }
-
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-
             ParserTask parserTask = new ParserTask();
-
-            // Invokes the thread for parsing the JSON data
             parserTask.execute(result);
-
         }
     }
-
     private String downloadUrl(String strUrl) throws IOException {
         String data = "";
         InputStream iStream = null;
         HttpURLConnection urlConnection = null;
         try {
             URL url = new URL(strUrl);
-
-            // Creating an http connection to communicate with url
             urlConnection = (HttpURLConnection) url.openConnection();
-
-            // Connecting to url
             urlConnection.connect();
-
-            // Reading data from url
             iStream = urlConnection.getInputStream();
-
             BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
-
             StringBuffer sb = new StringBuffer();
-
             String line = "";
             while ((line = br.readLine()) != null) {
                 sb.append(line);
             }
-
             data = sb.toString();
             Log.d("downloadUrl", data.toString());
             br.close();
-
         } catch (Exception e) {
             Log.d("Exception", e.toString());
         } finally {
@@ -387,69 +328,45 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
         }
         return data;
     }
-
     private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
-
-        // Parsing the data in non-ui thread
         @Override
         protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
-
             JSONObject jObject;
             List<List<HashMap<String, String>>> routes = null;
-
             try {
                 jObject = new JSONObject(jsonData[0]);
                 Log.d("ParserTask", jsonData[0].toString());
                 DataParser parser = new DataParser();
                 Log.d("ParserTask", parser.toString());
-
-                // Starts parsing data
                 routes = parser.parse(jObject);
                 Log.d("ParserTask", "Executing routes");
                 Log.d("ParserTask", routes.toString());
-
             } catch (Exception e) {
                 Log.d("ParserTask", e.toString());
                 e.printStackTrace();
             }
             return routes;
         }
-
-        // Executes in UI thread, after the parsing process
         @Override
         protected void onPostExecute(List<List<HashMap<String, String>>> result) {
             ArrayList<LatLng> points;
             PolylineOptions lineOptions = null;
-
-            // Traversing through all the routes
             for (int i = 0; i < result.size(); i++) {
                 points = new ArrayList<>();
                 lineOptions = new PolylineOptions();
-
-                // Fetching i-th route
                 List<HashMap<String, String>> path = result.get(i);
-
-                // Fetching all the points in i-th route
                 for (int j = 0; j < path.size(); j++) {
                     HashMap<String, String> point = path.get(j);
-
                     double lat = Double.parseDouble(point.get("lat"));
                     double lng = Double.parseDouble(point.get("lng"));
                     LatLng position = new LatLng(lat, lng);
-
                     points.add(position);
                 }
-
-                // Adding all the points in the route to LineOptions
                 lineOptions.addAll(points);
                 lineOptions.width(10);
                 lineOptions.color(Color.BLUE);
-
                 Log.d("onPostExecute", "onPostExecute lineoptions decoded");
-
             }
-
-            // Drawing polyline in the Google Map for the i-th route
             if (lineOptions != null) {
                 mMap.addPolyline(lineOptions);
             } else {
@@ -457,7 +374,6 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
             }
         }
     }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -476,8 +392,6 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                 break;
         }
     }
-
-
     private void sendRideSosAPI() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_RIDE_SOS).newBuilder();
         urlBuilder.addQueryParameter("device", "ANDROID");
@@ -501,16 +415,12 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                     } else {
                         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                     }
-
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         }, true);
     }
-
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -524,12 +434,10 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
         getRideAPI(mMap);
 
     }
-
     @Override
     public void onBackPressed() {
         permissionDialog();
     }
-
     private void permissionDialog() {
         builder.setTitle("Close Ride?");
         builder.setMessage("Are you sure you want to close the ride?");
@@ -548,16 +456,9 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
         builder.setIcon(R.drawable.ic_cancel);
         builder.show();
     }
-
-
     @Override
     public void onLocationChanged(Location location) {
-
         longitude = location.getLongitude();
         latitude = location.getLatitude();
     }
-
-
-
-
 }

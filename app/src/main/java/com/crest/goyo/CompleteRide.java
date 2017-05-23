@@ -34,7 +34,6 @@ public class CompleteRide extends AppCompatActivity implements View.OnClickListe
         getSupportActionBar().hide();
         setContentView(R.layout.activity_complete_ride);
 
-
         initUI();
 
         if(getIntent().getExtras()!=null){
@@ -48,7 +47,6 @@ public class CompleteRide extends AppCompatActivity implements View.OnClickListe
     }
 
     private void completeRideAPI() {
-
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_RIDE_PAYMENT).newBuilder();
         urlBuilder.addQueryParameter("device", "ANDROID");
         urlBuilder.addQueryParameter("lang", "en");
@@ -64,7 +62,6 @@ public class CompleteRide extends AppCompatActivity implements View.OnClickListe
                 try {
                     int responce_status = response.getInt(VolleyTAG.status);
                     String message = response.getString(VolleyTAG.message);
-
                     if (responce_status == VolleyTAG.response_status) {
                         JSONObject data = response.getJSONObject("data");
                         JSONObject ride=data.getJSONObject("ride");
@@ -80,8 +77,6 @@ public class CompleteRide extends AppCompatActivity implements View.OnClickListe
                         end_point.setText(l_data.getString("destination_address"));
                     } else {
                     }
-
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -90,7 +85,6 @@ public class CompleteRide extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initUI() {
-
         actionbar_title = (TextView) findViewById(R.id.actionbar_title);
         bt_rate_ride = (Button) findViewById(R.id.bt_rate_ride);
         tv_start_point = (TextView) findViewById(R.id.tv_start_point);
@@ -99,21 +93,17 @@ public class CompleteRide extends AppCompatActivity implements View.OnClickListe
 
         bt_rate_ride.setOnClickListener(this);
 
-
         actionbar_title.setText(R.string.actionbar_complete_ride);
-
     }
 
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
             case R.id.bt_rate_ride:
                 Intent pIntent = new Intent(getApplicationContext(), RateThisRide.class);
                 startActivity(pIntent);
                 break;
         }
-
     }
 
     @Override

@@ -24,6 +24,7 @@
 package com.crest.goyo.Utils;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
@@ -33,6 +34,9 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.ProgressBar;
 
 public class FileUtils {
 
@@ -144,7 +148,17 @@ public class FileUtils {
         }
         return null;
     }
+    public static void showProgressBar(Activity context, ProgressBar progressBar){
+        context.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        progressBar.setVisibility(View.VISIBLE);
 
+    }
+
+    public static void hideProgressBar(Activity context,ProgressBar progressBar){
+        context.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        progressBar.setVisibility(View.GONE);
+    }
     /**
      * @param uri The Uri to check.
      * @return Whether the Uri authority is Google Photos.

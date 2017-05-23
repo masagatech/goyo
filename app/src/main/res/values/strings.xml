@@ -120,4 +120,6 @@
     <string name="actionbar_schedule_detail">Schedule Ride Detail</string>
     <string name="actionbar_referralcode">Referral code</string>
     <string name="actionbar_add_money">Add Money</string>
+    <string name="hint_enter_mobile">MOBILE NUMBER</string>
+    <string name="hint_enter_verification_code">VERIFICATION CODE</string>
 </resources>

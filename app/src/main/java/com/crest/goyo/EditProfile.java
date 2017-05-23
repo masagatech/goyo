@@ -16,14 +16,19 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.crest.goyo.ModelClasses.CityModel;
 import com.crest.goyo.Utils.Constant;
 import com.crest.goyo.Utils.Preferences;
 import com.crest.goyo.VolleyLibrary.RequestInterface;
@@ -39,12 +44,15 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.HttpUrl;
 
@@ -63,6 +71,12 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
     ProgressDialog dialog;
     private static final int REQUEST_STORAGE_READ_ACCESS_PERMISSION = 101;
     private String filePathProfile = "";
+    private RadioGroup mGenderGrup;
+    private RadioButton mMale,mFemale;
+    private RadioButton mGender;
+    private Spinner spinner_city_list;
+    private ArrayAdapter<String> cityListAdapter;
+    private List<CityModel> cityList = new ArrayList<>();
 
 
     @Override
@@ -73,7 +87,16 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
 
         initUI();
 
+
+        cityListAdapter = new ArrayAdapter<String>(this, R.layout.spinner_list_item);
+        cityListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_city_list.setAdapter(cityListAdapter);
+
+
+
+
         if (Constant.isOnline(getApplicationContext())) {
+            getCitiesAPI();
             getUserProfileAPI();
         }
     }
@@ -84,7 +107,6 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         urlBuilder.addQueryParameter("lang", "en");
         urlBuilder.addQueryParameter("login_id", Preferences.getValue_String(getApplicationContext(), Preferences.USER_ID));
         urlBuilder.addQueryParameter("v_token", Preferences.getValue_String(getApplicationContext(), Preferences.USER_AUTH_TOKEN));
-
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
@@ -95,11 +117,17 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
                     int responce_status = response.getInt(VolleyTAG.status);
                     String message = response.getString(VolleyTAG.message);
                     if (responce_status == VolleyTAG.response_status) {
-//                        Toast.makeText(EditProfile.this, message, Toast.LENGTH_LONG).show();
                         JSONObject jsonObject = response.getJSONObject("data");
                         et_first_name.setText(jsonObject.getString("v_name"));
                         et_email.setText(jsonObject.getString("v_email"));
                         et_mo_number.setText(jsonObject.getString("v_phone"));
+                        if(jsonObject.get("v_gender").equals("Male")){
+                            mMale.setChecked(true);
+                            mFemale.setChecked(false);
+                        }else{
+                            mFemale.setChecked(true);
+                            mMale.setChecked(false);
+                        }
 
                         if (jsonObject.getString("v_image").equals("")) {
                             img_profile.setImageResource(R.drawable.no_user);
@@ -112,9 +140,14 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
                                     .into(img_profile);
                         }
 
-
+                        if(!cityList.isEmpty()){
+                            for (int i=0; i<cityList.size();i++){
+                                if(cityList.get(i).getId().equalsIgnoreCase(jsonObject.getString("i_city_id"))){
+                                    spinner_city_list.setSelection(i);
+                                }
+                            }
+                        }
                     } else {
-//                        Toast.makeText(EditProfile.this, message, Toast.LENGTH_LONG).show();
                     }
 
                 } catch (JSONException e) {
@@ -132,6 +165,11 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         et_email = (EditText) findViewById(R.id.et_email);
         et_mo_number = (EditText) findViewById(R.id.et_mo_number);
         bt_save = (Button) findViewById(R.id.bt_save);
+        mGenderGrup = (RadioGroup) findViewById(R.id.g1);
+        spinner_city_list = (Spinner) findViewById(R.id.spinner_city_list);
+        mMale=(RadioButton)findViewById(R.id.r1);
+        mFemale=(RadioButton)findViewById(R.id.r2);
+
 
         iv_edit.setOnClickListener(this);
         bt_save.setOnClickListener(this);
@@ -190,7 +228,38 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         }
 
     }
-
+    private void getCitiesAPI() {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.GET_CITIES).newBuilder();
+        urlBuilder.addQueryParameter("device", "ANDROID");
+        urlBuilder.addQueryParameter("lang", "");
+        String url = urlBuilder.build().toString();
+        String newurl = url.replaceAll(" ", "%20");
+        okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
+        VolleyRequestClass.allRequest(EditProfile.this, newurl, new RequestInterface() {
+            @Override
+            public void onResult(JSONObject response) {
+                try {
+                    int responce_status = response.getInt(VolleyTAG.status);
+                    String message = response.getString(VolleyTAG.message);
+                    if (responce_status == VolleyTAG.response_status) {
+                        JSONArray data = response.getJSONArray("data");
+                        Log.e("TAG","City length = "+data.length());
+                        for (int i = 0; i <data.length(); i++) {
+                            JSONObject objData = data.getJSONObject(i);
+                            CityModel cityModel = new CityModel(objData.getString("id"),objData.getString("v_name"));
+                            cityList.add(cityModel);
+                            cityListAdapter.add(cityModel.getName());
+                        }
+                        cityListAdapter.notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(EditProfile.this, message, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, true);
+    }
     private class upload_image_asyn extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
@@ -207,7 +276,10 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
                 @Override
                 public void run() {
                     try {
-                        executeMultipartPost();
+                        int selectedId = mGenderGrup.getCheckedRadioButtonId();
+                        mGender = (RadioButton) findViewById(selectedId);
+                        String gender = mGender.getText().toString();
+                        executeMultipartPost(gender);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -228,7 +300,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         }
     }
 
-    private void executeMultipartPost() throws Exception {
+    private void executeMultipartPost(String gender) throws Exception {
 
         try {
             HttpClient httpClient = new DefaultHttpClient();
@@ -241,6 +313,9 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
             reqEntity.addPart("v_name", new StringBody(et_first_name.getText().toString()));
             reqEntity.addPart("v_email", new StringBody(et_email.getText().toString()));
             reqEntity.addPart("v_phone", new StringBody(et_mo_number.getText().toString()));
+            reqEntity.addPart("v_gender", new StringBody(gender));
+            reqEntity.addPart("i_city_id", new StringBody(cityList.get(spinner_city_list.getSelectedItemPosition()).getId()));
+
             if (filePathProfile.equals("")) {
             } else {
                 File file = new File(filePathProfile);
@@ -257,16 +332,14 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
             }
             System.out.println("Response Register: " + s.toString());
             final JSONObject jsonObject = new JSONObject(s.toString());
-            final String success = jsonObject.optString("success").toString();
-            String value = String.valueOf(success);
+            final String success = jsonObject.optString("status").toString();
             final String messaage = jsonObject.optString("message").toString();
-            if (value == "1") {
+            if (success == "1") {
                 runOnUiThread(new Runnable() {
                     public void run() {
                         Toast.makeText(getApplicationContext(), messaage, Toast.LENGTH_SHORT).show();
                         Intent intent=new Intent(EditProfile.this,MainActivity.class);
                         startActivity(intent);
-//                        getUserProfileAPI();
                     }
                 });
 
@@ -278,14 +351,11 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
                     }
                 });
             }
-
         } catch (Exception e) {
-            // handle exception here
             Log.d("exception", "     " + e);
             e.printStackTrace();
         }
     }
-
 
     private void requestPermission(final String permission, String rationale, final int requestCode) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
