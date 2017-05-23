@@ -45,18 +45,18 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         initUI();
 
-        Log.e("TAG","checkSelfPermission");
+        Log.e("TAG", "checkSelfPermission");
         if (ActivityCompat.checkSelfPermission(Login.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,android.Manifest.permission.ACCESS_FINE_LOCATION)){
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
                 //If the user has denied the permission previously your code will come to this block
                 //Here you can explain why you need this permission
                 //Explain here why you need this permission
-                Log.e("TAG","checkSelfPermission in");
+                Log.e("TAG", "checkSelfPermission in");
             }
 
-            Log.e("TAG","checkSelfPermission out");
+            Log.e("TAG", "checkSelfPermission out");
             //And finally ask for the permission
-            ActivityCompat.requestPermissions(Login.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},05);
+            ActivityCompat.requestPermissions(Login.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 05);
 
             return;
         }
@@ -100,18 +100,18 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 break;
             case R.id.btn_login:
 
-                Log.e("TAG","checkSelfPermission");
+                Log.e("TAG", "checkSelfPermission");
                 if (ActivityCompat.checkSelfPermission(Login.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(this,android.Manifest.permission.ACCESS_FINE_LOCATION)){
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
                         //If the user has denied the permission previously your code will come to this block
                         //Here you can explain why you need this permission
                         //Explain here why you need this permission
-                        Log.e("TAG","checkSelfPermission in");
+                        Log.e("TAG", "checkSelfPermission in");
                     }
 
-                    Log.e("TAG","checkSelfPermission out");
+                    Log.e("TAG", "checkSelfPermission out");
                     //And finally ask for the permission
-                    ActivityCompat.requestPermissions(Login.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},05);
+                    ActivityCompat.requestPermissions(Login.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 05);
 
                     return;
                 }
@@ -165,10 +165,15 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         JSONObject jsonObject = response.getJSONObject("data");
                         Preferences.setValue(getApplicationContext(), Preferences.USER_ID, jsonObject.getString("id"));
                         Preferences.setValue(getApplicationContext(), Preferences.USER_AUTH_TOKEN, jsonObject.getString("v_token"));
-
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
 
+                    } else if (responce_status == 2) {
+                        JSONObject data = response.getJSONObject("data");
+                        Intent intent = new Intent(getApplicationContext(), VerifyAccountActivity.class);
+                        intent.putExtra("id", data.getString("id"));
+                        intent.putExtra("phone", data.getString("phone"));
+                        startActivity(intent);
                     } else {
                         Toast.makeText(Login.this, message, Toast.LENGTH_LONG).show();
                     }

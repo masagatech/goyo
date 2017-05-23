@@ -48,7 +48,6 @@ public class RateThisRide extends AppCompatActivity implements View.OnClickListe
 
     }
     private void completeRideAPI() {
-
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_RIDE_PAYMENT).newBuilder();
         urlBuilder.addQueryParameter("device", "ANDROID");
         urlBuilder.addQueryParameter("lang", "en");
@@ -64,7 +63,6 @@ public class RateThisRide extends AppCompatActivity implements View.OnClickListe
                 try {
                     int responce_status = response.getInt(VolleyTAG.status);
                     String message = response.getString(VolleyTAG.message);
-
                     if (responce_status == VolleyTAG.response_status) {
                         JSONObject data = response.getJSONObject("data");
                         JSONObject ride=data.getJSONObject("ride");
@@ -83,8 +81,6 @@ public class RateThisRide extends AppCompatActivity implements View.OnClickListe
                         tv_ride_time.setText("" +date+" "+ time);
                     } else {
                     }
-
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -101,7 +97,6 @@ public class RateThisRide extends AppCompatActivity implements View.OnClickListe
         urlBuilder.addQueryParameter("i_rate", String.valueOf(rating_bar.getRating()));
         urlBuilder.addQueryParameter("l_comment", et_comment.getText().toString());
         urlBuilder.addQueryParameter("v_type", "user");
-
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
@@ -118,13 +113,11 @@ public class RateThisRide extends AppCompatActivity implements View.OnClickListe
                     } else {
                         Toast.makeText(RateThisRide.this, message, Toast.LENGTH_LONG).show();
                     }
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         }, true);
-
     }
 
     private void initUI() {
@@ -150,7 +143,6 @@ public class RateThisRide extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
         }
-
     }
 
     @Override

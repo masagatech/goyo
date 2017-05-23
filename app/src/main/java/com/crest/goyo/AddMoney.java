@@ -64,7 +64,6 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener 
     }
 
     private void initUI() {
-
         actionbar_title = (TextView) findViewById(R.id.actionbar_title);
         tv_money=(TextView)findViewById(R.id.tv_money);
         tv_amount=(TextView)findViewById(R.id.tv_amount);

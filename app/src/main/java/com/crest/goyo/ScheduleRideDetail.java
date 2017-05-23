@@ -42,8 +42,9 @@ public class ScheduleRideDetail extends AppCompatActivity implements View.OnClic
     private RideCancelAdapter adapter;
     private LinearLayout lay_done,lay_cancel_schedule;
     private int mYear, mMonth, mDay, mHour, mMinute;
-    private Calendar c;
+    private Calendar calendar;
     private List<RideCancelModel> list = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,18 +54,23 @@ public class ScheduleRideDetail extends AppCompatActivity implements View.OnClic
 
         initUI();
 
-        c = Calendar.getInstance();
-        mYear = c.get(Calendar.YEAR);
-        mMonth = c.get(Calendar.MONTH);
-        mDay = c.get(Calendar.DAY_OF_MONTH);
-        mHour = c.get(Calendar.HOUR_OF_DAY);
-        mMinute = c.get(Calendar.MINUTE);
+
+
+
+        calendar = Calendar.getInstance();
+        mYear = calendar.get(Calendar.YEAR);
+        mMonth = calendar.get(Calendar.MONTH);
+        mDay = calendar.get(Calendar.DAY_OF_MONTH);
+        mHour = calendar.get(Calendar.HOUR_OF_DAY);
+        mMinute = calendar.get(Calendar.MINUTE);
 
         getRideAPI();
 
 
-
     }
+
+
+
 
     private void getRideAPI() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_GET_RIDE).newBuilder();
@@ -144,7 +150,6 @@ public class ScheduleRideDetail extends AppCompatActivity implements View.OnClic
         dialog.setContentView(R.layout.dialog_request_cancel_reason);
 
         rv_cancel_reason = (RecyclerView) dialog.findViewById(R.id.rv_cancel_reason);
-//        rb_other = (RadioButton) dialog.findViewById(R.id.rb_other);
         et_reason = (EditText) dialog.findViewById(R.id.et_reason);
         bt_cancel = (Button) dialog.findViewById(R.id.bt_cancel);
         bt_done = (Button) dialog.findViewById(R.id.bt_done);
@@ -205,7 +210,6 @@ public class ScheduleRideDetail extends AppCompatActivity implements View.OnClic
                         startActivity(intent);
                     } else {
                         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-
                         dialog.dismiss();
                     }
                 } catch (JSONException e) {
@@ -226,7 +230,6 @@ public class ScheduleRideDetail extends AppCompatActivity implements View.OnClic
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
-
         VolleyRequestClass.allRequest(getApplicationContext(), newurl, new RequestInterface() {
             @Override
             public void onResult(JSONObject response) {
@@ -241,7 +244,6 @@ public class ScheduleRideDetail extends AppCompatActivity implements View.OnClic
                             list.add(new RideCancelModel(jsonObject.getString("j_title"),jsonObject.getString("id")));
                         }
                         adapter.notifyDataSetChanged();
-
                     } else {
                         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
                     }
@@ -250,9 +252,7 @@ public class ScheduleRideDetail extends AppCompatActivity implements View.OnClic
                 }
             }
         }, false);
-
     }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();

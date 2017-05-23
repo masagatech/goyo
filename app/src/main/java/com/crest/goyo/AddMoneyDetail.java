@@ -287,9 +287,7 @@ public class AddMoneyDetail extends AppCompatActivity {
                     Toast.makeText(AddMoneyDetail.this,
                             error.getMessage(),
                             Toast.LENGTH_SHORT).show();
-
                 }
-
             }
         }) {
             @Override
