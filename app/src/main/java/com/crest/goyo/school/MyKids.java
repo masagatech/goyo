@@ -116,10 +116,22 @@ public class MyKids extends Fragment {
         btbtnAddNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MyKids.this.getActivity(), MyKidsRegistration.class));
+                startActivityForResult(new Intent(MyKids.this.getActivity(), MyKidsRegistration.class),2);
             }
         });
 
+    }
+
+    // Call Back method  to get the Message form other Activity
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        // check if the request code is same as what is passed  here it is 2
+        if(requestCode==2)
+        {
+            bindListView();
+        }
     }
 
     private void bindListView() {
@@ -163,9 +175,11 @@ public class MyKids extends Fragment {
             view.findViewById(R.id.txtNodata).setVisibility(View.GONE);
             _clnt_mykids_listAdapter = new MyKidsListAdapter(this.getActivity(), lst);
             lstmykids.setAdapter(_clnt_mykids_listAdapter);
+            lstmykids.setVisibility(View.VISIBLE);
             notifyCrewChanges();
 
         } else {
+            lstmykids.setVisibility(View.GONE);
             view.findViewById(R.id.txtNodata).setVisibility(View.VISIBLE);
         }
     }

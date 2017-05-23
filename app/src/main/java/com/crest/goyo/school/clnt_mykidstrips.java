@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.crest.goyo.AdapterClasses.clnt_mykids_listAdapter;
 import com.crest.goyo.ModelClasses.MyKidsTrips;
@@ -34,11 +35,13 @@ public class clnt_mykidstrips extends AppCompatActivity {
     private MyKidsTrips mykid;
     MenuItem menu_refresh;
     private CustomDialog customDialog;
+    private String studentId = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clnt_mykids);
-        setTitle("My Kids");
+        setTitle("Today's Trip Status");
+        getBundle();
         initUI();
     }
 
@@ -52,6 +55,16 @@ public class clnt_mykidstrips extends AppCompatActivity {
         bindListView();
 
     }
+
+    private void getBundle() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle == null) {
+            return;
+        }
+        studentId = bundle.get("stdid").toString();
+
+    }
+
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
@@ -83,22 +96,27 @@ public class clnt_mykidstrips extends AppCompatActivity {
     }
 
     private void addListners(){
-        lstmykids.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mykid = ((MyKidsTrips) parent.getItemAtPosition(position));
-                Intent in = new Intent(clnt_mykidstrips.this, clnt_tripview.class);
-                in.putExtra("tripid",mykid.tripid);
-                in.putExtra("status",mykid.stsi);
-                startActivity(in);
-            }
-        });
+//        lstmykids.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//                mykid = ((MyKidsTrips) parent.getItemAtPosition(position));
+//                if(mykid.stsi.equals("0")){
+//                    Toast.makeText(clnt_mykidstrips.this,"Trip is not started! Once started you will be notify!",Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                Intent in = new Intent(clnt_mykidstrips.this, clnt_tripview.class);
+//                in.putExtra("tripid",mykid.tripid);
+//                in.putExtra("status",mykid.stsi);
+//                startActivity(in);
+//            }
+//        });
     }
 
     private void bindListView() {
         JsonObject json = new JsonObject();
         json.addProperty("uid", Global.getUserID(getApplicationContext()));
+        json.addProperty("studid",studentId );
         json.addProperty("flag", "todaystrip");
-
         customDialog.show();
         Ion.with(this)
                 .load(Global.urls.getmykids.value)

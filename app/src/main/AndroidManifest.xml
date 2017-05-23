@@ -152,9 +152,11 @@
         </service>
 
         <activity android:name=".NotificationInfo" />
-        <activity android:name=".school.clnt_mykidstrips" />
-        <activity android:name=".school.clnt_tripview" />
-        <activity android:name=".school.MyKidsRegistration"></activity>
+        <activity android:name=".school.clnt_mykidstrips" android:screenOrientation="portrait" >
+
+        </activity>
+        <activity android:name=".school.clnt_tripview" android:screenOrientation="portrait"/>
+        <activity android:name=".school.MyKidsRegistration" android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
