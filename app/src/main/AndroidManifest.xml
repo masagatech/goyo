@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.crest.goyo">
 
-    <uses-sdk android:minSdkVersion="19" android:targetSdkVersion="25"/>
+    <uses-sdk
+        android:minSdkVersion="19"
+        android:targetSdkVersion="25" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -35,6 +37,7 @@
     <uses-feature android:name="android.hardware.location.gps" />
 
     <uses-permission android:name="com.example.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
@@ -86,9 +89,12 @@
             </intent-filter>
             -->
         </activity>
-        <activity android:name=".VerifyAccountActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name=".AddMoney" android:screenOrientation="portrait"></activity>
-        <activity android:name=".AddMoneyDetail" android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".AddMoney"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AddMoneyDetail"
+            android:screenOrientation="portrait" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -143,7 +149,10 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".NotificationInfo"></activity>
+        <activity android:name=".NotificationInfo" />
+        <activity android:name=".school.clnt_mykidstrips" />
+        <activity android:name=".school.clnt_tripview" />
+        <activity android:name=".school.MyKidsRegistration"></activity>
     </application>
 
 </manifest>

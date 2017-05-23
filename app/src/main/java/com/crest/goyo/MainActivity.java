@@ -42,6 +42,7 @@ import com.crest.goyo.fragment.ReferralCodeFragment;
 import com.crest.goyo.fragment.TariffCardFragment;
 import com.crest.goyo.fragment.TermsAndConditionsFragment;
 import com.crest.goyo.other.CircleTransform;
+import com.crest.goyo.school.MyKids;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -70,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG_NOTIFICATIONS = "NOTIFICATIONS";
     private static final String TAG_FEEDBACK = "FEEDBACK";
     private static final String TAG_TERMS_CONDITIONS = "TERMS AND CONDITIONS";
+    private static final String TAG_MY_KIDS = "MY KID";
+
     public static final String MESSAGE_SUCCESS = "MessageSuccess";
     public static final String MESAGE_ERROR = "MessageError";
     public static final String MESSAGE_NOTIFICATION = "MessageNotification";
@@ -236,6 +239,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case 8:
                 TermsAndConditionsFragment termsAndConditionsFragment = new TermsAndConditionsFragment();
                 return termsAndConditionsFragment;
+            case 9:
+                MyKids mykidsFragment = new MyKids();
+                return mykidsFragment;
             default:
                 return new BookYourRideFragment();
         }
@@ -297,6 +303,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         navItemIndex = 8;
                         actionbar_title.setText(R.string.nav_terms);
                         CURRENT_TAG = TAG_TERMS_CONDITIONS;
+                        break;
+                    case R.id.nav_my_kids:
+                        navItemIndex = 9;
+                        actionbar_title.setText(R.string.nav_my_kids);
+                        CURRENT_TAG = TAG_MY_KIDS;
                         break;
                     default:
                         navItemIndex = 0;
