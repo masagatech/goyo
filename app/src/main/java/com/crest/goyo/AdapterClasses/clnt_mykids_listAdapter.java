@@ -1,17 +1,21 @@
 package com.crest.goyo.AdapterClasses;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crest.goyo.ModelClasses.MyKidsTrips;
 import com.crest.goyo.R;
+import com.crest.goyo.school.clnt_tripview;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +31,7 @@ public class clnt_mykids_listAdapter extends BaseAdapter {
     Context context;
     String _drop, _pickup;
     private static String headerText = "";
+
     public clnt_mykids_listAdapter(Context context, List<MyKidsTrips> lst, Resources rs) {
         this.list = lst;
         this.context = context;
@@ -62,31 +67,50 @@ public class clnt_mykids_listAdapter extends BaseAdapter {
         } else {
             mViewHolder = (MyViewHolder) convertView.getTag();
         }
-        String header = list.get(position).pd + " - " + list.get(position).btch + " - " + list.get(position).time;
-        if(headerText.equals(header) != true){
-            if(headerText.equals("")!=true){mViewHolder.txtBorder.setVisibility(View.VISIBLE);}
+        final MyKidsTrips mykid =  list.get(position);
+
+        String header = mykid.pd + " - " + mykid.btch + " - " + mykid.time;
+        if (headerText.equals(header) != true) {
+//            if (headerText.equals("") != true) {
+//                mViewHolder.txtBorder.setVisibility(View.GONE);
+//            }
 
             headerText = header;
             mViewHolder.header.setVisibility(View.VISIBLE);
-            mViewHolder.titleTxt.setText(list.get(position).btch);
+            mViewHolder.titleTxt.setText(mykid.btch);
 
-            //Log.e("date",list.get(position).get(Tables.tbl_driver_info.createon));
-            mViewHolder.Date.setText(list.get(position).time);
+            //Log.e("date",mykid.get(Tables.tbl_driver_info.createon));
+            mViewHolder.Date.setText(mykid.date + " " + mykid.time);
 
-            if (list.get(position).stsi.equals("1")) {
+            if (mykid.stsi.equals("1")) {
                 mViewHolder.uploadonRes.setBackgroundResource(R.drawable.ic_action_play);
 
-            } else if (list.get(position).stsi.equals("2")) {
+            } else if (mykid.stsi.equals("2")) {
                 mViewHolder.uploadonRes.setBackgroundResource(R.drawable.ic_action_done);
-            } else if (list.get(position).stsi.equals("0")) {
+            } else if (mykid.stsi.equals("0")) {
                 mViewHolder.uploadonRes.setBackgroundResource(R.drawable.ic_action_wait);
             }
+            mViewHolder.txtMargin.setVisibility(View.VISIBLE);
+            mViewHolder.btnTrack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mykid.stsi.equals("0")) {
+                        Toast.makeText(context, "Trip is not started! Once started you will be notify!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Intent in = new Intent(context, clnt_tripview.class);
+                    in.putExtra("tripid", mykid.tripid);
+                    in.putExtra("status", mykid.stsi);
+                    context.startActivity(in);
+                }
+            });
 
-        }else{
+        } else {
+            mViewHolder.txtMargin.setVisibility(View.GONE);
+            mViewHolder.header.setVisibility(View.GONE);
 
-           mViewHolder.header.setVisibility(View.GONE);
         }
-        if (list.get(position).pd.equalsIgnoreCase("p")) {
+        if (mykid.pd.equalsIgnoreCase("p")) {
             mViewHolder.txtSideColor.setBackgroundColor(Color.parseColor("#18b400"));
             mViewHolder.povTitle.setText(_pickup);
             mViewHolder.povTitle.setTextColor(Color.parseColor("#18b400"));
@@ -96,25 +120,27 @@ public class clnt_mykids_listAdapter extends BaseAdapter {
 
             mViewHolder.povTitle.setTextColor(Color.RED);
         }
-        if (list.get(position).stdsi.equals("1")) {
+        if (mykid.stdsi.equals("1")) {
             mViewHolder.txtKidStatus.setBackgroundResource(R.drawable.ic_action_done);
-        } else if (list.get(position).stdsi.equals("2")) {
+        } else if (mykid.stdsi.equals("2")) {
             mViewHolder.txtKidStatus.setBackgroundResource(R.drawable.ic_action_cancel);
-        } else if (list.get(position).stdsi.equals("0")) {
+        } else if (mykid.stdsi.equals("0")) {
             mViewHolder.txtKidStatus.setBackgroundResource(R.drawable.ic_action_wait);
-        }else {
+        } else {
             //mViewHolder.txtKidStatus.setBackgroundResource(R.drawable.ic_action_cancel);
         }
 
-        mViewHolder.txtkidName.setText(list.get(position).nm);
+        mViewHolder.txtkidName.setText(mykid.nm);
+
 
         return convertView;
     }
 
 
     private class MyViewHolder {
-        private TextView titleTxt, povTitle, uploadonRes, Date, hidid, txtSideColor, txtkidName,txtBorder,txtKidStatus;
+        private TextView titleTxt, povTitle, uploadonRes, Date, hidid, txtSideColor, txtkidName, txtBorder, txtKidStatus, txtMargin;
         private RelativeLayout header;
+        private ImageButton btnTrack;
 
         public MyViewHolder(View item) {
             hidid = (TextView) item.findViewById(R.id.hidid);
@@ -125,9 +151,10 @@ public class clnt_mykids_listAdapter extends BaseAdapter {
             txtSideColor = (TextView) item.findViewById(R.id.txtSideColor);
             txtkidName = (TextView) item.findViewById(R.id.txtkidName);
             header = (RelativeLayout) item.findViewById(R.id.header);
-            txtBorder = (TextView)item.findViewById(R.id.txtBorder);
-
-            txtKidStatus= (TextView)item.findViewById(R.id.txtKidStatus);
+            txtBorder = (TextView) item.findViewById(R.id.txtBorder);
+            txtMargin = (TextView) item.findViewById(R.id.txtMargin);
+            txtKidStatus = (TextView) item.findViewById(R.id.txtKidStatus);
+            btnTrack = (ImageButton) item.findViewById(R.id.btnStartTrack);
         }
     }
 }

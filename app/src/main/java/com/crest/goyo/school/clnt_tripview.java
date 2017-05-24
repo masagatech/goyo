@@ -9,6 +9,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -16,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crest.goyo.ModelClasses.MyKidsModel;
 import com.crest.goyo.ModelClasses.model_tripdata;
 import com.crest.goyo.R;
 import com.crest.goyo.SocketClient.SC_IOApplication;
@@ -78,11 +80,16 @@ public class clnt_tripview extends AppCompatActivity implements OnMapReadyCallba
     //font
     Typeface tf;
 
+    //views
+    View kid1,kid2,kid3,kid4,kid5;
+    TextView txtk1,txtk2,txtk3,txtk4,txtk5;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clnt_tripview);
         addCustomFont();
+        setTitle("Trip View");
         initUI();
         getBundle();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -91,6 +98,19 @@ public class clnt_tripview extends AppCompatActivity implements OnMapReadyCallba
     //Initialize
     private void initUI() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        kid1 = findViewById(R.id.kid1);
+        kid2 = findViewById(R.id.kid2);
+        kid3 = findViewById(R.id.kid3);
+        kid4 = findViewById(R.id.kid4);
+        kid5 = findViewById(R.id.kid5);
+
+        txtk1 = (TextView) kid1.findViewById(R.id.txtName);
+        txtk2 = (TextView) kid2.findViewById(R.id.txtName);
+        txtk3 = (TextView) kid3.findViewById(R.id.txtName);
+        txtk4 = (TextView) kid4.findViewById(R.id.txtName);
+        txtk5 = (TextView) kid5.findViewById(R.id.txtName);
+
+
 //        tvSpeed = (TextView) findViewById(R.id.tvSpeed);
 //        tvSpeed.setTypeface(tf);
 //        tvLastloc = (TextView) findViewById(R.id.tvLastloc);
@@ -108,6 +128,8 @@ public class clnt_tripview extends AppCompatActivity implements OnMapReadyCallba
 //        listView1.setAdapter(adapter);
 
     }
+
+
 
     private void showTimeSpeed(String speed, String Time) {
         tvSpeed.setText(speed + " Km/h");
@@ -375,6 +397,7 @@ public class clnt_tripview extends AppCompatActivity implements OnMapReadyCallba
         tripid = bundle.get("tripid").toString();
         status = bundle.get("status").toString();
         googleMapInit();
+        getKidsOnTrip();
     }
 
     private void updateMap() {
@@ -432,6 +455,63 @@ public class clnt_tripview extends AppCompatActivity implements OnMapReadyCallba
                             ea.printStackTrace();
                         }
 
+                    }
+                });
+    }
+
+
+    List<MyKidsModel> lstmykidsd;
+    private void getKidsOnTrip() {
+        JsonObject json = new JsonObject();
+        json.addProperty("uid", Global.getUserID(this));
+        json.addProperty("tripid", tripid);
+        json.addProperty("flag", "kidsontrip");
+        Ion.with(this)
+                .load(Global.urls.getmykids.value)
+                .setJsonObjectBody(json)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        // do stuff with the result or error
+                        try {
+                            if (result != null) Log.v("result", result.toString());
+                            // JSONObject jsnobject = new JSONObject(jsond);
+                            Gson gson = new Gson();
+                            Type listType = new TypeToken<List<MyKidsModel>>() {
+                            }.getType();
+                            lstmykidsd = (List<MyKidsModel>) gson.fromJson(result.get("data"), listType);
+                            MyKidsModel _d ;
+                            if(lstmykidsd.size() > 0){
+                                _d =lstmykidsd.get(0);
+                                kid1.setVisibility(View.VISIBLE);
+                                txtk1.setText(_d.Name);
+                            }
+                            if(lstmykidsd.size() > 1){
+                                _d =lstmykidsd.get(1);
+                                kid2.setVisibility(View.VISIBLE);
+                                txtk2.setText(_d.Name);
+                            }
+                            if(lstmykidsd.size() > 2){
+                                _d =lstmykidsd.get(2);
+                                kid3.setVisibility(View.VISIBLE);
+                                txtk3.setText(_d.Name);
+                            }
+                            if(lstmykidsd.size() > 3){
+                                _d =lstmykidsd.get(3);
+                                kid4.setVisibility(View.VISIBLE);
+                                txtk4.setText(_d.Name);
+                            }
+                            if(lstmykidsd.size() > 4){
+                                _d =lstmykidsd.get(4);
+                                kid5.setVisibility(View.VISIBLE);
+                                txtk5.setText(_d.Name);
+                            }
+
+
+                        } catch (Exception ea) {
+                            ea.printStackTrace();
+                        }
                     }
                 });
     }

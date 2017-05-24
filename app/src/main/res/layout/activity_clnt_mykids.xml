@@ -14,16 +14,23 @@ tools:context="com.crest.goyo.school.clnt_mykidstrips">
     android:divider="@null"
     >
 </ListView>
-<TextView
-    android:id="@+id/txtNodata"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="No Data"
-    android:textSize="15sp"
-    android:layout_centerInParent="true"
-    android:visibility="gone"
 
-    />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:id="@+id/txtNodata">
+
+        <TextView
+            android:id="@+id/textView"
+            android:drawableTop="@drawable/ic_track_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Today there is no tracking set up for you!"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
 
 </RelativeLayout>
 

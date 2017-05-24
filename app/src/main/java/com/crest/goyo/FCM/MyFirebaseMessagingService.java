@@ -222,7 +222,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     .setSmallIcon(R.drawable.ic_taxi)
                     .setContentTitle(getData.get("title"))
                     .setContentText(getData.get("body"))
-                    .setAutoCancel(false)
+                    .setAutoCancel(true)
                     .setSound(defaultSoundUri)
                     .setContentIntent(pendingIntent);
             NotificationManager notificationManager =(NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
