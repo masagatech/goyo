@@ -78,8 +78,15 @@ public class ReferralCodeFragment extends Fragment implements View.OnClickListen
                     int responce_status = response.getInt(VolleyTAG.status);
                     if (responce_status == VolleyTAG.response_status) {
                         JSONObject jsonObject = response.getJSONObject("data");
-                        tv_code.setText(jsonObject.getString("v_referral_code"));
-                        tv_earn_money.setText("Share your referral code and get "+"\u20B9"+" "+jsonObject.getString("earn_money")+". So share your code and get your money.");
+                        if(jsonObject.getString("v_referral_code").equals("")){
+                            tv_code.setVisibility(View.GONE);
+                            tv_earn_money.setText("No Referral Code Available");
+                            bt_invite.setEnabled(false);
+                        }else{
+                            tv_code.setText(jsonObject.getString("v_referral_code"));
+                            tv_earn_money.setText("Share your referral code and get "+"\u20B9"+" "+jsonObject.getString("earn_money")+". So share your code and get your money.");
+                        }
+
                     } else {
 
                     }

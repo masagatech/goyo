@@ -565,6 +565,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                         CHARGE_RIDE_TIME_PICKUP_CHARGE = charges.getString("ride_time_pick_charge");
                         CHARGE_RIDE_TIME_WAIT_CHARGE = charges.getString("ride_time_charge");
                         CHARGE_SERVICE_TAX = charges.getString("service_tax");
+                        Log.d("#######","estimation charge : "+showEstimationCharge);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -1293,6 +1294,8 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                     if (Integer.parseInt(showEstimationCharge) == 1) {
                         Log.d("#####", "estimation : " + showEstimationCharge);
                         countAmount();
+                    }else{
+                        Log.d("#####", "estimation : " + "00:00");
                     }
                     getActivity().runOnUiThread(new Runnable() {
                         @Override

@@ -1,7 +1,6 @@
 package com.crest.goyo;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -19,7 +18,6 @@ import com.crest.goyo.ModelClasses.CityModel;
 import com.crest.goyo.Utils.Constant;
 import com.crest.goyo.Utils.CustomDialog;
 import com.crest.goyo.VolleyLibrary.RequestInterface;
-import com.crest.goyo.VolleyLibrary.ServiceHandler;
 import com.crest.goyo.VolleyLibrary.VolleyRequestClass;
 import com.crest.goyo.VolleyLibrary.VolleyTAG;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -32,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.HttpUrl;
-import okhttp3.Request;
 
 public class SignUp extends AppCompatActivity implements View.OnClickListener {
     private TextView actionbar_title;
@@ -119,10 +116,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                     }
                 } else {
                     et_email.setError("Please enter valid email.");
-
                 }
-            } else {
-                et_email.setError("Please enter email.");
             }
 
         }
@@ -199,99 +193,8 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         }, true);
     }
 
-    private class getSignUp extends AsyncTask<String, Void, Void> {
-        @Override
-        protected void onPreExecute() {
-            // TODO Auto-generated method stub
-            super.onPreExecute();
-            customDialog = new CustomDialog(SignUp.this);
-            customDialog.show();
 
-        }
 
-        @Override
-        protected Void doInBackground(String... url) {
-
-            ServiceHandler sh = new ServiceHandler();
-            String jsonStr = sh.makeServiceCall(url[0], ServiceHandler.GET);
-            Log.e("sign in", "    " + jsonStr);
-            if (jsonStr != null) {
-                try {
-                    JSONObject jsonObj = new JSONObject(jsonStr);
-                    Log.e("json obj ", "    " + jsonObj);
-                    final String success = jsonObj.optString("status").toString();
-                    Log.e("success", "    " + success);
-                    final String message = jsonObj.optString("message").toString();
-                    String value = String.valueOf(success);
-                    Log.e("value", "    " + value);
-                    if (value.equals("0")) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(SignUp.this, message, Toast.LENGTH_LONG).show();
-                            }
-                        });
-
-                    } else {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(SignUp.this, message, Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(getApplicationContext(), Login.class);
-                                startActivity(intent);
-                            }
-                        });
-
-                    }
-                } catch (JSONException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            } else {
-                Log.e("ServiceHandler", "Couldn't get any data from the url");
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            // TODO Auto-generated method stub
-            super.onPostExecute(result);
-            customDialog.hide();
-        }
-    }
-
-//    private void userSignupAPI() {
-//        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_SIGNUP).newBuilder();
-//        urlBuilder.addQueryParameter("device", "ANDROID");
-//        urlBuilder.addQueryParameter("v_name", et_full_name.getText().toString());
-//        urlBuilder.addQueryParameter("v_email", et_email.getText().toString());
-//        urlBuilder.addQueryParameter("v_phone", et_mo_no.getText().toString());
-//        urlBuilder.addQueryParameter("v_password", et_pasword.getText().toString());
-//        urlBuilder.addQueryParameter("v_device_token", FirebaseInstanceId.getInstance().getToken());
-//        String url = urlBuilder.build().toString();
-//        String newurl = url.replaceAll(" ", "%20");
-//
-//        VolleyRequestClass.allRequest(SignUp.this, newurl, new RequestInterface() {
-//            @Override
-//            public void onResult(JSONObject response) {
-//                Log.d("#####","request : "+response);
-//                final String success = response.optString("status").toString();
-//                Log.e("success", "    " + success);
-//                final String message = response.optString("message").toString();
-//                String value = String.valueOf(success);
-//                Log.e("value", "    " + value);
-//                if (value.equals("0")) {
-//                    Toast.makeText(SignUp.this, message, Toast.LENGTH_LONG).show();
-//                } else {
-//                    Toast.makeText(SignUp.this, message, Toast.LENGTH_LONG).show();
-//                    Intent intent = new Intent(getApplicationContext(), Login.class);
-//                    startActivity(intent);
-//                }
-//
-//            }
-//        }, true);
-//    }
 
 
 }
