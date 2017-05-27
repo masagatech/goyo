@@ -13,6 +13,7 @@ public class Preferences {
     public static final String RIDE_ID = "RIDE_ID";
     public static final String DRIVER_ID = "DRIVER_ID";
     public static final String ADD_MONEY = "ADD_MONEY";
+    public static final String NO_VEHICLES = "NO_VEHICLES";
 
 
     public static void setValue(Context context, String Key, String Value) {

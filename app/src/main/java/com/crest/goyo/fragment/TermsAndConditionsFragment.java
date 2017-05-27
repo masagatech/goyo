@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.crest.goyo.R;
 import com.crest.goyo.Utils.Constant;
 import com.crest.goyo.VolleyLibrary.RequestInterface;
-import com.crest.goyo.VolleyLibrary.VolleyRequestClass;
+import com.crest.goyo.VolleyLibrary.VolleyRequestClassNew;
 import com.crest.goyo.VolleyLibrary.VolleyTAG;
 
 import org.json.JSONException;
@@ -35,6 +35,10 @@ public class TermsAndConditionsFragment extends Fragment implements View.OnClick
         // Required empty public constructor
     }
 
+    public static TermsAndConditionsFragment newInstance(){
+        TermsAndConditionsFragment termsAndConditionsFragment = new TermsAndConditionsFragment();
+        return termsAndConditionsFragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,7 +75,7 @@ public class TermsAndConditionsFragment extends Fragment implements View.OnClick
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
-        VolleyRequestClass.allRequest(getActivity(), newurl, new RequestInterface() {
+        VolleyRequestClassNew.allRequest(getActivity(), newurl, new RequestInterface() {
             @Override
             public void onResult(JSONObject response) {
                 try {
@@ -92,6 +96,6 @@ public class TermsAndConditionsFragment extends Fragment implements View.OnClick
                     e.printStackTrace();
                 }
             }
-        }, true);
+        });
     }
 }

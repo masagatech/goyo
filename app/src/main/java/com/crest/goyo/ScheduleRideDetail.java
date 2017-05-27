@@ -54,9 +54,6 @@ public class ScheduleRideDetail extends AppCompatActivity implements View.OnClic
 
         initUI();
 
-
-
-
         calendar = Calendar.getInstance();
         mYear = calendar.get(Calendar.YEAR);
         mMonth = calendar.get(Calendar.MONTH);
@@ -66,11 +63,7 @@ public class ScheduleRideDetail extends AppCompatActivity implements View.OnClic
 
         getRideAPI();
 
-
     }
-
-
-
 
     private void getRideAPI() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_GET_RIDE).newBuilder();
@@ -82,7 +75,7 @@ public class ScheduleRideDetail extends AppCompatActivity implements View.OnClic
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
-        VolleyRequestClass.allRequest(getApplicationContext(), newurl, new RequestInterface() {
+        VolleyRequestClassNew.allRequest(getApplicationContext(), newurl, new RequestInterface() {
             @Override
             public void onResult(JSONObject response) {
                 try {
@@ -109,7 +102,7 @@ public class ScheduleRideDetail extends AppCompatActivity implements View.OnClic
                     e.printStackTrace();
                 }
             }
-        }, false);
+        });
     }
 
     private void initUI() {
@@ -163,14 +156,12 @@ public class ScheduleRideDetail extends AppCompatActivity implements View.OnClic
             getRideCancelReasonApi();
         }
 
-
         bt_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (Constant.isOnline(getApplicationContext())) {
                     userCancelScheduleRide(dialog);
                 }
-
             }
         });
 
@@ -192,7 +183,7 @@ public class ScheduleRideDetail extends AppCompatActivity implements View.OnClic
         urlBuilder.addQueryParameter("lang", "en");
         urlBuilder.addQueryParameter("login_id", Preferences.getValue_String(getApplicationContext(), Preferences.USER_ID));
         urlBuilder.addQueryParameter("v_token", Preferences.getValue_String(getApplicationContext(), Preferences.USER_AUTH_TOKEN));
-        urlBuilder.addQueryParameter("i_ride_id", "2");
+        urlBuilder.addQueryParameter("i_ride_id", Preferences.getValue_String(getApplicationContext(), Preferences.RIDE_ID));
         urlBuilder.addQueryParameter("cancel_reason_id",Preferences.getValue_String(getApplicationContext(),"cancel_id") );
         urlBuilder.addQueryParameter("cancel_reason_text", et_reason.getText().toString());
         String url = urlBuilder.build().toString();

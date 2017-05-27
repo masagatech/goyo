@@ -14,11 +14,8 @@ import com.crest.goyo.CompleteRide;
 import com.crest.goyo.MainActivity;
 import com.crest.goyo.R;
 import com.crest.goyo.StartRideActivity;
-import com.crest.goyo.school.clnt_tripview;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-
-import java.util.HashMap;
 
 /**
  * Created by brittany on 4/3/17.
@@ -27,94 +24,94 @@ import java.util.HashMap;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMsgService";
     private static String notifData;
-    private String deduct_amount,paid_amount;
-    String ride_id, mType = null;
+    private String deduct_amount, paid_amount;
+    String ride_id, mType = null, mTitle = null, mBody = null;
     public static final String MESSAGE_SUCCESS = "MessageSuccess";
     public static final String MESAGE_ERROR = "MessageError";
     public static final String MESSAGE_NOTIFICATION = "MessageNotification";
+
     @Override
     public void onMessageReceived(final RemoteMessage remoteMessage) {
         //notifData= String.valueOf(remoteMessage);
 
 //        if(mType!=null & !mType.isEmpty()){
-            ride_id = remoteMessage.getData().get("i_ride_id");
-            mType = remoteMessage.getData().get("type");
-            Log.e(TAG, "TAG : mType = " + mType);
-            Log.e(TAG, "TAG : remoteMessage = " + remoteMessage);
-            Log.e(TAG, "TAG : data = " + remoteMessage.getData());
-            Log.e(TAG, "TAG : messageType = " + remoteMessage.getMessageType());
+        ride_id = remoteMessage.getData().get("i_ride_id");
+        mType = remoteMessage.getData().get("type");
+        mTitle = remoteMessage.getData().get("title");
+        mBody = remoteMessage.getData().get("body");
 
-            //this is added by pratik
-            if(mType != null){
-                if(mType.equals("driver_tracking")){
-                    String mSubType = remoteMessage.getData().get("subtype");
-                   if(mSubType.equals("start_trip")){
-                       java.util.Map<java.lang.String,java.lang.String> m = remoteMessage.getData();
-                       sendNotificationTrackStartTrip(m);
-                   }
+        Log.e(TAG, "NOTIF TAG : mType = " + mType);
+        Log.e(TAG, " NOTIF TAG : mTitle = " + mTitle);
+        Log.e(TAG, "NOTIF TAG : mBody = " + mBody);
+        Log.e(TAG, "NOTIF TAG : data = " + remoteMessage.getData());
 
 
-
-                    return;
-                }
-            }
-            //end
-
-            if (mType != null) {
-                if (mType.equalsIgnoreCase("user_ride_start")) {
-                    SendMessageToDeitician(ride_id);
-                    return;
-                }
-            }
-            if(mType.equals("user_ride_complete")){
-                Log.e(TAG, "TAG : user_ride_complete = " + mType);
-                sendNotificationComplete();
-            }
-            if(mType.equals("user_ride_start")){
-                Log.e(TAG, "TAG : user_ride_start = " + mType);
-                sendNotification();
-            }
-            if(mType.equals("user_ride_wallet_payment")){
-                Log.e(TAG, "TAG : user_ride_wallet_payment = " + mType);
-                paid_amount=remoteMessage.getData().get("paid_wallet_amount");
-                sendNotificationPayment();
-            }
-            if(mType.equals("user_ride_cancel_charge")){
-                Log.e(TAG, "TAG : user_ride_cancel_charge = " + mType);
-                deduct_amount=remoteMessage.getData().get("deduct_amount");
-                sendNotificationCancelCharge();
-            }
-            SendMessageNotification();
-            // TODO(developer): Handle FCM messages here.
-            Log.d(TAG, "data: " + remoteMessage.getData());
-            if (remoteMessage.getData().size() > 0) {
-                Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-                if (/* Check if data needs to be processed by long running job */ true) {
-                    // For long-running tasks (10 seconds or more) use Firebase Job Dispatcher.
-                } else {
-                    // Handle message within 10 seconds
-                    handleNow();
+        //this is added by pratik
+        if (mType != null) {
+            if (mType.equals("driver_tracking")) {
+                String mSubType = remoteMessage.getData().get("subtype");
+                if (mSubType.equals("start_trip")) {
+                    java.util.Map<java.lang.String, java.lang.String> m = remoteMessage.getData();
+                    sendNotificationTrackStartTrip(m);
                 }
 
+
+                return;
             }
-            if (remoteMessage.getNotification() != null) {
-                Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+        }
+        //end
+
+        if (mType != null) {
+            if (mType.equalsIgnoreCase("user_ride_start")) {
+                SendMessageToDeitician(ride_id);
+                return;
             }
-//        }
+        }
+        if (mType.equals("user_ride_complete")) {
+            sendNotificationComplete();
+        }
+        if (mType.equals("user_ride_start")) {
+            sendNotification();
+        }
+        if (mType.equals("user_ride_wallet_payment")) {
+            paid_amount = remoteMessage.getData().get("paid_wallet_amount");
+            sendNotificationPayment();
+        }
+        if (mType.equals("user_ride_cancel_charge")) {
+            deduct_amount = remoteMessage.getData().get("deduct_amount");
+            sendNotificationCancelCharge();
+        }
+        SendMessageNotification();
+        // TODO(developer): Handle FCM messages here.
+        Log.d(TAG, "data: " + remoteMessage.getData());
+        if (remoteMessage.getData().size() > 0) {
+            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+            if (/* Check if data needs to be processed by long running job */ true) {
+                // For long-running tasks (10 seconds or more) use Firebase Job Dispatcher.
+            } else {
+                // Handle message within 10 seconds
+                handleNow();
+            }
+
+        }
+        if (remoteMessage.getNotification() != null) {
+            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+        }
+
 
     }
 
     private void sendNotificationPayment() {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("from","notifServicePayment");
+        intent.putExtra("from", "notifServicePayment");
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_taxi)
-                .setContentTitle("Payment Detail")
-                .setContentText("Total payment for your ride is"+ "\u20B9"+" "+paid_amount+".")
+                .setContentTitle(mTitle)
+                .setContentText(mBody)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
@@ -126,15 +123,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void sendNotificationCancelCharge() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("i_ride_id", ride_id);
-        intent.putExtra("from","notifServiceRideCancelCharge");
+        intent.putExtra("from", "notifServiceRideCancelCharge");
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_taxi)
-                .setContentTitle("Ride Cancellation Charge")
-                .setContentText("Deduct amount for ride cancellation is"+" "+deduct_amount+".")
+                .setContentTitle(mTitle)
+                .setContentText(mBody)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
@@ -156,7 +153,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_taxi)
-                .setContentTitle("Your GoYo Ride is Completed.")
+                .setContentTitle(mTitle)
+                .setContentText(mBody)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
@@ -174,7 +172,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_taxi)
-                .setContentTitle("Start Ride")
+                .setContentTitle(mTitle)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
@@ -210,11 +208,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
     /*####################################Code By pratik (Don't touch)#######################################*/
-    private void sendNotificationTrackStartTrip(java.util.Map<java.lang.String,java.lang.String> getData) {
+    private void sendNotificationTrackStartTrip(java.util.Map<java.lang.String, java.lang.String> getData) {
         try {
             Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("tripid",getData.get("tripid"));
-            intent.putExtra("status",getData.get("status"));
+            intent.putExtra("tripid", getData.get("tripid"));
+            intent.putExtra("status", getData.get("status"));
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT);
             Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -225,9 +223,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     .setAutoCancel(true)
                     .setSound(defaultSoundUri)
                     .setContentIntent(pendingIntent);
-            NotificationManager notificationManager =(NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(11 /* ID of notification */, notificationBuilder.build());
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }

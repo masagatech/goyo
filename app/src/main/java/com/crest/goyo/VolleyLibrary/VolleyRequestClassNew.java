@@ -23,7 +23,7 @@ public class VolleyRequestClassNew {
     public static void allRequest(final Context applicationContext, final String newurl, final RequestInterface requestInterface) {
 
         RequestQueue queue = Volley.newRequestQueue(applicationContext);
-        new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 48, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.GET, newurl,
                 new Response.Listener<JSONObject>() {
                     @Override

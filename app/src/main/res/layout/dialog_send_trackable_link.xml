@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/select_loaction"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Send Trackable Link"
+            android:textColor="@color/colorBlack"
+            android:textSize="18dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Enter Confirmation PIN "
+            android:textSize="12dp"
+            android:visibility="gone"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.6dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/colorGrey"></View>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/pin1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:padding="10dp"
+                android:maxLines="1"
+                android:background="@android:color/transparent"
+                android:textColor="@color/colorBlack"
+                android:inputType="numberPassword"
+                android:textSize="16dp"
+                android:maxLength="1"
+                android:text="1"
+                android:gravity="center"
+                android:minWidth="30dp" />
+
+            <EditText
+                android:id="@+id/pin2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:padding="10dp"
+                android:maxLines="1"
+                android:background="@android:color/transparent"
+                android:textColor="@color/colorBlack"
+                android:inputType="numberPassword"
+                android:textSize="16dp"
+                android:maxLength="1"
+                android:text="*"
+                android:gravity="center"
+                android:minWidth="30dp"/>
+
+            <EditText
+                android:id="@+id/pin3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:padding="10dp"
+                android:maxLines="1"
+                android:background="@android:color/transparent"
+                android:textColor="@color/colorBlack"
+                android:inputType="numberPassword"
+                android:textSize="16dp"
+                android:maxLength="1"
+                android:text="*"
+                android:gravity="center"
+                android:minWidth="30dp"/>
+
+            <EditText
+                android:id="@+id/pin4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:padding="10dp"
+                android:maxLines="1"
+                android:background="@android:color/transparent"
+                android:textColor="@color/colorBlack"
+                android:inputType="numberPassword"
+                android:textSize="16dp"
+                android:maxLength="1"
+                android:text="*"
+                android:gravity="center"
+                android:minWidth="30dp"/>
+
+            <EditText
+                android:id="@+id/pin5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:padding="10dp"
+                android:maxLines="1"
+                android:background="@android:color/transparent"
+                android:textColor="@color/colorBlack"
+                android:inputType="number"
+                android:textSize="16dp"
+                android:maxLength="1"
+                android:gravity="center"
+                android:minWidth="30dp"
+                />
+
+            <EditText
+                android:id="@+id/pin6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:padding="10dp"
+                android:maxLines="1"
+                android:background="@android:color/transparent"
+                android:textColor="@color/colorBlack"
+                android:inputType="number"
+                android:textSize="16dp"
+                android:maxLength="1"
+                android:gravity="center"
+                android:minWidth="30dp"
+                />
+
+            <EditText
+                android:id="@+id/pin7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:padding="10dp"
+                android:maxLines="1"
+                android:background="@android:color/transparent"
+                android:textColor="@color/colorBlack"
+                android:inputType="number"
+                android:textSize="16dp"
+                android:maxLength="1"
+                android:gravity="center"
+                android:minWidth="30dp" />
+
+            <EditText
+                android:id="@+id/pin8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:padding="10dp"
+                android:maxLines="1"
+                android:background="@android:color/transparent"
+                android:textColor="@color/colorBlack"
+                android:inputType="number"
+                android:textSize="16dp"
+                android:maxLength="1"
+                android:gravity="center"
+                android:minWidth="30dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edttxt_phone_no"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Please Enter 10 digit number"
+                android:padding="5dp"
+                android:maxLines="1"
+                android:background="@android:color/transparent"
+                android:textColor="@color/colorBlack"
+                android:inputType="number"
+                android:textSize="16dp"
+                android:maxLength="10" />
+
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.6dp"
+            android:background="@color/colorGrey"></View>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end">
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="cancel"
+                android:textColor="@color/colorGrey" />
+
+            <Button
+                android:id="@+id/btn_apply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="Send" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+
+</RelativeLayout>

@@ -1,10 +1,12 @@
 package com.crest.goyo;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -30,6 +32,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.crest.goyo.ModelClasses.CityModel;
 import com.crest.goyo.Utils.Constant;
+import com.crest.goyo.Utils.FileUtils;
+import com.crest.goyo.Utils.FileUtilsCompressImage;
 import com.crest.goyo.Utils.Preferences;
 import com.crest.goyo.VolleyLibrary.RequestInterface;
 import com.crest.goyo.VolleyLibrary.VolleyRequestClass;
@@ -50,6 +54,9 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -381,14 +388,11 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         try {
             if (requestCode == RESULT_PROFILE_IMG && resultCode == RESULT_OK
                     && null != data) {
+
                 selectedImage = data.getData();
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                Cursor cursor = getContentResolver().query(selectedImage,
-                        filePathColumn, null, null, null);
-                cursor.moveToFirst();
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                filePathProfile = cursor.getString(columnIndex);
-                cursor.close();
+                String file = FileUtils.getPath(this, selectedImage);
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver() , selectedImage);
+                filePathProfile = saveBitmapToLocal(bitmap,EditProfile.this);
                 img_profile.setImageBitmap(BitmapFactory
                         .decodeFile(filePathProfile));
             }
@@ -397,5 +401,28 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
             Toast toast = Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT);
             toast.show();
         }
+    }
+
+    public String saveBitmapToLocal(Bitmap bm, Context context) {
+        String path = null;
+        try {
+            File file = FileUtilsCompressImage.getInstance(context).createTempFile("IMG_", ".jpg");
+            //File file = new File(context.getCacheDir(), imgName + ".JPEG");
+            FileOutputStream fos = new FileOutputStream(file);
+            bm.compress(Bitmap.CompressFormat.JPEG, 20, fos);
+            fos.flush();
+            fos.close();
+            path = file.getAbsolutePath();
+            Log.e("Tag","Path = "+path);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return path;
     }
 }

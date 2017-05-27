@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -63,10 +64,15 @@ import com.crest.goyo.VolleyLibrary.VolleyTAG;
 import com.crest.goyo.logger.Log;
 import com.crest.goyo.logger.LogWrapper;
 import com.crest.goyo.other.CircleTransform;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
@@ -107,11 +113,11 @@ import static android.view.View.VISIBLE;
 import static com.android.volley.VolleyLog.TAG;
 
 
-public class BookYourRideFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback {
+public class BookYourRideFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     // TODO: Rename parameter arguments, choose names that match
 
-    private TextView tv_surcharge, tv_pin, tv_driver_name, tv_vehicle_type_driver, tv_ph_no, tv_saved_drop_location, tv_saved_pickup_from, tv_total, tv_vehicle_type, tv_enter_promocode, tv_pickup_date, tv_pickup_time, tv_pickup_from, tv_drop_location;
-    private LinearLayout lay_total, lay_map_saved_location, lay_map_selection_location, lay_drop_location, lay_pickup_from, lay_ride_now, lay_book_your_ride_detail, lay_book_your_ride, lay_confirm_booking, lay_cancel_booking, lay_ride_later, lay_schedule_your_ride, lay_schedule_cancel, lay_booking_back, lay_cancel_book_ride, lay_schedule_now;
+    private TextView tv_surcharge, tv_pin, tv_driver_name, tv_vehicle_type_driver, tv_ph_no, tv_saved_drop_location, tv_saved_pickup_from, tv_total, tv_vehicle_type, tv_pickup_date, tv_pickup_time, tv_pickup_from, tv_drop_location;
+    private LinearLayout lay_total, lay_map_saved_location, lay_map_selection_location, lay_drop_location, lay_pickup_from, lay_ride_now, lay_book_your_ride_detail, tv_enter_promocode, lay_book_your_ride, lay_confirm_booking, lay_cancel_booking, lay_ride_later, lay_schedule_your_ride, lay_schedule_cancel, lay_booking_back, lay_cancel_book_ride, lay_schedule_now;
     private Button bt_call;
     private ImageView ic_calender, ic_timer, img_driver_profile;
     private EditText et_reason, et_add_promocode;
@@ -123,10 +129,11 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
     private Geocoder geocoder;
     private LatLng dest, origin;
     private ArrayList<LatLng> MarkerPoints;
-    private float total = 0;
+    //    private float total = 0;
+    private Integer mtime = 0;
     private double temp;
     private GPSTracker gps;
-    private double gpsLat, gpsLong;
+    private double gpsLat, gpsLong, changedLat, changedLong;
     private CameraPosition cameraPosition;
     private CameraUpdate cameraUpdate;
     private Calendar cal;
@@ -137,7 +144,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
     private AlertDialog.Builder builder;
     private int mYear, mMonth, mDay, mHour, mMinute;
     private RecyclerView rv_book_ride, rv_schedule_ride;
-    private JSONObject data,charges;
+    private JSONObject data, charges;
     private RideCancelAdapter adapter;
     private LatLng greenLatLng, redLatLng;
     private String showEstimationCharge;
@@ -156,7 +163,18 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
     private List<RideCancelModel> list = new ArrayList<>();
     private static final int REQUEST_CODE_PICKUP = 1;
     private static final int REQUEST_CODE_DROP = 2;
+    GoogleApiClient mGoogleApiClient;
+    LocationRequest mLocationRequest;
+    private boolean isChooseAddress = false;
+    private View locationButton;
+    private String updatedAddres = "";
+    private Context mContext;
+    private Integer timeInMinutes;
+    private TextView mCanclePromocode;
+    private String promocode_code;
 
+
+    LatLng lastUpdated;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -164,23 +182,78 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         super.onCreate(savedInstanceState);
     }
 
+    public static BookYourRideFragment newInstance() {
+        BookYourRideFragment bookYourRideFragment = new BookYourRideFragment();
+        return bookYourRideFragment;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_book_my_ride, container, false);
+
+        mContext = getContext();
+
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
+        isChooseAddress = false;
         initializeMap();
         initUI(view);
         loadCalanderView();
         recyclerviewItemClick();
 
+        mCanclePromocode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removePrompcodeAPI();
+            }
+        });
+
         return view;
 
     }
+
+    private void removePrompcodeAPI() {
+
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_REMOVE_PROMO_CODE).newBuilder();
+        urlBuilder.addQueryParameter("device", "ANDROID");
+        urlBuilder.addQueryParameter("lang", "en");
+        urlBuilder.addQueryParameter("login_id", Preferences.getValue_String(getActivity(), Preferences.USER_ID));
+        urlBuilder.addQueryParameter("v_token", Preferences.getValue_String(getActivity(), Preferences.USER_AUTH_TOKEN));
+        urlBuilder.addQueryParameter("city", cityCurrent);
+        urlBuilder.addQueryParameter("v_code", promocode_code);
+        urlBuilder.addQueryParameter("i_ride_id", Preferences.getValue_String(getActivity(), Preferences.RIDE_ID));
+        String url = urlBuilder.build().toString();
+        String newurl = url.replaceAll(" ", "%20");
+        okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
+        VolleyRequestClassNew.allRequest(mContext, newurl, new RequestInterface() {
+            @Override
+            public void onResult(JSONObject response) {
+                try {
+                    int responce_status = response.getInt(VolleyTAG.status);
+                    String message = response.getString(VolleyTAG.message);
+                    if (responce_status == VolleyTAG.response_status) {
+                        mCanclePromocode.setVisibility(View.GONE);
+                        tv_enter_promocode.setVisibility(VISIBLE);
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    } else {
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
     public boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -200,6 +273,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
             return true;
         }
     }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onClick(View v) {
@@ -255,7 +329,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                 selectDropLocation();
                 break;
 
-            case R.id.tv_enter_promocode:
+            case R.id.ll_promocode:
                 enterPromoCodeDialog();
                 break;
 
@@ -276,6 +350,8 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                         "tel", phone, null));
                 startActivity(phoneIntent);
                 break;
+
+
         }
 
     }
@@ -289,6 +365,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
             return;
         }
         location = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(getActivity(),
                     Manifest.permission.ACCESS_FINE_LOCATION)
@@ -299,9 +376,48 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
             onMapReadyGettingLocation();
         }
 
+
+        mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                if (lay_map_selection_location.getVisibility() == VISIBLE) {
+                    List<Address> addresses;
+                    try {
+                        addresses = geocoder.getFromLocation(changedLat, changedLong, 1);
+                        if (addresses.size() > 0) {
+                            String address = addresses.get(0).getAddressLine(0);
+                            String locality = addresses.get(0).getSubLocality();
+                            String adminArea = addresses.get(0).getAdminArea();
+                            cityCurrent = addresses.get(0).getLocality();
+                            tv_pickup_from.setText("" + address + ", " + locality + ", " + cityCurrent + ", " + adminArea);
+                            if (greenMarker != null) {
+                                greenMarker.remove();
+                            }
+                            greenMarker = mMap.addMarker(new MarkerOptions()
+                                    .position(new LatLng(changedLat, changedLong))
+                                    .icon(BitmapDescriptorFactory.fromBitmap(Constant.setMarkerPin(getActivity(), R.drawable.marker_pickup))));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(changedLat, changedLong), 13));
+                            isChooseAddress = false;
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(changedLat, changedLong), 13));
+                    isChooseAddress = false;
+                }
+
+                return true;
+            }
+        });
+
     }
 
     private void onMapReadyGettingLocation() {
+        buildGoogleApiClient();
+
+        mGoogleApiClient.connect();
         gps = new GPSTracker(getActivity(), getActivity());
         if (gps.canGetLocation()) {
             gpsLat = gps.getLatitude();
@@ -315,17 +431,21 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                 List<Address> addresses;
                 LocationManager locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
                 addresses = geocoder.getFromLocation(gpsLat, gpsLong, 1);
-                String address = addresses.get(0).getAddressLine(0);
-                cityCurrent = addresses.get(0).getLocality();
-                tv_pickup_from.setText("" + address + ", " + cityCurrent);
-                greenMarker = mMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(gpsLat, gpsLong))
-                        .icon(BitmapDescriptorFactory.fromBitmap(Constant.setMarkerPin(getActivity(), R.drawable.marker_pickup))));
-                cameraPosition = new CameraPosition.Builder()
-                        .target(new LatLng(gpsLat, gpsLong))
-                        .zoom(18)
-                        .build();
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                if (addresses.size() > 0) {
+                    String address = addresses.get(0).getAddressLine(0);
+                    String locality = addresses.get(0).getSubLocality();
+                    String adminArea = addresses.get(0).getAdminArea();
+                    cityCurrent = addresses.get(0).getLocality();
+                    tv_pickup_from.setText("" + address + ", " + locality + ", " + cityCurrent + ", " + adminArea);
+                    greenMarker = mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(gpsLat, gpsLong))
+                            .icon(BitmapDescriptorFactory.fromBitmap(Constant.setMarkerPin(getActivity(), R.drawable.marker_pickup))));
+                    cameraPosition = new CameraPosition.Builder()
+                            .target(new LatLng(gpsLat, gpsLong))
+                            .zoom(15)
+                            .build();
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                }
             } catch (IOException e) {
                 e.printStackTrace();
 
@@ -343,7 +463,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
             SupportMapFragment mapFrag = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
             mapFrag.getMapAsync(this);
             View mapView = mapFrag.getView();
-            View locationButton = ((View) mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
+            locationButton = ((View) mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
             RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
             rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
             rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
@@ -366,12 +486,14 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
             if (resultCode == RESULT_OK) {
                 origin = place.getLatLng();
                 tv_pickup_from.setText(place.getAddress());
+                isChooseAddress = true;
                 greenLatLng = place.getLatLng();
                 chargesLat = origin.latitude;
                 chargesLong = origin.longitude;
                 gpsLat = origin.latitude;
                 gpsLong = origin.longitude;
                 mMap.clear();
+                Log.d("'##########'", "getVehiclesListAPI : up activity result ");
                 getVehiclesListAPI(vehicleTypes.get(posVehicleTypes).getType());
                 greenMarker = mMap.addMarker(new MarkerOptions()
                         .position(greenLatLng)
@@ -383,6 +505,11 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(place.getLatLng()));
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 if (redMarker != null) {
+                    redMarker.remove();
+                    redMarker = mMap.addMarker(new MarkerOptions()
+                            .position(redLatLng)
+                            .title("" + place.getName())
+                            .icon(BitmapDescriptorFactory.fromBitmap(Constant.setMarkerPin(getActivity(), R.drawable.marker_drop))));
                     LatLngBounds.Builder builder = new LatLngBounds.Builder();
                     if (vehicleMarker != null) {
                         builder.include(vehicleMarker.getPosition());
@@ -457,6 +584,72 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
             } else if (resultCode == RESULT_CANCELED) {
             }
         }
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        if (mLastLocation != null) {
+        }
+
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(1000); //5 seconds
+        mLocationRequest.setFastestInterval(1000); //3 seconds
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        //mLocationRequest.setSmallestDisplacement(0.1F); //1/10 meter
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+//        Toast.makeText(getActivity(), "onConnectionSuspended", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Toast.makeText(getActivity(), " ConnectionFailed", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        changedLat = location.getLatitude();
+        changedLong = location.getLongitude();
+        List<Address> addresses;
+        try {
+            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            if (addresses.size() > 0) {
+                String address = addresses.get(0).getAddressLine(0);
+                String locality = addresses.get(0).getSubLocality();
+                String adminArea = addresses.get(0).getAdminArea();
+                cityCurrent = addresses.get(0).getLocality();
+                updatedAddres = address + ", " + locality + ", " + cityCurrent + ", " + adminArea;
+                Log.d("########", "Location Changed : " + "" + address + ", " + locality + ", " + cityCurrent + ", " + adminArea);
+                if (!isChooseAddress) {
+                    tv_pickup_from.setText(updatedAddres);
+                    greenMarker.setPosition(latLng);
+                }
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
     }
 
     @Override
@@ -540,7 +733,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
-        VolleyRequestClassNew.allRequest(getActivity(), newurl, new RequestInterface() {
+        VolleyRequestClassNew.allRequest(mContext, newurl, new RequestInterface() {
             @Override
             public void onResult(JSONObject response) {
                 final String success = response.optString("status").toString();
@@ -565,7 +758,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                         CHARGE_RIDE_TIME_PICKUP_CHARGE = charges.getString("ride_time_pick_charge");
                         CHARGE_RIDE_TIME_WAIT_CHARGE = charges.getString("ride_time_charge");
                         CHARGE_SERVICE_TAX = charges.getString("service_tax");
-                        Log.d("#######","estimation charge : "+showEstimationCharge);
+                        Log.d("#######", "estimation charge : " + showEstimationCharge);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -585,6 +778,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         urlBuilder.addQueryParameter("payment_mode", "cash");
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
+        Log.d("########", "URL_CONFIRM_RIDE : " + newurl);
         Request request = new Request.Builder()
                 .url(newurl)
                 .build();
@@ -615,9 +809,9 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         urlBuilder.addQueryParameter("destination_address", tv_drop_location.getText().toString());
         urlBuilder.addQueryParameter("destination_latitude", String.valueOf(dest.latitude));
         urlBuilder.addQueryParameter("destination_longitude", String.valueOf(dest.longitude));
-        urlBuilder.addQueryParameter("estimate_amount", String.valueOf(total));
-        urlBuilder.addQueryParameter("estimate_km", String.valueOf(rideDistance));
-        urlBuilder.addQueryParameter("estimate_time", String.valueOf(rideTime));
+//        urlBuilder.addQueryParameter("estimate_amount", String.valueOf(total));
+        urlBuilder.addQueryParameter("estimate_km", String.valueOf(rideDistance.replace("km", "").trim()));
+        urlBuilder.addQueryParameter("estimate_time", String.valueOf(timeInMinutes));
         urlBuilder.addQueryParameter("city", String.valueOf(cityCurrent));
         urlBuilder.addQueryParameter("charges", String.valueOf(charges));
         if (lay_book_your_ride.getVisibility() == VISIBLE) {
@@ -672,7 +866,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
-        VolleyRequestClass.allRequest(getActivity(), newurl, new RequestInterface() {
+        VolleyRequestClassNew.allRequest(mContext, newurl, new RequestInterface() {
             @Override
             public void onResult(JSONObject response) {
                 try {
@@ -681,8 +875,9 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                     if (responce_status == VolleyTAG.response_status) {
                         JSONObject jsonObject = response.getJSONObject("data");
                         JSONObject l_data = jsonObject.getJSONObject("l_data");
+                        JSONObject estimation = l_data.getJSONObject("estimation");
                         String vehicle_type = l_data.getString("vehicle_type");
-                        String estimate_amount = l_data.getString("estimate_amount");
+                        String estimate_amount = estimation.getString("final_total");
                         String pickup_address = l_data.getString("pickup_address");
                         String destination_addres = l_data.getString("destination_address");
                         if (lay_book_your_ride_detail.getVisibility() == VISIBLE) {
@@ -701,6 +896,12 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                             ((MainActivity) getActivity()).getSupportActionBar().setTitle("PICKUP ARRIVING");
                             Preferences.setValue(getActivity(), Preferences.DRIVER_ID, jsonObject.getString("i_driver_id").toString());
                             JSONObject driver_data = jsonObject.getJSONObject("driver_data");
+                            String strNumber = jsonObject.getString("v_pin");
+
+
+//                            String[] textArray = splitStringEvery(strNumber, 4);
+
+
                             tv_pin.setText("Your trip confirmation PIN : " + jsonObject.getString("v_pin"));
                             tv_driver_name.setText(driver_data.getString("driver_name"));
                             tv_ph_no.setText(driver_data.getString("driver_phone"));
@@ -723,7 +924,23 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                     e.printStackTrace();
                 }
             }
-        }, true);
+        });
+    }
+
+
+    public String[] splitStringEvery(String s, int interval) {
+        int arrayLength = (int) Math.ceil(((s.length() / (double) interval)));
+        String[] result = new String[arrayLength];
+
+        int j = 0;
+        int lastIndex = result.length - 1;
+        for (int i = 0; i < lastIndex; i++) {
+            result[i] = s.substring(j, j + interval);
+            j += interval;
+        } //Add the last bit
+        result[lastIndex] = s.substring(j);
+        Log.d("########", "splitt : " + result.toString());
+        return result;
     }
 
     private void getDriverLocationAPI() {
@@ -734,7 +951,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
-        VolleyRequestClassNew.allRequest(getActivity(), newurl, new RequestInterface() {
+        VolleyRequestClassNew.allRequest(mContext, newurl, new RequestInterface() {
             @Override
             public void onResult(JSONObject response) {
                 try {
@@ -802,7 +1019,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
 
-        VolleyRequestClassNew.allRequest(getActivity(), newurl, new RequestInterface() {
+        VolleyRequestClassNew.allRequest(mContext, newurl, new RequestInterface() {
             @Override
             public void onResult(JSONObject response) {
                 try {
@@ -827,9 +1044,14 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                         getActivity().runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                driverMarker = mMap.addMarker(new MarkerOptions()
-                                                        .position(driver)
-                                                        .icon(BitmapDescriptorFactory.fromBitmap(bmp)));
+                                                if (driverMarker != null) {
+                                                    driverMarker.remove();
+                                                } else {
+                                                    driverMarker = mMap.addMarker(new MarkerOptions()
+                                                            .position(driver)
+                                                            .icon(BitmapDescriptorFactory.fromBitmap(bmp)));
+                                                }
+
                                                 customerMarker = mMap.addMarker(new MarkerOptions().position(customer).icon(BitmapDescriptorFactory.fromBitmap(Constant.setMarkerPin(getActivity(), R.drawable.marker_driver))));
                                                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
                                                 builder.include(driverMarker.getPosition());
@@ -873,7 +1095,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
-        VolleyRequestClass.allRequest(getActivity(), newurl, new RequestInterface() {
+        VolleyRequestClassNew.allRequest(mContext, newurl, new RequestInterface() {
             @Override
             public void onResult(JSONObject response) {
                 try {
@@ -894,7 +1116,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                     e.printStackTrace();
                 }
             }
-        }, false);
+        });
 
     }
 
@@ -910,7 +1132,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
-        VolleyRequestClass.allRequest(getActivity(), newurl, new RequestInterface() {
+        VolleyRequestClassNew.allRequest(mContext, newurl, new RequestInterface() {
             @Override
             public void onResult(JSONObject response) {
                 try {
@@ -928,7 +1150,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                     e.printStackTrace();
                 }
             }
-        }, true);
+        });
     }
 
     private void promotionCodeExistsAPI() {
@@ -937,18 +1159,25 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         urlBuilder.addQueryParameter("lang", "en");
         urlBuilder.addQueryParameter("login_id", Preferences.getValue_String(getActivity(), Preferences.USER_ID));
         urlBuilder.addQueryParameter("v_token", Preferences.getValue_String(getActivity(), Preferences.USER_AUTH_TOKEN));
-        urlBuilder.addQueryParameter("city", cityCurrent);
+//        urlBuilder.addQueryParameter("city", cityCurrent);
         urlBuilder.addQueryParameter("v_code", et_add_promocode.getText().toString());
+        urlBuilder.addQueryParameter("i_ride_id", Preferences.getValue_String(getActivity(), Preferences.RIDE_ID));
+
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
-        VolleyRequestClass.allRequest(getActivity(), newurl, new RequestInterface() {
+        VolleyRequestClassNew.allRequest(mContext, newurl, new RequestInterface() {
             @Override
             public void onResult(JSONObject response) {
                 try {
                     int responce_status = response.getInt(VolleyTAG.status);
                     String message = response.getString(VolleyTAG.message);
                     if (responce_status == VolleyTAG.response_status) {
+                        JSONObject data = response.getJSONObject("data");
+                        promocode_code = data.getString("promocode_code");
+                        tv_enter_promocode.setVisibility(View.INVISIBLE);
+                        mCanclePromocode.setVisibility(View.VISIBLE);
+
                         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     } else {
@@ -960,7 +1189,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                     e.printStackTrace();
                 }
             }
-        }, true);
+        });
     }
 
     private void updateDriverLocation() {
@@ -971,6 +1200,41 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                 myhandler.postDelayed(this, 6000); //now is every 2 minutes
             }
         }, 6000);
+    }
+
+
+    private void updateVehicleList() {
+
+        if (h2 != null) {
+            Log.e("#####", "updateVehicleList :handler ");
+            h2.removeCallbacksAndMessages(null);
+        }
+        h1.postDelayed(new Runnable() {
+            public void run() {
+                Log.e("TAG", "Call h1 Handler");
+                getVehiclesListAPIThread(vehicleTypes.get(posVehicleTypes).getType());     // this method will contain your almost-finished HTTP calls
+                h1.postDelayed(this, 6000);
+            }
+        }, 6000);
+
+    }
+
+    private Handler h1 = new Handler();
+    private Handler h2 = new Handler();
+
+
+    private void updateVehicleListLongTime() {
+        if (h1 != null) {
+            Log.e("#####", "updateVehicleListLongTime :handler ");
+            h1.removeCallbacksAndMessages(null);
+        }
+        h2.postDelayed(new Runnable() {
+            public void run() {
+                Log.e("#######", "getVehiclesListAPIThread : entered ");
+                getVehiclesListAPIThread(vehicleTypes.get(posVehicleTypes).getType());
+                h2.postDelayed(this, 30000); //now is every 2 minutes
+            }
+        }, 30000);
     }
 
     private void enterPromoCodeDialog() {
@@ -1119,7 +1383,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
-        VolleyRequestClass.allRequest(getContext(), newurl, new RequestInterface() {
+        VolleyRequestClassNew.allRequest(mContext, newurl, new RequestInterface() {
             @Override
             public void onResult(JSONObject response) {
                 final String success = response.optString("status").toString();
@@ -1154,25 +1418,26 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                 rv_schedule_ride.setItemAnimator(new DefaultItemAnimator());
                                 rv_schedule_ride.setAdapter(recyclerBookRidesAdapter);
                             }
+                        }
 
-                            try {
-                                getVehiclesListAPI(vehicleTypes.get(posVehicleTypes).getType());
-                            } catch (Exception e) {
-
-                            }
+                        try {
+                            Log.d("'##########'", "getVehiclesListAPI : in getAvalableVehiclesAPI");
+                            getVehiclesListAPI(vehicleTypes.get(posVehicleTypes).getType());
+                            getVehicleTypeCharge(vehicleTypes.get(0).getType());
+                        } catch (Exception e) {
 
                         }
-                        getVehicleTypeCharge(vehicleTypes.get(0).getType());
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
 
             }
-        }, false);
+        });
     }
 
-    private void countAmount() {
+   /**//* private void countAmount() {
         int min_charge = Integer.parseInt(CHARGE_MIN_CHARGE);
         int base_fare = Integer.parseInt(CHARGE_BASE_FARE);
         int upto_km = Integer.parseInt(CHARGE_UPTO_KM);
@@ -1187,6 +1452,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
             total += base_fare;
         }
         Float i = Float.valueOf(rideDistance.substring(0, rideDistance.indexOf("km")));
+
         float dis = i.floatValue();
         if (upto_km > dis) {
 
@@ -1202,7 +1468,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         }
         android.util.Log.d("######", "total :  total " + total);
 
-    }
+    }*/
 
 
     private void getVehiclesListAPI(String vehicleType) {
@@ -1214,14 +1480,87 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
-        VolleyRequestClass.allRequest(getContext(), newurl, new RequestInterface() {
+        VolleyRequestClassNew.allRequest(mContext, newurl, new RequestInterface() {
             @Override
             public void onResult(JSONObject response) {
                 final String success = response.optString("status").toString();
                 final String message = response.optString("message").toString();
                 vehicleStatus = String.valueOf(success);
                 if (vehicleStatus.equals("0")) {
+                    updateVehicleList();
+
                     Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                } else {
+                    try {
+
+                        updateVehicleListLongTime();
+                        JSONArray data = response.getJSONArray("data");
+                        for (int i = 0; i < data.length(); i++) {
+                            JSONObject objData = data.getJSONObject(i);
+                            String lati = objData.getString("l_latitude");
+                            String longi = objData.getString("l_longitude");
+                            final LatLng point = new LatLng(Double.parseDouble(lati), Double.parseDouble(longi));
+                            MarkerPoints.clear();
+                            MarkerPoints.add(point);
+                            MarkerOptions options = new MarkerOptions();
+                            options.position(point);
+                            Thread thread = new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        URL url = new URL(vehicleTypes.get(posVehicleTypes).getPlotting_icon());
+                                        final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+
+                                        if (getActivity() == null)
+                                            return;
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if (vehicleMarker != null) {
+                                                    vehicleMarker.remove();
+                                                }
+                                                vehicleMarker = mMap.addMarker(new MarkerOptions()
+                                                        .position(point)
+                                                        .icon(BitmapDescriptorFactory.fromBitmap(bmp)));
+                                            }
+                                        });
+
+                                    } catch (MalformedURLException e) {
+                                        e.printStackTrace();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                            thread.start();
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        });
+    }
+
+    private void getVehiclesListAPIThread(String vehicleType) {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_GET_VEHICLE_LIST).newBuilder();
+        urlBuilder.addQueryParameter("device", "ANDROID");
+        urlBuilder.addQueryParameter("v_type", vehicleType);
+        urlBuilder.addQueryParameter("l_latitude", String.valueOf(gpsLat));
+        urlBuilder.addQueryParameter("l_longitude", String.valueOf(gpsLong));
+        String url = urlBuilder.build().toString();
+        String newurl = url.replaceAll(" ", "%20");
+        okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
+        VolleyRequestClassNew.allRequest(mContext, newurl, new RequestInterface() {
+            @Override
+            public void onResult(JSONObject response) {
+                final String success = response.optString("status").toString();
+                final String message = response.optString("message").toString();
+                vehicleStatus = String.valueOf(success);
+                if (vehicleStatus.equals("0")) {
+
                 } else {
                     try {
                         JSONArray data = response.getJSONArray("data");
@@ -1246,6 +1585,9 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                         getActivity().runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
+                                                if (vehicleMarker != null) {
+                                                    vehicleMarker.remove();
+                                                }
                                                 vehicleMarker = mMap.addMarker(new MarkerOptions()
                                                         .position(point)
                                                         .icon(BitmapDescriptorFactory.fromBitmap(bmp)));
@@ -1268,7 +1610,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                 }
 
             }
-        }, false);
+        });
     }
 
     private void downloadUrl() {
@@ -1278,7 +1620,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
-        VolleyRequestClass.allRequest(getActivity(), newurl, new RequestInterface() {
+        VolleyRequestClassNew.allRequest(mContext, newurl, new RequestInterface() {
             @Override
             public void onResult(JSONObject response) {
                 try {
@@ -1291,12 +1633,69 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                     rideDistance = distance.getString("text");
                     rideTime = duration.getString("text");
                     Log.i("#########" + "duration", rideTime);
-                    if (Integer.parseInt(showEstimationCharge) == 1) {
-                        Log.d("#####", "estimation : " + showEstimationCharge);
-                        countAmount();
-                    }else{
-                        Log.d("#####", "estimation : " + "00:00");
+                    Log.i("#########" + "rideDistance", rideDistance);
+
+                    //which is from server;
+
+                    if (rideTime.contains("hours")) {
+                        String time = rideTime;
+                        String splitTime[] = time.split(" hours ");
+                        String hours = splitTime[0];
+                        String minutes = splitTime[1];
+                        if (rideTime.contains("mins")) {
+                            Integer mins = Integer.parseInt(minutes.replaceAll("mins", "").trim());
+                            Log.i("#########" + "hours if : ", hours);
+                            Log.i("#########" + "mins if : ", minutes.replaceAll("mins", "").trim());
+                            mtime = Integer.parseInt(hours) * 60;
+                            timeInMinutes = (mtime + mins);
+                            Log.i("#########" + "timeInMinutes if : ", "" + timeInMinutes);
+                        } else {
+                            Integer mins = Integer.parseInt(minutes.replaceAll("min", "").trim());
+                            Log.i("#########" + "hours if : ", hours);
+                            Log.i("#########" + "mins if : ", minutes.replaceAll("min", "").trim());
+                            mtime = Integer.parseInt(hours) * 60;
+                            timeInMinutes = (mtime + mins);
+                            Log.i("#########" + "timeInMinutes if : ", "" + timeInMinutes);
+                        }
+
+                    } else if (rideTime.contains("hour")) {
+                        String time = rideTime;
+                        String splitTime[] = time.split(" hour ");
+                        String hours = splitTime[0];
+                        String minutes = splitTime[1];
+                        if (rideTime.contains("mins")) {
+                            Integer mins = Integer.parseInt(minutes.replaceAll("mins", "").trim());
+                            Log.i("#########" + "hours if : ", hours);
+                            Log.i("#########" + "mins if : ", minutes.replaceAll("mins", "").trim());
+                            mtime = Integer.parseInt(hours) * 60;
+                            timeInMinutes = (mtime + mins);
+                            Log.i("#########" + "timeInMinutes if : ", "" + timeInMinutes);
+                        } else {
+
+                        }
+
+                    } else {
+                        if (rideTime.contains("mins")) {
+                            Integer mins = Integer.parseInt(rideTime.replaceAll("mins", "").trim());
+                            timeInMinutes = mins;
+                        } else {
+
+                        }
+
                     }
+
+//                    String splitTime[]=time.split(" hours ");
+//                    String hours=splitTime[0];
+//                    String minutes=splitTime[1];
+//
+//                    Log.i("#########" + "hours", hours);
+
+//                    if (Integer.parseInt(showEstimationCharge) == 1) {
+//                        Log.d("#####", "estimation : " + showEstimationCharge);
+//                        countAmount();
+//                    } else {
+//                        Log.d("#####", "estimation : " + "00:00");
+//                    }
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -1307,8 +1706,9 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                     android.util.Log.d("Exception.", e.toString());
                 }
             }
-        }, true);
+        });
     }
+
 
     private class GetConfirmRide extends AsyncTask<String, Void, Void> {
         @Override
@@ -1378,7 +1778,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
 
         }
     }
-
     private void recyclerviewItemClick() {
         rv_schedule_ride.addOnItemTouchListener(
                 new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
@@ -1389,6 +1788,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                         mMap.clear();
                         createPickupDropMarkers();
                         if (Constant.isOnline(getActivity())) {
+                            Log.d("'##########'", "getVehiclesListAPI : in rv_schedule_ride recyclerviewItemClick");
                             getVehiclesListAPI(vehicleTypes.get(position).getType());
                             getVehicleTypeCharge(vehicleTypes.get(position).getType());
                         }
@@ -1404,6 +1804,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                         mMap.clear();
                         createPickupDropMarkers();
                         if (Constant.isOnline(getActivity())) {
+                            Log.d("'##########'", "getVehiclesListAPI : in rv_book_ride recyclerviewItemClick");
                             getVehiclesListAPI(vehicleTypes.get(position).getType());
                             getVehicleTypeCharge(vehicleTypes.get(position).getType());
                         }
@@ -1501,7 +1902,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         ic_timer = (ImageView) view.findViewById(R.id.ic_timer);
         tv_pickup_from = (TextView) view.findViewById(R.id.tv_pickup_from);
         tv_drop_location = (TextView) view.findViewById(R.id.tv_drop_location);
-        tv_enter_promocode = (TextView) view.findViewById(R.id.tv_enter_promocode);
+        tv_enter_promocode = (LinearLayout) view.findViewById(R.id.ll_promocode);
         tv_vehicle_type = (TextView) view.findViewById(R.id.tv_vehicle_type);
         tv_saved_drop_location = (TextView) view.findViewById(R.id.tv_saved_drop_location);
         tv_saved_pickup_from = (TextView) view.findViewById(R.id.tv_saved_pickup_from);
@@ -1513,6 +1914,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         tv_ph_no = (TextView) view.findViewById(R.id.tv_ph_no);
         img_driver_profile = (ImageView) view.findViewById(R.id.img_driver_profile);
         bt_call = (Button) view.findViewById(R.id.bt_call);
+        mCanclePromocode = (TextView) view.findViewById(R.id.txt_cancle_promocod);
 
 
         lay_ride_now.setOnClickListener(this);
@@ -1529,6 +1931,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         lay_drop_location.setOnClickListener(this);
         tv_enter_promocode.setOnClickListener(this);
         bt_call.setOnClickListener(this);
+        locationButton.setOnClickListener(this);
 
 
         MarkerPoints = new ArrayList<>();
@@ -1542,15 +1945,18 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         super.onDestroyView();
         if (myhandler != null) {
             myhandler.removeCallbacksAndMessages(null);
-            Log.d("!!!!!!", "Thread successfully stopped. dv");
         }
-        Log.d("!!!!!!", "stop fragment : dv");
+        if (h1 != null) {
+            h1.removeCallbacksAndMessages(null);
+        }
+        if (h2 != null) {
+            h2.removeCallbacksAndMessages(null);
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
     }
 }
 

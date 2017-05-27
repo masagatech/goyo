@@ -19,7 +19,6 @@ import com.crest.goyo.Utils.Preferences;
 import com.crest.goyo.VolleyLibrary.RequestInterface;
 import com.crest.goyo.VolleyLibrary.VolleyRequestClass;
 import com.crest.goyo.VolleyLibrary.VolleyTAG;
-import com.crest.goyo.logger.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -100,11 +99,8 @@ public class MyRidesFragment extends Fragment implements View.OnClickListener {
                         rideList.clear();
                         for (int i = 0; i < data.length(); i++) {
                             JSONObject objData = data.getJSONObject(i);
-                            JSONObject l_data=objData.getJSONObject("l_data");
-                            JSONObject tripData=l_data.getJSONObject("trip_time");
                             {
-                                Log.d("######","............"+objData.getString("d_start"));
-                                rideList.add(new MyRidesModel(objData.getString("id"),objData.getString("user_v_name"),objData.getString("e_status"),l_data.getString("vehicle_type"),objData.getString("d_time"),l_data.getString("pickup_address"),l_data.getString("destination_address"),l_data.getString("final_amount"),l_data.getString("actual_distance"),l_data.getString("trip_time_in_min"),objData.getString("d_start"),objData.getString("d_end"),tripData.getString("days"),tripData.getString("hours"),tripData.getString("minutes"),tripData.getString("seconds"),objData.getString("v_ride_code")));
+                                rideList.add(new MyRidesModel(objData.getString("id"),objData.getString("status"),objData.getString("ride_time"),objData.getString("vehicle_type"),objData.getString("pickup_address"),objData.getString("destination_address"),objData.getString("driver_name")));
                             }
 
                             myRidesAdapter = new MyRidesAdapter(rideList);

@@ -38,7 +38,6 @@ public class PaymentDetail extends AppCompatActivity implements View.OnClickList
             case R.id.actionbar_title:
                 builder.setTitle("Ride Sucessfull");
                 builder.setMessage("Your ride is sucessfuly done.");
-
                 builder.setNegativeButton("RATE THIS RIDE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         Intent rIntent = new Intent(getApplicationContext(), RateThisRide.class);
