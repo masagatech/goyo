@@ -10,9 +10,8 @@ import android.widget.TextView;
 import com.crest.goyo.Utils.Constant;
 import com.crest.goyo.Utils.Preferences;
 import com.crest.goyo.VolleyLibrary.RequestInterface;
-import com.crest.goyo.VolleyLibrary.VolleyRequestClass;
+import com.crest.goyo.VolleyLibrary.VolleyRequestClassNew;
 import com.crest.goyo.VolleyLibrary.VolleyTAG;
-import com.crest.goyo.logger.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,55 +29,55 @@ public class CompleteMyRidesDetail extends AppCompatActivity {
         setContentView(R.layout.activity_complete_my_rides_detail);
 
         initUI();
-
-        if(getIntent().getExtras()!=null){
-            tv_pickup_from.setText(getIntent().getStringExtra("pickupAdd"));
-            tv_drop_loc.setText(getIntent().getStringExtra("dropAdd"));
-            tv_total_fare.setText("\u20B9" + " " + getIntent().getStringExtra("finalAmount"));
-            tv_total_distance.setText(getIntent().getStringExtra("finalDistance")+ " km");
-            tv_total_duration.setText(getIntent().getStringExtra("tripDuration")+" min");
-            try {
-                String date = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong((getIntent().getStringExtra("rideTime"))), DateUtils.FORMAT_SHOW_DATE);
-                String time = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong(getIntent().getStringExtra("rideTime")), DateUtils.FORMAT_SHOW_TIME);
-                String startDate = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong(getIntent().getStringExtra("startTime")), DateUtils.FORMAT_SHOW_DATE);
-                String startTime = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong(getIntent().getStringExtra("startTime")), DateUtils.FORMAT_SHOW_TIME);
-                String endDate = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong(getIntent().getStringExtra("endTime")), DateUtils.FORMAT_SHOW_DATE);
-                String endTime = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong(getIntent().getStringExtra("endTime")), DateUtils.FORMAT_SHOW_TIME);
-                Log.d("######","time : "+date + " AT " + time);
-                tv_time.setText(date + " AT " + time);
-                tv_start_time.setText(startDate + " AT " + startTime);
-                tv_end_time.setText(endDate + " AT " + endTime);
-
-//                if (jsonObject.getString("ride_l_comment").equals("")) {
-//                    tv_comment.setVisibility(View.GONE);
-//                    title_comment.setVisibility(View.GONE);
-//                } else {
-//                    tv_comment.setText(jsonObject.getString("ride_l_comment"));
-//                }
-            } catch (Exception e) {
-                Log.d("######","Exception : "+e);
-            }
-        }else {
-
-        }
-
-//        if (Constant.isOnline(getApplicationContext())) {
-//            getRideDetail();
+//
+//        if(getIntent().getExtras()!=null){
+//            tv_pickup_from.setText(getIntent().getStringExtra("pickupAdd"));
+//            tv_drop_loc.setText(getIntent().getStringExtra("dropAdd"));
+//            tv_total_fare.setText("\u20B9" + " " + getIntent().getStringExtra("finalAmount"));
+//            tv_total_distance.setText(getIntent().getStringExtra("finalDistance")+ " km");
+//            tv_total_duration.setText(getIntent().getStringExtra("tripDuration")+" min");
+//            try {
+//                String date = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong((getIntent().getStringExtra("rideTime"))), DateUtils.FORMAT_SHOW_DATE);
+//                String time = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong(getIntent().getStringExtra("rideTime")), DateUtils.FORMAT_SHOW_TIME);
+//                String startDate = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong(getIntent().getStringExtra("startTime")), DateUtils.FORMAT_SHOW_DATE);
+//                String startTime = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong(getIntent().getStringExtra("startTime")), DateUtils.FORMAT_SHOW_TIME);
+//                String endDate = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong(getIntent().getStringExtra("endTime")), DateUtils.FORMAT_SHOW_DATE);
+//                String endTime = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong(getIntent().getStringExtra("endTime")), DateUtils.FORMAT_SHOW_TIME);
+//                Log.d("######","time : "+date + " AT " + time);
+//                tv_time.setText(date + " AT " + time);
+//                tv_start_time.setText(startDate + " AT " + startTime);
+//                tv_end_time.setText(endDate + " AT " + endTime);
+//
+////                if (jsonObject.getString("ride_l_comment").equals("")) {
+////                    tv_comment.setVisibility(View.GONE);
+////                    title_comment.setVisibility(View.GONE);
+////                } else {
+////                    tv_comment.setText(jsonObject.getString("ride_l_comment"));
+////                }
+//            } catch (Exception e) {
+//                Log.d("######","Exception : "+e);
+//            }
+//        }else {
+//
 //        }
+
+        if (Constant.isOnline(getApplicationContext())) {
+//            getRideDetail();
+            getRideAPI();
+        }
     }
 
-    private void getRideDetail() {
-
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_USER_RIDE_DETAIL).newBuilder();
+    private void getRideAPI() {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_GET_RIDE).newBuilder();
         urlBuilder.addQueryParameter("device", "ANDROID");
         urlBuilder.addQueryParameter("lang", "en");
         urlBuilder.addQueryParameter("login_id", Preferences.getValue_String(getApplicationContext(), Preferences.USER_ID));
         urlBuilder.addQueryParameter("v_token", Preferences.getValue_String(getApplicationContext(), Preferences.USER_AUTH_TOKEN));
-        urlBuilder.addQueryParameter("i_ride_id", "");
+        urlBuilder.addQueryParameter("i_ride_id", Preferences.getValue_String(getApplicationContext(), Preferences.RIDE_ID));
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
-        VolleyRequestClass.allRequest(CompleteMyRidesDetail.this, newurl, new RequestInterface() {
+        VolleyRequestClassNew.allRequest(getApplicationContext(), newurl, new RequestInterface() {
             @Override
             public void onResult(JSONObject response) {
                 try {
@@ -86,16 +85,22 @@ public class CompleteMyRidesDetail extends AppCompatActivity {
                     String message = response.getString(VolleyTAG.message);
                     if (responce_status == VolleyTAG.response_status) {
                         JSONObject jsonObject = response.getJSONObject("data");
-                        tv_pickup_from.setText(jsonObject.getJSONObject("l_data").getString("pickup_address"));
-                        tv_drop_loc.setText(jsonObject.getJSONObject("l_data").getString("destination_address"));
-                        tv_total_fare.setText("\u20B9" + " " + jsonObject.getJSONObject("l_data").getString("final_amount"));
-                        tv_total_distance.setText(jsonObject.getJSONObject("l_data").getString("estimate_km"));
-                        tv_total_duration.setText(jsonObject.getJSONObject("l_data").getString("estimate_time"));
-
-
-                        rating_bar.setRating(Float.parseFloat(jsonObject.getString("ride_i_rate")));
+                        JSONObject l_data = jsonObject.getJSONObject("l_data");
+                        JSONObject rate = jsonObject.getJSONObject("rate");
+                        tv_pickup_from.setText(l_data.getString("pickup_address"));
+                        tv_drop_loc.setText(l_data.getString("destination_address"));
+                        tv_total_fare.setText("\u20B9" + " " + l_data.getString("final_amount"));
+                        tv_total_distance.setText(l_data.getString("actual_distance") + " km");
+                        rating_bar.setRating(Float.parseFloat(rate.getString("i_rate")));
+                        tv_total_duration.setText(l_data.getString("trip_time_in_min") + " min");
+                        if (rate.getString("rate_cmment").equals("")) {
+                            tv_comment.setVisibility(View.GONE);
+                            title_comment.setVisibility(View.GONE);
+                        } else {
+                            tv_comment.setText(rate.getString("rate_cmment"));
+                        }
                         try {
-                            String date = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong(jsonObject.getString("d_time")), DateUtils.FORMAT_SHOW_DATE);
+                            String date = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong((jsonObject.getString("d_time"))), DateUtils.FORMAT_SHOW_DATE);
                             String time = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong(jsonObject.getString("d_time")), DateUtils.FORMAT_SHOW_TIME);
                             String startDate = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong(jsonObject.getString("d_start")), DateUtils.FORMAT_SHOW_DATE);
                             String startTime = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong(jsonObject.getString("d_start")), DateUtils.FORMAT_SHOW_TIME);
@@ -105,28 +110,78 @@ public class CompleteMyRidesDetail extends AppCompatActivity {
                             tv_start_time.setText(startDate + " AT " + startTime);
                             tv_end_time.setText(endDate + " AT " + endTime);
 
-                            if (jsonObject.getString("ride_l_comment").equals("")) {
-                                tv_comment.setVisibility(View.GONE);
-                                title_comment.setVisibility(View.GONE);
-                            } else {
-                                tv_comment.setText(jsonObject.getString("ride_l_comment"));
-                            }
                         } catch (Exception e) {
 
                         }
-
-
                     } else {
-
                     }
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-        }, true);
-
+        });
     }
+
+//    private void getRideDetail() {
+//
+//        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_USER_RIDE_DETAIL).newBuilder();
+//        urlBuilder.addQueryParameter("device", "ANDROID");
+//        urlBuilder.addQueryParameter("lang", "en");
+//        urlBuilder.addQueryParameter("login_id", Preferences.getValue_String(getApplicationContext(), Preferences.USER_ID));
+//        urlBuilder.addQueryParameter("v_token", Preferences.getValue_String(getApplicationContext(), Preferences.USER_AUTH_TOKEN));
+//        urlBuilder.addQueryParameter("i_ride_id", "");
+//        String url = urlBuilder.build().toString();
+//        String newurl = url.replaceAll(" ", "%20");
+//        okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
+//        VolleyRequestClass.allRequest(CompleteMyRidesDetail.this, newurl, new RequestInterface() {
+//            @Override
+//            public void onResult(JSONObject response) {
+//                try {
+//                    int responce_status = response.getInt(VolleyTAG.status);
+//                    String message = response.getString(VolleyTAG.message);
+//                    if (responce_status == VolleyTAG.response_status) {
+//                        JSONObject jsonObject = response.getJSONObject("data");
+//                        tv_pickup_from.setText(jsonObject.getJSONObject("l_data").getString("pickup_address"));
+//                        tv_drop_loc.setText(jsonObject.getJSONObject("l_data").getString("destination_address"));
+//                        tv_total_fare.setText("\u20B9" + " " + jsonObject.getJSONObject("l_data").getString("final_amount"));
+//                        tv_total_distance.setText(jsonObject.getJSONObject("l_data").getString("estimate_km"));
+//                        tv_total_duration.setText(jsonObject.getJSONObject("l_data").getString("estimate_time"));
+//
+//
+//                        rating_bar.setRating(Float.parseFloat(jsonObject.getString("ride_i_rate")));
+//                        try {
+//                            String date = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong(jsonObject.getString("d_time")), DateUtils.FORMAT_SHOW_DATE);
+//                            String time = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong(jsonObject.getString("d_time")), DateUtils.FORMAT_SHOW_TIME);
+//                            String startDate = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong(jsonObject.getString("d_start")), DateUtils.FORMAT_SHOW_DATE);
+//                            String startTime = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong(jsonObject.getString("d_start")), DateUtils.FORMAT_SHOW_TIME);
+//                            String endDate = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong(jsonObject.getString("d_end")), DateUtils.FORMAT_SHOW_DATE);
+//                            String endTime = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong(jsonObject.getString("d_end")), DateUtils.FORMAT_SHOW_TIME);
+//                            tv_time.setText(date + " AT " + time);
+//                            tv_start_time.setText(startDate + " AT " + startTime);
+//                            tv_end_time.setText(endDate + " AT " + endTime);
+//
+//                            if (jsonObject.getString("ride_l_comment").equals("")) {
+//                                tv_comment.setVisibility(View.GONE);
+//                                title_comment.setVisibility(View.GONE);
+//                            } else {
+//                                tv_comment.setText(jsonObject.getString("ride_l_comment"));
+//                            }
+//                        } catch (Exception e) {
+//
+//                        }
+//
+//
+//                    } else {
+//
+//                    }
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }, true);
+//
+//    }
 
     private void initUI() {
 

@@ -14,6 +14,7 @@ import com.crest.goyo.R;
 public class CustomDialog {
 
     Dialog dialog;
+
     public CustomDialog(Context context) {
         dialog = new Dialog(context);
         dialog.setContentView(R.layout.custom_dialog);
@@ -29,6 +30,8 @@ public class CustomDialog {
         if (dialog.isShowing()){
             dialog.dismiss();
         }
+
+
 
     }
 

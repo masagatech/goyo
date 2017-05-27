@@ -27,7 +27,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-android:visibility="gone"
                     android:gravity="center">
 
                     <TextView
@@ -91,6 +90,7 @@ android:visibility="gone"
                         android:background="@color/colorGrey"></View>
 
                     <LinearLayout
+                        android:id="@+id/ll_share"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1.3"

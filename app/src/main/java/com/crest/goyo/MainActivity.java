@@ -12,6 +12,7 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
@@ -41,6 +42,7 @@ import com.crest.goyo.fragment.PromotionCodeFragment;
 import com.crest.goyo.fragment.ReferralCodeFragment;
 import com.crest.goyo.fragment.TariffCardFragment;
 import com.crest.goyo.fragment.TermsAndConditionsFragment;
+import com.crest.goyo.logger.Log;
 import com.crest.goyo.other.CircleTransform;
 import com.crest.goyo.school.MyKids;
 
@@ -79,11 +81,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String TAG = "MainActivity";
     public static String CURRENT_TAG = TAG_BOOK_YOUR_RIDE;
 
+    private FragmentManager mFragmentManager;
+
+    BookYourRideFragment bookYourRideFragment;
+    TermsAndConditionsFragment termsAndConditionsFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mFragmentManager = getSupportFragmentManager();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mHandler = new Handler();
@@ -99,56 +107,78 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imgProfile = (ImageView) navHeader.findViewById(R.id.img_profile);
 
         String menuFragment = getIntent().getStringExtra("from");
+        String addMoney = getIntent().getStringExtra("addMoney");
+        Log.d("#########", "addMoney : " + addMoney);
 
-        if (menuFragment != null) {
-            if (menuFragment.equals("notifServicePayment")) {
-                setUpNavigationView();
-                MyWalletFragment myWalletFragment = new MyWalletFragment();
-                Fragment fragment = getHomeFragment();
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
-                        android.R.anim.fade_out);
-                FragmentTransaction replace = fragmentTransaction.replace(R.id.frame, myWalletFragment, CURRENT_TAG = TAG_MY_WALLET);
-                navItemIndex = 5;
-                activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
-                actionbar_title.setText(R.string.nav_my_wallet);
-                CURRENT_TAG = TAG_MY_WALLET;
-                fragmentTransaction.commitAllowingStateLoss();
-            } else if (menuFragment.equals("notifServiceRideCancelCharge")) {
-                setUpNavigationView();
-                MyWalletFragment myWalletFragment = new MyWalletFragment();
-                Fragment fragment = getHomeFragment();
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
-                        android.R.anim.fade_out);
-                FragmentTransaction replace = fragmentTransaction.replace(R.id.frame, myWalletFragment, CURRENT_TAG = TAG_MY_WALLET);
-                navItemIndex = 5;
-                activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
-                actionbar_title.setText(R.string.nav_my_wallet);
-                CURRENT_TAG = TAG_MY_WALLET;
-                fragmentTransaction.commitAllowingStateLoss();
+            if (menuFragment != null) {
+                if (menuFragment.equals("notifServicePayment")) {
+                    setUpNavigationView();
+                    MyWalletFragment myWalletFragment = new MyWalletFragment();
+                    Fragment fragment = getHomeFragment();
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                            android.R.anim.fade_out);
+                    FragmentTransaction replace = fragmentTransaction.replace(R.id.frame, myWalletFragment, CURRENT_TAG = TAG_MY_WALLET);
+                    navItemIndex = 5;
+                    activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
+                    actionbar_title.setText(R.string.nav_my_wallet);
+                    CURRENT_TAG = TAG_MY_WALLET;
+                    fragmentTransaction.commitAllowingStateLoss();
+                } else if (menuFragment.equals("notifServiceRideCancelCharge")) {
+                    setUpNavigationView();
+                    MyWalletFragment myWalletFragment = new MyWalletFragment();
+                    Fragment fragment = getHomeFragment();
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                            android.R.anim.fade_out);
+                    FragmentTransaction replace = fragmentTransaction.replace(R.id.frame, myWalletFragment, CURRENT_TAG = TAG_MY_WALLET);
+                    navItemIndex = 5;
+                    activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
+                    actionbar_title.setText(R.string.nav_my_wallet);
+                    CURRENT_TAG = TAG_MY_WALLET;
+                    fragmentTransaction.commitAllowingStateLoss();
+                } else {
+
+                }
             } else {
+                if (addMoney != null) {
+                    if (addMoney.equals("sucessAddMoney")) {
+                        setUpNavigationView();
+                        MyWalletFragment myWalletFragment = new MyWalletFragment();
+                        Fragment fragment = getHomeFragment();
+                        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                                android.R.anim.fade_out);
+                        FragmentTransaction replace = fragmentTransaction.replace(R.id.frame, myWalletFragment, CURRENT_TAG = TAG_MY_WALLET);
+                        navItemIndex = 5;
+                        activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
+                        actionbar_title.setText(R.string.nav_my_wallet);
+                        CURRENT_TAG = TAG_MY_WALLET;
+                        fragmentTransaction.commitAllowingStateLoss();
+                    }
+                }else{
+                    activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
+                    actionbar_title.setText(R.string.nav_book_my_ride);
+                    setUpNavigationView();
+                    if (savedInstanceState == null) {
+                        navItemIndex = 0;
+                        CURRENT_TAG = TAG_BOOK_YOUR_RIDE;
+                        loadHomeFragment();
+                    }
+                }
 
             }
-        } else {
-            activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
-            actionbar_title.setText(R.string.nav_book_my_ride);
+
             setUpNavigationView();
-            if (savedInstanceState == null) {
-                navItemIndex = 0;
-                CURRENT_TAG = TAG_BOOK_YOUR_RIDE;
-                loadHomeFragment();
-            }
+
+            edit_profile.setOnClickListener(this);
+            logout.setOnClickListener(this);
+
+            getMessageFromNotification();
+            getUserProfileAPI();
+
         }
 
-
-        edit_profile.setOnClickListener(this);
-        logout.setOnClickListener(this);
-
-        getMessageFromNotification();
-        getUserProfileAPI();
-
-    }
 
     private void getUserProfileAPI() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_GET_USER_PROFILE).newBuilder();
@@ -187,6 +217,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void loadHomeFragment() {
+        drawer.closeDrawers();
         setToolbarTitle();
         if (getSupportFragmentManager().findFragmentByTag(CURRENT_TAG) != null) {
             drawer.closeDrawers();
@@ -206,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (mPendingRunnable != null) {
             mHandler.post(mPendingRunnable);
         }
-        drawer.closeDrawers();
+        //drawer.closeDrawers();
         invalidateOptionsMenu();
     }
 
@@ -432,12 +463,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onPause() {
         super.onPause();
+//        App.activityPaused();
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(mReceiveMessageFromNotification);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+//        App.activityResumed();
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiveMessageFromNotification,
                 new IntentFilter(MyFirebaseMessagingService.MESSAGE_SUCCESS));
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiveMessageFromNotification,
@@ -450,4 +483,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStart() {
         super.onStart();
     }
+
+
+
+    /*private void isDroverOpen()
+    {
+        if(drawer.isDrawerOpen(GravityCompat.START))
+        {
+            drawer.closeDrawer(GravityCompat.START);
+
+        }else {
+            drawer.openDrawer(GravityCompat.START);
+        }
+    }
+
+    public void initBookYourRideFragment()
+    {
+        bookYourRideFragment = BookYourRideFragment.newInstance();
+
+        if(!bookYourRideFragment.isAdded())
+        {
+            mFragmentManager.beginTransaction().replace(R.id.frame,bookYourRideFragment).commit();
+        }
+    }
+
+
+
+    public void initTwoFragment()
+    {
+        termsAndConditionsFragment = TermsAndConditionsFragment.newInstance();
+
+        if(!termsAndConditionsFragment.isAdded())
+        {
+            mFragmentManager.beginTransaction().add(R.id.frame,termsAndConditionsFragment).addToBackStack(termsAndConditionsFragment.getClass().getName()).commit();
+        }
+
+    }*/
+
+
 }

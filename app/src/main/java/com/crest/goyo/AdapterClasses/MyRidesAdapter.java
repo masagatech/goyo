@@ -14,7 +14,7 @@ import com.crest.goyo.CancelMyRidesDetail;
 import com.crest.goyo.CompleteMyRidesDetail;
 import com.crest.goyo.ModelClasses.MyRidesModel;
 import com.crest.goyo.R;
-import com.crest.goyo.Utils.Preferences;
+import com.crest.goyo.StartMyRidesDetail;
 
 import java.util.List;
 
@@ -43,49 +43,48 @@ public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.MyView> 
     public void onBindViewHolder(MyRidesAdapter.MyView holder, final int position) {
 
 
-        holder.tv_dr_name.setText("" + list.get(position).getUser_v_name());
+        holder.tv_dr_name.setText("" + list.get(position).getDriver_name());
         holder.tv_vehicle_detail.setText("" + list.get(position).getVehicle_type());
 
         holder.tv_pickup.setText("" + list.get(position).getPickup_address() + " to");
         holder.tv_drop.setText("" + list.get(position).getDestination_address());
 
-        String date =  DateUtils.formatDateTime(context, Long.parseLong(list.get(position).getD_time()), DateUtils.FORMAT_SHOW_DATE);
-        String time = DateUtils.formatDateTime(context, Long.parseLong(list.get(position).getD_time()), DateUtils.FORMAT_SHOW_TIME);
+        String date =  DateUtils.formatDateTime(context, Long.parseLong(list.get(position).getRide_time()), DateUtils.FORMAT_SHOW_DATE);
+        String time = DateUtils.formatDateTime(context, Long.parseLong(list.get(position).getRide_time()), DateUtils.FORMAT_SHOW_TIME);
         holder.tv_date_time.setText("" +date+" "+ time);
 
-        if (list.get(position).getE_status().equals("complete")) {
+        if (list.get(position).getStatus().equals("complete")) {
             holder.view_status.setBackgroundResource(R.color.colorGreen);
-            holder.tv_ride_status.setText("" + list.get(position).getE_status());
+            holder.tv_ride_status.setText("" + list.get(position).getStatus());
             holder.tv_ride_status.setTextColor(context.getResources().getColor(R.color.colorGreen));
-        } else if (list.get(position).getE_status().equals("scheduled")) {
+        } else if (list.get(position).getStatus().equals("scheduled")) {
             holder.view_status.setBackgroundResource(R.color.colorBlue);
-            holder.tv_ride_status.setText("" + list.get(position).getE_status());
+            holder.tv_ride_status.setText("" + list.get(position).getStatus());
             holder.tv_ride_status.setTextColor(context.getResources().getColor(R.color.colorBlue));
-        } else if (list.get(position).getE_status().equals("cancel")) {
+        } else if (list.get(position).getStatus().equals("cancel")) {
             holder.view_status.setBackgroundResource(R.color.colorRed);
-            holder.tv_ride_status.setText("" + list.get(position).getE_status());
+            holder.tv_ride_status.setText("" + list.get(position).getStatus());
             holder.tv_ride_status.setTextColor(context.getResources().getColor(R.color.colorRed));
+        }else if(list.get(position).getStatus().equals("start")){
+            holder.view_status.setBackgroundResource(R.color.colorPrimary);
+            holder.tv_ride_status.setText("" + list.get(position).getStatus());
+            holder.tv_ride_status.setTextColor(context.getResources().getColor(R.color.colorPrimary));
         }
         holder.lay_my_rides.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(list.get(position).getE_status().equals("cancel")){
+                if(list.get(position).getStatus().equals("cancel")){
                     Intent intent = new Intent(context, CancelMyRidesDetail.class);
-                    intent.putExtra("rideTime",list.get(position).getD_time());
-                    intent.putExtra("pickupAdd",list.get(position).getPickup_address());
-                    intent.putExtra("dropAdd",list.get(position).getDestination_address());
+                    intent.putExtra("rideID",list.get(position).getId());
+                    context.startActivity(intent);
+                }else if(list.get(position).getStatus().equals("start")){
+                    Intent intent = new Intent(context, StartMyRidesDetail.class);
+                    intent.putExtra("rideID",list.get(position).getId());
                     context.startActivity(intent);
                 }else{
                     Intent intent = new Intent(context, CompleteMyRidesDetail.class);
-                    intent.putExtra("finalAmount",list.get(position).getFinal_amount());
-                    intent.putExtra("finalDistance",list.get(position).getActual_distance());
-                    intent.putExtra("rideTime",list.get(position).getD_time());
-                    intent.putExtra("pickupAdd",list.get(position).getPickup_address());
-                    intent.putExtra("dropAdd",list.get(position).getDestination_address());
-                    intent.putExtra("startTime",list.get(position).getD_start());
-                    intent.putExtra("endTime",list.get(position).getD_end());
-                    intent.putExtra("tripDuration",list.get(position).getTrip_time_in_min());
+                    intent.putExtra("rideID",list.get(position).getId());
                     context.startActivity(intent);
                 }
 

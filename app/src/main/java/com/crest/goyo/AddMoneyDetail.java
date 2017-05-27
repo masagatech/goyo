@@ -155,6 +155,9 @@ public class AddMoneyDetail extends AppCompatActivity {
                     if (responce_status == VolleyTAG.response_status) {
                         JSONObject jsonObject = response.getJSONObject("data");
                         Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
+                        Intent intent=new Intent(getApplicationContext(),MainActivity.class);
+                        intent.putExtra("addMoney","sucessAddMoney");
+                        startActivity(intent);
                     } else {
 
                     }
@@ -332,7 +335,7 @@ public class AddMoneyDetail extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Log.i(TAG, "Success - Payment ID : " + data.getStringExtra(SdkConstants.PAYMENT_ID));
                 String paymentId = data.getStringExtra(SdkConstants.PAYMENT_ID);
-                showDialogMessage("Payment Success Id : " + paymentId);
+//                showDialogMessage("Payment Success Id : " + paymentId);
                 addMoneyAPI(paymentId);
             } else if (resultCode == RESULT_CANCELED) {
                 Log.i(TAG, "failure");

@@ -18,6 +18,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 /**
  * Created by jarica on 21/7/16.
@@ -175,6 +176,7 @@ public class GPSTracker extends Service implements LocationListener {
         if(location != null){
             speed = location.getSpeed();
             direction = location.getBearing();
+            Toast.makeText(mContext,""+location,Toast.LENGTH_SHORT).show();
         }
     }
 

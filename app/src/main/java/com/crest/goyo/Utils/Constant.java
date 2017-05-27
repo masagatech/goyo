@@ -43,7 +43,7 @@ public class Constant {
     public static final String URL_USER_RIDE_CANCEL = BASE_URL + "cancelRide";
     public static final String URL_GET_DRIVER_LOCATIOIN = BASE_URL + "getDriverLocation";
     public static final String URL_GET_PROMOTION_CODES = BASE_URL + "getPromotionCodes";
-    public static final String URL_APPLY_PROMOCODE = BASE_URL + "promotionCodeExists";
+    public static final String URL_APPLY_PROMOCODE = BASE_URL + "rideApplyPromotionCode";
     public static final String URL_ADD_MONEY = BASE_URL + "addMoney";
     public static final String URL_GET_NOTIF = BASE_URL + "getNotifications";
     public static final String URL_GET_NOTIF_INFO = BASE_URL + "getNotificationInfo";
@@ -51,6 +51,8 @@ public class Constant {
     public static final String URL_RIDE_PAYMENT = BASE_URL + "ridePayment";
     public static final String URL_TERMS_COND = BASE_URL + "getCms";
     public static final String GET_CITIES = BASE_URL + "getCities";
+    public static final String URL_REMOVE_PROMO_CODE = BASE_URL + "rideRemovePromotionCode";
+    public static final String START_RIDE = BASE_URL + "rideSendTrackLink";
     public static final String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     public static boolean CHECK_GPS = true;
 
@@ -67,7 +69,7 @@ public class Constant {
     }
 
     public static Bitmap setMarkerPin(Context context, int pin){
-        BitmapDrawable bitmapdraw = (BitmapDrawable) context.getResources().getDrawable(pin);
+        BitmapDrawable bitmapdraw = (BitmapDrawable)context.getResources().getDrawable(pin);
         Bitmap bitmap = bitmapdraw.getBitmap();
         return Bitmap.createScaledBitmap(bitmap, 70, 70, false);
     }

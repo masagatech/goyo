@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crest.goyo.Utils.Constant;
 import com.crest.goyo.Utils.Preferences;
@@ -19,7 +21,8 @@ import org.json.JSONObject;
 import okhttp3.HttpUrl;
 
 public class AddMoney extends AppCompatActivity implements View.OnClickListener {
-    private TextView actionbar_title,tv_money,tv_amount;
+    private TextView actionbar_title,tv_amount;
+    private EditText tv_money;
     private Button bt_add_money,bt_500,bt_1000,bt_1500;
 
 
@@ -65,7 +68,7 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener 
 
     private void initUI() {
         actionbar_title = (TextView) findViewById(R.id.actionbar_title);
-        tv_money=(TextView)findViewById(R.id.tv_money);
+        tv_money=(EditText)findViewById(R.id.tv_money);
         tv_amount=(TextView)findViewById(R.id.tv_amount);
         bt_add_money = (Button) findViewById(R.id.bt_add_money);
         bt_500=(Button)findViewById(R.id.bt_500);
@@ -77,7 +80,7 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener 
         bt_1500.setOnClickListener(this);
 
         actionbar_title.setText(R.string.actionbar_add_money);
-        tv_money.setText("1000");
+//        tv_money.setText("1000");
 
     }
 
@@ -85,9 +88,14 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_add_money:
-                Intent intent = new Intent(getApplicationContext(), AddMoneyDetail.class);
-                intent.putExtra("addMoneyAmount",tv_money.getText().toString());
-                startActivity(intent);
+                if (tv_money.getText().toString().equals("")) {
+                    Toast.makeText(getApplicationContext(),"Please add amount.",Toast.LENGTH_SHORT).show();
+                }else{
+                    Intent intent = new Intent(getApplicationContext(), AddMoneyDetail.class);
+                    intent.putExtra("addMoneyAmount",tv_money.getText().toString());
+                    startActivity(intent);
+                }
+
                 break;
 
             case R.id.bt_500:

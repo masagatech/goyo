@@ -53,7 +53,6 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         cityListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_city_list.setAdapter(cityListAdapter);
 
-
         getCitiesAPI();
     }
 
@@ -164,7 +163,6 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         urlBuilder.addQueryParameter("v_password", et_pasword.getText().toString());
         urlBuilder.addQueryParameter("v_device_token", FirebaseInstanceId.getInstance().getToken());
         urlBuilder.addQueryParameter("i_city_id", cityList.get(spinner_city_list.getSelectedItemPosition()).getId());
-
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
@@ -185,16 +183,10 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                     } else {
                         Toast.makeText(SignUp.this, message, Toast.LENGTH_LONG).show();
                     }
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         }, true);
     }
-
-
-
-
-
 }
