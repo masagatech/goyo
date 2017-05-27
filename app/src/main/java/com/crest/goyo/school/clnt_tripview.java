@@ -356,6 +356,9 @@ public class clnt_tripview extends AppCompatActivity implements OnMapReadyCallba
                             trackMarker(objTrp);
                             /*Toast.makeText(getApplicationContext(),
                                     d, Toast.LENGTH_LONG).show();*/
+                        }else if (data.get("evt").equals("stop")) {
+                           // JSONObject objTrp = (JSONObject) data.get("data");
+                            Toast.makeText(clnt_tripview.this, "Trip End", Toast.LENGTH_LONG).show();
                         }
 
                     } catch (Exception e) {

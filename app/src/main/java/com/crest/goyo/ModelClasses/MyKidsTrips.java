@@ -4,6 +4,7 @@ package com.crest.goyo.ModelClasses;
  * Created by mTech on 12-May-2017.
  */
 
+import com.google.android.gms.nearby.messages.PublishCallback;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -40,6 +41,8 @@ public class MyKidsTrips {
 
     @SerializedName("trpid")
     public String tripid;
+
+    public int Type;
 
     public MyKidsTrips()
     {}
