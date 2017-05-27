@@ -645,7 +645,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                 }
             }
 
-
         } catch (IOException e) {
             e.printStackTrace();
         }
