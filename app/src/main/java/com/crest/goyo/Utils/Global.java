@@ -20,7 +20,7 @@ public class Global {
 
     //server
     public final static String REST_URL = "http://35.154.230.244:8082/goyoapi";
-    public static final String SOCKET_URL = "ht*tp://35.154.230.244:8082/";
+    public static final String SOCKET_URL = "http://35.154.230.244:8082/";
 
     public static File ExternalPath = Environment.getExternalStorageDirectory();
     public final static String Image_Path = "/goyo_images";
