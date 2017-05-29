@@ -4,7 +4,7 @@
     <color name="clouds">#ecf0f1</color>
     <item name="white" type="color">#FFFFFFFF</item>
     <color name="input_gray">#FFDEE6E6</color>
-    <color name="button_green">#c9e5ff</color>
+    <color name="button_green">#ffebcc</color>
     <color name="button_gray">#cbcbcb</color>
     <color name="blue">#FF1784C7</color>
     <color name="cards_number_textColor">#514538</color>
@@ -39,7 +39,7 @@
     <color name="active_yellow">#ffdd00</color>
     <color name="inactive_text">#d0cbc6</color>
     <color name="inactive_bg">#fffbe2</color>
-    <color name="active_text">#3c3329</color>
+    <color name="active_text">#ffe0be</color>
     <color name="color_13">#fffbe2</color>
     <color name="primary_green">#6ac451</color>
     <color name="color_3">#13100d</color>

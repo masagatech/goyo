@@ -99,6 +99,17 @@
                         android:layout_height="wrap_content"
                         android:visibility="gone" />
 
+                    <!--<Button-->
+                    <!--android:id="@+id/btnStartTrack"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentEnd="true"-->
+                    <!--android:layout_alignParentTop="true"-->
+                    <!--android:background="@color/button_green"-->
+                    <!--android:drawableTop="@drawable/ic_icon_track"-->
+                    <!--android:text="TRACK"-->
+                    <!--app:srcCompat="@drawable/ic_icon_track" />-->
+
                     <ImageButton
                         android:id="@+id/btnStartTrack"
                         android:layout_width="wrap_content"
@@ -106,7 +117,20 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
                         android:background="@color/button_green"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
                         app:srcCompat="@drawable/ic_icon_track" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_below="@+id/btnStartTrack"
+                        android:layout_marginTop="2dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:text="TRACK"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="12dp" />
 
                 </RelativeLayout>
 
@@ -157,14 +181,14 @@
                         android:visibility="gone" />
                 </RelativeLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="15dp"
-                    android:visibility="gone"
-                    android:id="@+id/itembottom"/>
+
             </LinearLayout>
 
 
         </LinearLayout>
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:visibility="gone"
+        android:id="@+id/itembottom"/>
 </LinearLayout>

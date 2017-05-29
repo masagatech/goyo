@@ -15,12 +15,12 @@ import java.lang.reflect.Modifier;
 public class Global {
 
 //public static String DOMAIN_URL = "http://192.168.1.16:8081/goyoapi";
-    public final static String REST_URL = "http://192.168.43.10:8082/goyoapi";
-    public static final String SOCKET_URL = "http://192.168.43.10:8082/";
+//    public final static String REST_URL = "http://192.168.43.10:8082/goyoapi";
+//    public static final String SOCKET_URL = "http://192.168.43.10:8082/";
 
     //server
-//    public final static String REST_URL = "http://35.154.230.244:8082/goyoapi";
-//    public static final String SOCKET_URL = "http://35.154.230.244:8082/";
+    public final static String REST_URL = "http://35.154.230.244:8082/goyoapi";
+    public static final String SOCKET_URL = "ht*tp://35.154.230.244:8082/";
 
     public static File ExternalPath = Environment.getExternalStorageDirectory();
     public final static String Image_Path = "/goyo_images";
