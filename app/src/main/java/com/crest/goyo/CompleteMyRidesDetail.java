@@ -21,6 +21,7 @@ import okhttp3.HttpUrl;
 public class CompleteMyRidesDetail extends AppCompatActivity {
     private TextView title_comment, actionbar_title, tv_comment, tv_total_fare, tv_total_distance, tv_time, tv_pickup_from, tv_drop_loc, tv_start_time, tv_end_time, tv_total_duration;
     private RatingBar rating_bar;
+    private String rideID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,12 @@ public class CompleteMyRidesDetail extends AppCompatActivity {
         setContentView(R.layout.activity_complete_my_rides_detail);
 
         initUI();
+
+
+        if (getIntent().getExtras() != null) {
+            rideID = getIntent().getStringExtra("rideID");
+            getRideAPI();
+        }
 //
 //        if(getIntent().getExtras()!=null){
 //            tv_pickup_from.setText(getIntent().getStringExtra("pickupAdd"));
@@ -73,7 +80,7 @@ public class CompleteMyRidesDetail extends AppCompatActivity {
         urlBuilder.addQueryParameter("lang", "en");
         urlBuilder.addQueryParameter("login_id", Preferences.getValue_String(getApplicationContext(), Preferences.USER_ID));
         urlBuilder.addQueryParameter("v_token", Preferences.getValue_String(getApplicationContext(), Preferences.USER_AUTH_TOKEN));
-        urlBuilder.addQueryParameter("i_ride_id", Preferences.getValue_String(getApplicationContext(), Preferences.RIDE_ID));
+        urlBuilder.addQueryParameter("i_ride_id",rideID);
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();

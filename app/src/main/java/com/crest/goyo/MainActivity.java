@@ -3,6 +3,7 @@ package com.crest.goyo;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
@@ -17,6 +18,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -74,10 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG_FEEDBACK = "FEEDBACK";
     private static final String TAG_TERMS_CONDITIONS = "TERMS AND CONDITIONS";
     private static final String TAG_MY_KIDS = "MY KID";
-
-    public static final String MESSAGE_SUCCESS = "MessageSuccess";
-    public static final String MESAGE_ERROR = "MessageError";
-    public static final String MESSAGE_NOTIFICATION = "MessageNotification";
+    private AlertDialog.Builder builder;
     private String TAG = "MainActivity";
     public static String CURRENT_TAG = TAG_BOOK_YOUR_RIDE;
 
@@ -110,74 +109,75 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String addMoney = getIntent().getStringExtra("addMoney");
         Log.d("#########", "addMoney : " + addMoney);
 
-            if (menuFragment != null) {
-                if (menuFragment.equals("notifServicePayment")) {
-                    setUpNavigationView();
-                    MyWalletFragment myWalletFragment = new MyWalletFragment();
-                    Fragment fragment = getHomeFragment();
-                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
-                            android.R.anim.fade_out);
-                    FragmentTransaction replace = fragmentTransaction.replace(R.id.frame, myWalletFragment, CURRENT_TAG = TAG_MY_WALLET);
-                    navItemIndex = 5;
-                    activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
-                    actionbar_title.setText(R.string.nav_my_wallet);
-                    CURRENT_TAG = TAG_MY_WALLET;
-                    fragmentTransaction.commitAllowingStateLoss();
-                } else if (menuFragment.equals("notifServiceRideCancelCharge")) {
-                    setUpNavigationView();
-                    MyWalletFragment myWalletFragment = new MyWalletFragment();
-                    Fragment fragment = getHomeFragment();
-                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
-                            android.R.anim.fade_out);
-                    FragmentTransaction replace = fragmentTransaction.replace(R.id.frame, myWalletFragment, CURRENT_TAG = TAG_MY_WALLET);
-                    navItemIndex = 5;
-                    activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
-                    actionbar_title.setText(R.string.nav_my_wallet);
-                    CURRENT_TAG = TAG_MY_WALLET;
-                    fragmentTransaction.commitAllowingStateLoss();
-                } else {
-
-                }
+        if (menuFragment != null) {
+            if (menuFragment.equals("notifServicePayment")) {
+                setUpNavigationView();
+                MyWalletFragment myWalletFragment = new MyWalletFragment();
+                Fragment fragment = getHomeFragment();
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                        android.R.anim.fade_out);
+                FragmentTransaction replace = fragmentTransaction.replace(R.id.frame, myWalletFragment, CURRENT_TAG = TAG_MY_WALLET);
+                navItemIndex = 5;
+                activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
+                actionbar_title.setText(R.string.nav_my_wallet);
+                CURRENT_TAG = TAG_MY_WALLET;
+                fragmentTransaction.commitAllowingStateLoss();
+            } else if (menuFragment.equals("notifServiceRideCancelCharge")) {
+                setUpNavigationView();
+                MyWalletFragment myWalletFragment = new MyWalletFragment();
+                Fragment fragment = getHomeFragment();
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                        android.R.anim.fade_out);
+                FragmentTransaction replace = fragmentTransaction.replace(R.id.frame, myWalletFragment, CURRENT_TAG = TAG_MY_WALLET);
+                navItemIndex = 5;
+                activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
+                actionbar_title.setText(R.string.nav_my_wallet);
+                CURRENT_TAG = TAG_MY_WALLET;
+                fragmentTransaction.commitAllowingStateLoss();
             } else {
-                if (addMoney != null) {
-                    if (addMoney.equals("sucessAddMoney")) {
-                        setUpNavigationView();
-                        MyWalletFragment myWalletFragment = new MyWalletFragment();
-                        Fragment fragment = getHomeFragment();
-                        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
-                                android.R.anim.fade_out);
-                        FragmentTransaction replace = fragmentTransaction.replace(R.id.frame, myWalletFragment, CURRENT_TAG = TAG_MY_WALLET);
-                        navItemIndex = 5;
-                        activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
-                        actionbar_title.setText(R.string.nav_my_wallet);
-                        CURRENT_TAG = TAG_MY_WALLET;
-                        fragmentTransaction.commitAllowingStateLoss();
-                    }
-                }else{
-                    activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
-                    actionbar_title.setText(R.string.nav_book_my_ride);
-                    setUpNavigationView();
-                    if (savedInstanceState == null) {
-                        navItemIndex = 0;
-                        CURRENT_TAG = TAG_BOOK_YOUR_RIDE;
-                        loadHomeFragment();
-                    }
-                }
 
             }
-
-            setUpNavigationView();
-
-            edit_profile.setOnClickListener(this);
-            logout.setOnClickListener(this);
-
-            getMessageFromNotification();
-            getUserProfileAPI();
+        } else {
+            if (addMoney != null) {
+                if (addMoney.equals("sucessAddMoney")) {
+                    setUpNavigationView();
+                    MyWalletFragment myWalletFragment = new MyWalletFragment();
+                    Fragment fragment = getHomeFragment();
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                            android.R.anim.fade_out);
+                    FragmentTransaction replace = fragmentTransaction.replace(R.id.frame, myWalletFragment, CURRENT_TAG = TAG_MY_WALLET);
+                    navItemIndex = 5;
+                    activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
+                    actionbar_title.setText(R.string.nav_my_wallet);
+                    CURRENT_TAG = TAG_MY_WALLET;
+                    fragmentTransaction.commitAllowingStateLoss();
+                }
+            } else {
+                activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
+                actionbar_title.setText(R.string.nav_book_my_ride);
+                setUpNavigationView();
+                if (savedInstanceState == null) {
+                    navItemIndex = 0;
+                    CURRENT_TAG = TAG_BOOK_YOUR_RIDE;
+                    loadHomeFragment();
+                }
+            }
 
         }
+
+        setUpNavigationView();
+
+        edit_profile.setOnClickListener(this);
+        logout.setOnClickListener(this);
+
+        getMessageFromNotification();
+//        rideCancelByDriverNotify();
+        getUserProfileAPI();
+
+    }
 
 
     private void getUserProfileAPI() {
@@ -245,6 +245,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (navItemIndex) {
             case 0:
                 BookYourRideFragment bookYourRideFragment = new BookYourRideFragment();
+//                Preferences.setValue(getApplicationContext(),"comeFromm","MyRides");
                 return bookYourRideFragment;
             case 1:
                 MyRidesFragment myRidesFragment = new MyRidesFragment();
@@ -448,10 +449,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mReceiveMessageFromNotification = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                android.util.Log.d(TAG, "data: " + "app open notif START RIDE main activity 1");
                 if (intent.getAction().equals(MyFirebaseMessagingService.MESSAGE_SUCCESS)) {
+                    android.util.Log.d(TAG, "data: " + "app open notif START RIDE main activity 2");
                     if (intent.getExtras() != null) {
+                        android.util.Log.d(TAG, "data: " + "app open notif START RIDE main activity 3");
                         String mRideid = intent.getStringExtra("i_ride_id");
                         Intent in = new Intent(MainActivity.this, StartRideActivity.class);
+                        in.putExtra("i_ride_id", mRideid);
+                        startActivity(in);
+                    }
+                }else if(intent.getAction().equals(MyFirebaseMessagingService.RIDE_CANCEL_BY_DRIVER)){
+                    if (intent.getExtras() != null) {
+                        android.util.Log.d(TAG, "data: " + "app open notif main activity");
+                        String mTitle = intent.getStringExtra("mTitle");
+                        String mBody = intent.getStringExtra("mBody");
+                        builder = new AlertDialog.Builder(MainActivity.this, R.style.MyAlertDialogStyle);
+                        builder.setTitle(mTitle);
+                        builder.setMessage(mBody);
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                dialog.dismiss();
+                               Intent intent=new Intent(getApplicationContext(),MainActivity.class);
+                                startActivity(intent);
+                            }
+                        });
+                        builder.show();
+
+                    }
+
+                }else if(intent.getAction().equals(MyFirebaseMessagingService.COMPLETE_RIDE)){
+                    if (intent.getExtras() != null) {
+                        android.util.Log.d(TAG, "data: " + "app open notif complete ride main activity ");
+                        String mRideid = intent.getStringExtra("i_ride_id");
+                        Intent in = new Intent(MainActivity.this, CompleteRide.class);
                         in.putExtra("i_ride_id", mRideid);
                         startActivity(in);
                     }
@@ -459,6 +490,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         };
     }
+
+//    private void rideCancelByDriverNotify() {
+//        mReceiveMessageFromNotification = new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, final Intent intent) {
+//                if (intent.getAction().equals(MyFirebaseMessagingService.RIDE_CANCEL_BY_DRIVER)) {
+//                    if (intent.getExtras() != null) {
+//                        android.util.Log.d(TAG, "data: " + "app open notif main activity");
+//                        String mTitle = intent.getStringExtra("mTitle");
+//                        String mBody = intent.getStringExtra("mBody");
+//                        builder = new AlertDialog.Builder(MainActivity.this, R.style.MyAlertDialogStyle);
+//                        builder.setTitle(mTitle);
+//                        builder.setMessage(mBody);
+//                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int whichButton) {
+//                                dialog.dismiss();
+//                               Intent intent=new Intent(getApplicationContext(),MainActivity.class);
+//                                startActivity(intent);
+//                            }
+//                        });
+//                        builder.show();
+//
+//                    }
+//                }
+//            }
+//        };
+//    }
+
+
 
     @Override
     public void onPause() {
@@ -477,6 +537,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new IntentFilter(MyFirebaseMessagingService.MESAGE_ERROR));
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiveMessageFromNotification,
                 new IntentFilter(MyFirebaseMessagingService.MESSAGE_NOTIFICATION));
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiveMessageFromNotification,
+                new IntentFilter(MyFirebaseMessagingService.RIDE_CANCEL_BY_DRIVER));
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiveMessageFromNotification,
+                new IntentFilter(MyFirebaseMessagingService.COMPLETE_RIDE));
     }
 
     @Override

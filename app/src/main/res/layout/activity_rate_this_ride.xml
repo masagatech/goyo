@@ -137,11 +137,11 @@
                             <TextView
                                 android:id="@+id/tv_pickup_from"
                                 android:layout_width="match_parent"
-                                android:maxLines="1"
+                                android:maxLines="2"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center|start"
                                 android:hint="@string/action_pickup"
-                                android:textSize="12dp"
+                                android:textSize="11dp"
                                 android:textColor="@color/colorBlack"
                                 android:textColorHint="@color/colorGrey" />
 
@@ -164,8 +164,8 @@
                             <TextView
                                 android:id="@+id/tv_drop_location"
                                 android:layout_width="match_parent"
-                                android:maxLines="1"
-                                android:textSize="12dp"
+                                android:maxLines="2"
+                                android:textSize="11dp"
                                 android:layout_height="wrap_content"
                                 android:hint="@string/action_drop"
                                 android:textColor="@color/colorBlack"

@@ -84,7 +84,7 @@ import okhttp3.HttpUrl;
  * Created by brittany on 5/1/17.
  */
 
-public class StartRideActivity extends AppCompatActivity implements View.OnClickListener, LocationSource.OnLocationChangedListener,OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class StartRideActivity extends AppCompatActivity implements View.OnClickListener, LocationSource.OnLocationChangedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     private TextView actionbar_title, tv_dr_name, tv_type, tv_pin;
     private ImageView iv_share, img_profile;
     private String mRideid, comeFrom;
@@ -113,6 +113,9 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
     private String cityCurrent;
     private Location location;
     private LocationManager locManager;
+    private double currentLat, currentLong;
+    private LatLng currentLatLong;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -174,7 +177,7 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                 } else if (phone.length() != 10) {
                     mPhoneNo.setError("Please enter correct phone number");
                 } else {
-                    send_sharable_linl_api(mRideid, phone, progressBar11,dialog);
+                    send_sharable_linl_api(mRideid, phone, progressBar11, dialog);
                 }
             }
         });
@@ -185,7 +188,7 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
 
     }
 
-    private void send_sharable_linl_api(final String mRideId, final String mPhoneNo, final ProgressBar progressBar,final Dialog dialog) {
+    private void send_sharable_linl_api(final String mRideId, final String mPhoneNo, final ProgressBar progressBar, final Dialog dialog) {
         FileUtils.showProgressBar(StartRideActivity.this, progressBar);
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.START_RIDE).newBuilder();
         urlBuilder.addQueryParameter("device", "ANDROID");
@@ -269,12 +272,16 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                         bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.marker_direction);
                         bitmap = bitmapdraw.getBitmap();
                         resizeMarker = Bitmap.createScaledBitmap(bitmap, width, height, false);
+//                        currentMarker = mMap.addMarker(new MarkerOptions()
+//                                .position(loc)
+//                                .icon(BitmapDescriptorFactory.fromBitmap(Constant.setMarkerPin(getApplicationContext(), R.drawable.marker_direction))));
                         currentMarker = mMap.addMarker(new MarkerOptions()
                                 .position(loc)
                                 .icon(BitmapDescriptorFactory.fromBitmap(resizeMarker)));
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
                         cameraPosition = new CameraPosition.Builder()
                                 .target(loc)
+                                .bearing(20)
                                 .zoom(20).build();
                         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                         updateDriverLocation();
@@ -287,13 +294,13 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
             }
         });
     }
-
+    private Handler h1 = new Handler();
     private void updateDriverLocation() {
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+
+        h1.postDelayed(new Runnable() {
             public void run() {
                 getDriverLocationAPIThread();
-                handler.postDelayed(this, 3000); //now is every 2 minutes
+                h1.postDelayed(this, 3000); //now is every 2 minutes
             }
         }, 3000);
     }
@@ -314,6 +321,8 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                     int responce_status = response.getInt(VolleyTAG.status);
                     String message = response.getString(VolleyTAG.message);
                     if (responce_status == VolleyTAG.response_status) {
+
+
                         JSONObject jsonObject = response.getJSONObject("data");
                         driverLat = jsonObject.getDouble("l_latitude");
                         driverLong = jsonObject.getDouble("l_longitude");
@@ -322,6 +331,37 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                         bitmap = bitmapdraw.getBitmap();
                         resizeMarker = Bitmap.createScaledBitmap(bitmap, width, height, false);
                         currentMarker.setPosition(loc);
+//                        cameraPosition = new CameraPosition.Builder()
+//                                .target(loc)             // Sets the center of the map to current location
+//                                .zoom(20)                   // Sets the zoom
+//                                .bearing(20) // Sets the orientation of the camera to east
+//                                .tilt(0)                   // Sets the tilt of the camera to 0 degrees
+//                                .build();
+//                        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                        Location targetLocation = new Location("");//provider name is unnecessary
+                        targetLocation.setLatitude(driverLat);//your coords of course
+                        targetLocation.setLongitude(driverLong);
+                        Log.e("TAG", "targetLocation "+targetLocation);
+//                        float distanceInMeters =  targetLocation.distanceTo(location);
+                        if (targetLocation.hasBearing()) {
+                            Log.e("TAG", "hasBearing = true");
+                             cameraPosition = new CameraPosition.Builder()
+                                    .target(loc)             // Sets the center of the map to current location
+                                    .zoom(20)                   // Sets the zoom
+                                    .bearing(targetLocation.getBearing()) // Sets the orientation of the camera to east
+                                    .tilt(0)                   // Sets the tilt of the camera to 0 degrees
+                                    .build();                   // Creates a CameraPosition from the builder
+                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                        } else {
+                            Log.e("TAG", "hasBearing = false");
+                             cameraPosition = new CameraPosition.Builder()
+                                    .target(loc)             // Sets the center of the map to current location
+                                    .zoom(20)                   // Sets the zoom
+                                    .bearing(20) // Sets the orientation of the camera to east
+                                    .tilt(0)                   // Sets the tilt of the camera to 0 degrees
+                                    .build();
+                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                        }
 //                        currentMarker = mMap.addMarker(new MarkerOptions()
 //                                .position(loc)
 //                                .flat(true)
@@ -554,8 +594,8 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                     int responce_status = response.getInt(VolleyTAG.status);
                     String message = response.getString(VolleyTAG.message);
                     if (responce_status == VolleyTAG.response_status) {
-                        JSONObject data=response.getJSONObject("data");
-                        String phNo=data.getString("phone_sos");
+                        JSONObject data = response.getJSONObject("data");
+                        String phNo = data.getString("phone_sos");
 //                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                         Intent phoneIntent = new Intent(Intent.ACTION_DIAL, Uri.fromParts(
                                 "tel", phNo, null));
@@ -577,6 +617,11 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
         if (gps.canGetLocation()) {
             latitude = gps.getLatitude();
             longitude = gps.getLongitude();
+//            Location currentLocation = new Location("");//provider name is unnecessary
+//            currentLocation.setLatitude(latitude);//your coords of course
+//            currentLocation.setLongitude(longitude);
+//
+//            float distanceInMeters =  targetLocation.distanceTo(location);
         } else {
             gps.showSettingsAlert();
         }
@@ -585,17 +630,15 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
             return;
         }
         geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
-        locManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-         location = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-
+        locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        location = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(getApplicationContext(),
                     android.Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
                 List<Address> addresses;
                 try {
-                    addresses = geocoder.getFromLocation(latitude,longitude, 1);
+                    addresses = geocoder.getFromLocation(latitude, longitude, 1);
                     if (addresses.size() > 0) {
                         cityCurrent = addresses.get(0).getLocality();
                     }
@@ -607,12 +650,10 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
         } else {
             List<Address> addresses;
             try {
-                addresses = geocoder.getFromLocation(latitude,longitude, 1);
+                addresses = geocoder.getFromLocation(latitude, longitude, 1);
                 if (addresses.size() > 0) {
                     cityCurrent = addresses.get(0).getLocality();
                 }
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -624,6 +665,10 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onBackPressed() {
+        if (h1 != null) {
+            Log.e("#####", "updateVehicleListLongTime :handler ");
+            h1.removeCallbacksAndMessages(null);
+        }
         if (comeFrom.equals("startRideDetail")) {
             finish();
         } else {
@@ -684,15 +729,13 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onLocationChanged(Location location) {
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        currentLatLong = latLng;
         List<Address> addresses;
         try {
             addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
             if (addresses.size() > 0) {
-                Log.d("#######","city : "+cityCurrent);
-
+                Log.d("#######", "city : " + cityCurrent);
             }
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -701,28 +744,6 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
 
 
 
-//    List<Address> addresses;
-//                    try {
-//        addresses = geocoder.getFromLocation(changedLat, changedLong, 1);
-//        if (addresses.size() > 0) {
-//            String address = addresses.get(0).getAddressLine(0);
-//            String locality = addresses.get(0).getSubLocality();
-//            String adminArea = addresses.get(0).getAdminArea();
-//            cityCurrent = addresses.get(0).getLocality();
-//            tv_pickup_from.setText("" + address + ", " + locality + ", " + cityCurrent + ", " + adminArea);
-//            if (greenMarker != null) {
-//                greenMarker.remove();
-//            }
-//            greenMarker = mMap.addMarker(new MarkerOptions()
-//                    .position(new LatLng(changedLat, changedLong))
-//                    .icon(BitmapDescriptorFactory.fromBitmap(Constant.setMarkerPin(getActivity(), R.drawable.marker_pickup))));
-//            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(changedLat, changedLong), 13));
-//            isChooseAddress = false;
-//        }
-//
-//    } catch (IOException e) {
-//        e.printStackTrace();
-//    }
 
 
 }

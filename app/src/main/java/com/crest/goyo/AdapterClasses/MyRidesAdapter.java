@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.crest.goyo.CancelMyRidesDetail;
 import com.crest.goyo.CompleteMyRidesDetail;
+import com.crest.goyo.MainActivity;
 import com.crest.goyo.ModelClasses.MyRidesModel;
 import com.crest.goyo.R;
 import com.crest.goyo.StartMyRidesDetail;
@@ -69,6 +70,10 @@ public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.MyView> 
             holder.view_status.setBackgroundResource(R.color.colorPrimary);
             holder.tv_ride_status.setText("" + list.get(position).getStatus());
             holder.tv_ride_status.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+        }else if(list.get(position).getStatus().equals("confirm")){
+            holder.view_status.setBackgroundResource(R.color.colorBrown);
+            holder.tv_ride_status.setText("" + list.get(position).getStatus());
+            holder.tv_ride_status.setTextColor(context.getResources().getColor(R.color.colorBrown));
         }
         holder.lay_my_rides.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +86,11 @@ public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.MyView> 
                 }else if(list.get(position).getStatus().equals("start")){
                     Intent intent = new Intent(context, StartMyRidesDetail.class);
                     intent.putExtra("rideID",list.get(position).getId());
+                    context.startActivity(intent);
+                }else if(list.get(position).getStatus().equals("confirm")){
+                    Intent intent = new Intent(context, MainActivity.class);
+                    intent.putExtra("rideID",list.get(position).getId());
+                    intent.putExtra("comeFrom","MyRides");
                     context.startActivity(intent);
                 }else{
                     Intent intent = new Intent(context, CompleteMyRidesDetail.class);

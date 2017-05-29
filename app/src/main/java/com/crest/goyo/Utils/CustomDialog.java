@@ -30,10 +30,5 @@ public class CustomDialog {
         if (dialog.isShowing()){
             dialog.dismiss();
         }
-
-
-
     }
-
-
 }

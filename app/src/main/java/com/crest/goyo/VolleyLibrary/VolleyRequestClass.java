@@ -35,7 +35,6 @@ public class VolleyRequestClass {
                             requestInterface.onResult(response);
                             Log.d(applicationContext.getClass().getName(), "" + newurl);
                             Log.d(applicationContext.getClass().getName(), "" + response);
-
                             if (b) customDialog.hide();
                         } else {
                             Log.e("ServiceHandler", "Couldn't get any data from the url");

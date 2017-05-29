@@ -11,7 +11,6 @@ import android.widget.Toast;
  * Created by jasson on 27/6/16.
  */
 public class Constant {
-
     //    public static String BASE_URL = "http://192.168.0.222:3000/api/";
 //    http://35.154.123.76:8081/api/api-list
     public static String BASE_URL = "http://35.154.230.244:8081/api/";
@@ -36,7 +35,6 @@ public class Constant {
     public static final String URL_CITY_TYPE = BASE_URL + "getCities";
     public static final String URL_CONFIRM_RIDE = BASE_URL + "confirmRide";
     public static final String URL_REFERRAL_CODE = BASE_URL + "getReferralCode";
-    public static final String URL_USER_RIDE_DETAIL = BASE_URL + "getUserRideDetails";
     public static final String URL_USER_WALLET = BASE_URL + "getUserWallet";
     public static final String URL_RIDE_RATE = BASE_URL + "rideRate";
     public static final String URL_GET_RIDE_CANCEL = BASE_URL + "getRideCancelReasons";

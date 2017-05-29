@@ -27,6 +27,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private String deduct_amount, paid_amount;
     String ride_id, mType = null, mTitle = null, mBody = null;
     public static final String MESSAGE_SUCCESS = "MessageSuccess";
+    public static final String RIDE_CANCEL_BY_DRIVER = "RideCancelByDriver";
+    public static final String COMPLETE_RIDE = "CompleteRide";
     public static final String MESAGE_ERROR = "MessageError";
     public static final String MESSAGE_NOTIFICATION = "MessageNotification";
 
@@ -54,8 +56,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     java.util.Map<java.lang.String, java.lang.String> m = remoteMessage.getData();
                     sendNotificationTrackStartTrip(m);
                 }
-
-
                 return;
             }
         }
@@ -66,6 +66,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 SendMessageToDeitician(ride_id);
                 return;
             }
+            if (mType.equalsIgnoreCase("user_ride_cancel")) {
+                SendMessageToMainActivity(mTitle, mBody);
+                return;
+            }
+//            if (mType.equalsIgnoreCase("user_ride_complete")) {
+//                SendMessageToCompleteRide(ride_id);
+//            }
+
         }
         if (mType.equals("user_ride_complete")) {
             sendNotificationComplete();
@@ -80,6 +88,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (mType.equals("user_ride_cancel_charge")) {
             deduct_amount = remoteMessage.getData().get("deduct_amount");
             sendNotificationCancelCharge();
+        }
+        if (mType.equals("user_ride_cancel")) {
+            Log.d(TAG, "data: " + "app close notif");
+            sendNotificationRideCancel();
         }
         SendMessageNotification();
         // TODO(developer): Handle FCM messages here.
@@ -100,6 +112,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
     }
+
+
+
 
     private void sendNotificationPayment() {
         Intent intent = new Intent(this, MainActivity.class);
@@ -181,19 +196,57 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         notificationManager.notify(04 /* ID of notification */, notificationBuilder.build());
     }
 
+    private void sendNotificationRideCancel() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+                PendingIntent.FLAG_ONE_SHOT);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_taxi)
+                .setContentTitle(mTitle)
+                .setContentText(mBody)
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setContentIntent(pendingIntent);
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(05 /* ID of notification */, notificationBuilder.build());
+    }
+
     private void SendMessageToDeitician(String rideId) {
         Intent registrationComplete = null;
         try {
-            Log.e(TAG, "TAG RIDE ID" + rideId);
             registrationComplete = new Intent(MESSAGE_SUCCESS);
             registrationComplete.putExtra("i_ride_id", rideId);
         } catch (Exception e) {
-            Log.e("GCMRegIntentService", "Registration error");
             registrationComplete = new Intent(MESAGE_ERROR);
         }
         LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
     }
 
+    private void SendMessageToMainActivity(String mTitle, String mBody) {
+        Intent registrationComplete = null;
+        try {
+            registrationComplete = new Intent(RIDE_CANCEL_BY_DRIVER);
+            registrationComplete.putExtra("mTitle", mTitle);
+            registrationComplete.putExtra("mBody", mBody);
+        } catch (Exception e) {
+//            registrationComplete = new Intent(MESAGE_ERROR);
+        }
+        LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
+    }
+    private void SendMessageToCompleteRide(String ride_id) {
+        Intent registrationComplete = null;
+        try {
+            registrationComplete = new Intent(COMPLETE_RIDE);
+            Log.e("GCMRegIntentService", "Ride complete");
+            registrationComplete.putExtra("i_ride_id", ride_id);
+        } catch (Exception e) {
+//            registrationComplete = new Intent(MESAGE_ERROR);
+        }
+        LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
+    }
     private void SendMessageNotification() {
         Intent registrationComplete = null;
         try {
