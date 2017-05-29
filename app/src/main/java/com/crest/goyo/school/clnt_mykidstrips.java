@@ -14,16 +14,22 @@ import android.widget.Toast;
 
 import com.crest.goyo.AdapterClasses.clnt_mykids_listAdapter;
 import com.crest.goyo.ModelClasses.MyKidsTrips;
+import com.crest.goyo.ModelClasses.model_tripdata;
 import com.crest.goyo.R;
 import com.crest.goyo.Utils.CustomDialog;
 import com.crest.goyo.Utils.Global;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
+import org.json.JSONObject;
+
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 public class clnt_mykidstrips extends AppCompatActivity {
@@ -127,12 +133,30 @@ public class clnt_mykidstrips extends AppCompatActivity {
                     public void onCompleted(Exception e, JsonObject result) {
                         // do stuff with the result or error
                         try {
+                            Gson g = new Gson();
                             if (result != null) Log.v("result", result.toString());
                             // JSONObject jsnobject = new JSONObject(jsond);
-                            Gson gson = new Gson();
-                            Type listType = new TypeToken<List<MyKidsTrips>>() {
+                            Type listType = new TypeToken<MyKidsTrips>() {
                             }.getType();
-                            lstmykidsd = (List<MyKidsTrips>) gson.fromJson(result.get("data"), listType);
+                            String header = "";
+                            JsonArray ar = result.get("data").getAsJsonArray();
+                            lstmykidsd = new ArrayList<MyKidsTrips>();
+
+                            for(int i = 0 ;i <= ar.size() - 1 ; i ++){
+                                 JsonObject o = ar.get(i).getAsJsonObject();
+                                 MyKidsTrips j = (MyKidsTrips)g.fromJson(o, listType);
+
+                                if(!header.equals(j.pd + " - " + j.btch + " - " + j.time)){
+                                    j.Type = 1;
+                                    lstmykidsd.add((MyKidsTrips)Global.cloneObject(j));
+                                    header = j.pd + " - " + j.btch + " - " + j.time;
+                                }
+
+                                j.Type = 0;
+                                lstmykidsd.add(j);
+
+                            }
+                            //List<MyKidsTrips> temp_lstmykidsd = (List<MyKidsTrips>) gson.fromJson(result.get("data"), listType);
                             bindCreawData(lstmykidsd);
                         } catch (Exception ea) {
                             ea.printStackTrace();

@@ -20,17 +20,21 @@ import com.crest.goyo.school.clnt_tripview;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.halfbit.pinnedsection.PinnedSectionListView;
+
 
 /**
  * Created by mTech on 02-May-2017.
  */
-public class clnt_mykids_listAdapter extends BaseAdapter {
+public class clnt_mykids_listAdapter extends BaseAdapter  implements PinnedSectionListView.PinnedSectionListAdapter {
 
     List<MyKidsTrips> list = new ArrayList<MyKidsTrips>();
     LayoutInflater inflater;
     Context context;
     String _drop, _pickup;
     private static String headerText = "";
+    public static final int ITEM = 0;
+    public static final int SECTION = 1;
 
     public clnt_mykids_listAdapter(Context context, List<MyKidsTrips> lst, Resources rs) {
         this.list = lst;
@@ -70,27 +74,24 @@ public class clnt_mykids_listAdapter extends BaseAdapter {
         final MyKidsTrips mykid =  list.get(position);
 
         String header = mykid.pd + " - " + mykid.btch + " - " + mykid.time;
-        if (headerText.equals(header) != true) {
-//            if (headerText.equals("") != true) {
-//                mViewHolder.txtBorder.setVisibility(View.GONE);
-//            }
+
+        if (mykid.Type == SECTION) {
 
             headerText = header;
             mViewHolder.header.setVisibility(View.VISIBLE);
+//            mViewHolder.header.setBackgroundColor(parent.getResources().getColor(Color.GRAY));
+            mViewHolder._item.setVisibility(View.GONE);
             mViewHolder.titleTxt.setText(mykid.btch);
-
             //Log.e("date",mykid.get(Tables.tbl_driver_info.createon));
             mViewHolder.Date.setText(mykid.date + " " + mykid.time);
-
             if (mykid.stsi.equals("1")) {
                 mViewHolder.uploadonRes.setBackgroundResource(R.drawable.ic_action_play);
-
             } else if (mykid.stsi.equals("2")) {
                 mViewHolder.uploadonRes.setBackgroundResource(R.drawable.ic_action_done);
             } else if (mykid.stsi.equals("0")) {
                 mViewHolder.uploadonRes.setBackgroundResource(R.drawable.ic_action_wait);
             }
-            mViewHolder.txtMargin.setVisibility(View.VISIBLE);
+            //mViewHolder.txtMargin.setVisibility(View.VISIBLE);
             mViewHolder.btnTrack.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -106,8 +107,14 @@ public class clnt_mykids_listAdapter extends BaseAdapter {
             });
 
         } else {
-            mViewHolder.txtMargin.setVisibility(View.GONE);
+            //mViewHolder.txtMargin.setVisibility(View.GONE);
             mViewHolder.header.setVisibility(View.GONE);
+            if(list.size() - 1 != position){
+                if(list.get(position + 1).Type == SECTION){
+                    mViewHolder.itembottom.setVisibility(View.VISIBLE);
+                }
+            }
+
 
         }
         if (mykid.pd.equalsIgnoreCase("p")) {
@@ -137,13 +144,27 @@ public class clnt_mykids_listAdapter extends BaseAdapter {
     }
 
 
+
+    @Override public int getViewTypeCount() {
+        return 2;
+    }
+
+    @Override public int getItemViewType(int position) {
+        return list.get(position).Type;
+    }
+
+    @Override
+    public boolean isItemViewTypePinned(int viewType) {
+        return viewType  == SECTION;
+    }
+
+
     private class MyViewHolder {
-        private TextView titleTxt, povTitle, uploadonRes, Date, hidid, txtSideColor, txtkidName, txtBorder, txtKidStatus, txtMargin;
-        private RelativeLayout header;
+        private TextView titleTxt, povTitle, uploadonRes, Date, txtSideColor, txtkidName, txtKidStatus,itembottom;
+        private RelativeLayout header, _item;
         private ImageButton btnTrack;
 
         public MyViewHolder(View item) {
-            hidid = (TextView) item.findViewById(R.id.hidid);
             titleTxt = (TextView) item.findViewById(R.id.titleTxt);
             povTitle = (TextView) item.findViewById(R.id.povTitle);
             uploadonRes = (TextView) item.findViewById(R.id.uploadonRes);
@@ -151,10 +172,12 @@ public class clnt_mykids_listAdapter extends BaseAdapter {
             txtSideColor = (TextView) item.findViewById(R.id.txtSideColor);
             txtkidName = (TextView) item.findViewById(R.id.txtkidName);
             header = (RelativeLayout) item.findViewById(R.id.header);
-            txtBorder = (TextView) item.findViewById(R.id.txtBorder);
-            txtMargin = (TextView) item.findViewById(R.id.txtMargin);
+            _item =(RelativeLayout) item.findViewById(R.id.item);
             txtKidStatus = (TextView) item.findViewById(R.id.txtKidStatus);
             btnTrack = (ImageButton) item.findViewById(R.id.btnStartTrack);
+            itembottom = (TextView) item.findViewById(R.id.itembottom);
+
+
         }
     }
 }

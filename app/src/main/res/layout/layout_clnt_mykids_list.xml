@@ -3,17 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-<TextView
-    android:layout_width="match_parent" android:id="@+id/txtMargin"
-    android:layout_height="10dp" android:background="@color/transparent"></TextView>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="2px"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:id="@+id/txtBorder"
-        android:background="#ccc"
-        android:visibility="gone" />
 
     <LinearLayout
             android:orientation="horizontal"
@@ -39,6 +28,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
+                    android:background="@color/button_green"
                     android:padding="8dp">
 
                     <TextView
@@ -61,7 +51,7 @@
                         android:layout_toRightOf="@+id/uploadonRes"
                         android:singleLine="true"
                         android:text="Large Text"
-                        android:textColor="@color/colorAccent"
+                        android:textColor="@color/colorBlack"
                         android:textSize="16dp"
                         android:textStyle="bold" />
 
@@ -69,13 +59,13 @@
                         android:id="@+id/Date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/titleTxt"
                         android:layout_alignStart="@+id/titleTxt"
+                        android:layout_below="@+id/titleTxt"
                         android:layout_marginRight="10dp"
                         android:layout_marginTop="5dp"
 
                         android:text="Date"
-                        android:textColor="#000000"
+                        android:textColor="@color/colorBlack"
                         android:textSize="11dp" />
 
 
@@ -83,11 +73,11 @@
                         android:id="@+id/povTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/titleTxt"
                         android:layout_below="@+id/Date"
                         android:layout_marginTop="5dp"
-                        android:layout_alignStart="@+id/titleTxt"
                         android:text="POV"
-                        android:textColor="#000000"
+                        android:textColor="@color/colorBlack"
                         android:textSize="11dp" />
 
 
@@ -109,19 +99,44 @@
                         android:layout_height="wrap_content"
                         android:visibility="gone" />
 
+                    <!--<Button-->
+                    <!--android:id="@+id/btnStartTrack"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentEnd="true"-->
+                    <!--android:layout_alignParentTop="true"-->
+                    <!--android:background="@color/button_green"-->
+                    <!--android:drawableTop="@drawable/ic_icon_track"-->
+                    <!--android:text="TRACK"-->
+                    <!--app:srcCompat="@drawable/ic_icon_track" />-->
+
                     <ImageButton
                         android:id="@+id/btnStartTrack"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
-                        android:background="#FFFFFF"
+                        android:background="@color/button_green"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
                         app:srcCompat="@drawable/ic_icon_track" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_below="@+id/btnStartTrack"
+                        android:layout_marginTop="2dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:text="TRACK"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="12dp" />
 
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:focusableInTouchMode="false"
+                    android:id="@+id/item"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="8dp" >
@@ -166,9 +181,14 @@
                         android:visibility="gone" />
                 </RelativeLayout>
 
+
             </LinearLayout>
 
 
         </LinearLayout>
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:visibility="gone"
+        android:id="@+id/itembottom"/>
 </LinearLayout>
