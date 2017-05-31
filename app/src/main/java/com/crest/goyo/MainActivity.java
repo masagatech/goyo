@@ -1,6 +1,7 @@
 package com.crest.goyo;
 
 
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AlertDialog.Builder builder;
     private String TAG = "MainActivity";
     public static String CURRENT_TAG = TAG_BOOK_YOUR_RIDE;
-
+    NotificationManager mNotificationManager;
     private FragmentManager mFragmentManager;
 
     BookYourRideFragment bookYourRideFragment;
@@ -177,6 +178,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        rideCancelByDriverNotify();
         getUserProfileAPI();
 
+    }
+
+    private void rideCancelByDriverNotify() {
+        mReceiveMessageFromNotification = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                android.util.Log.d(TAG, "data: " + "app open notif COMPLETE RIDE main activity 1");
+                if (intent.getAction().equals(MyFirebaseMessagingService.MESSAGE_NOTIFICATION)) {
+                    android.util.Log.d(TAG, "data: " + "app open notif COMPLETE RIDE main activity 2");
+                    if (intent.getExtras() != null) {
+                        android.util.Log.d(TAG, "data: " + "app open notif COMPLETE RIDE main activity 3");
+                        String mRideid = intent.getStringExtra("i_ride_id");
+                        Intent in = new Intent(MainActivity.this, CompleteRide.class);
+                        in.putExtra("i_ride_id", mRideid);
+                        startActivity(in);
+                    }
+                }
+            }
+        };
     }
 
 
@@ -459,7 +479,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         in.putExtra("i_ride_id", mRideid);
                         startActivity(in);
                     }
-                }else if(intent.getAction().equals(MyFirebaseMessagingService.RIDE_CANCEL_BY_DRIVER)){
+                } else if (intent.getAction().equals(MyFirebaseMessagingService.RIDE_CANCEL_BY_DRIVER)) {
+                    android.util.Log.d(TAG, "data: " + "app open notif main activity");
                     if (intent.getExtras() != null) {
                         android.util.Log.d(TAG, "data: " + "app open notif main activity");
                         String mTitle = intent.getStringExtra("mTitle");
@@ -470,7 +491,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 dialog.dismiss();
-                               Intent intent=new Intent(getApplicationContext(),MainActivity.class);
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                 startActivity(intent);
                             }
                         });
@@ -478,14 +499,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     }
 
-                }else if(intent.getAction().equals(MyFirebaseMessagingService.COMPLETE_RIDE)){
-                    if (intent.getExtras() != null) {
-                        android.util.Log.d(TAG, "data: " + "app open notif complete ride main activity ");
-                        String mRideid = intent.getStringExtra("i_ride_id");
-                        Intent in = new Intent(MainActivity.this, CompleteRide.class);
-                        in.putExtra("i_ride_id", mRideid);
-                        startActivity(in);
-                    }
                 }
             }
         };
@@ -519,7 +532,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //    }
 
 
-
     @Override
     public void onPause() {
         super.onPause();
@@ -541,6 +553,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new IntentFilter(MyFirebaseMessagingService.RIDE_CANCEL_BY_DRIVER));
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiveMessageFromNotification,
                 new IntentFilter(MyFirebaseMessagingService.COMPLETE_RIDE));
+        Log.e("#########", "Receiver : ");
     }
 
     @Override

@@ -51,7 +51,7 @@ public class ReferralCode extends AppCompatActivity implements View.OnClickListe
                     if (responce_status == VolleyTAG.response_status) {
                         JSONObject jsonObject = response.getJSONObject("data");
                         tv_code.setText(jsonObject.getString("v_referral_code"));
-                        tv_earn_money.setText("Share your referral code and get "+"\u20B9"+" "+jsonObject.getString("earn_money")+". So share your code and get your money.");
+                        tv_earn_money.setText(jsonObject.getString("message"));
                     } else {
 
                     }

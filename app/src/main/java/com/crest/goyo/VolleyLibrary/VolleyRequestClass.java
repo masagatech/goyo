@@ -2,6 +2,7 @@ package com.crest.goyo.VolleyLibrary;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -46,6 +47,7 @@ public class VolleyRequestClass {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (b) customDialog.hide();
+                        Toast.makeText(applicationContext,"Server not responding please try again.",Toast.LENGTH_SHORT).show();
                         VolleyLog.d("VolleyLog:", "" + error);
                     }
                 }

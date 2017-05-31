@@ -7,8 +7,8 @@ android {
         applicationId "com.crest.goyo"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 13
-        versionName "2.1"
+        versionCode 14
+        versionName "2.2"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -76,11 +76,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile "de.halfbit:pinned-section-listview:1.0.0"
 }
-
-
-
-
-
-
 
 apply plugin: 'com.google.gms.google-services'

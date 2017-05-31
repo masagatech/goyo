@@ -20,6 +20,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -460,7 +461,25 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
 
             }
         } else {
-            gps.showSettingsAlert();
+            android.app.AlertDialog.Builder alertDialog = new android.app.AlertDialog.Builder(mContext);
+            alertDialog.setTitle("GPS settings");
+            alertDialog.setMessage("Your GPS seems to be disabled, do you want to enable it?");
+            alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    mContext.startActivity(intent);
+                }
+            });
+            alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                    Intent intent = new Intent(Intent.ACTION_MAIN);
+                    intent.addCategory(Intent.CATEGORY_HOME);
+                    getActivity().finish();
+                    startActivity(intent);
+                }
+            });
+            alertDialog.show();
         }
     }
 
@@ -489,6 +508,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         Place place = PlaceAutocomplete.getPlace(getContext(), data);
         geocoder = new Geocoder(getActivity(), Locale.getDefault());
         if (requestCode == REQUEST_CODE_PICKUP) {
@@ -749,8 +769,8 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         urlBuilder.addQueryParameter("lang", "en");
         urlBuilder.addQueryParameter("city", cityCurrent);
         urlBuilder.addQueryParameter("vehicle_type", type);
-        urlBuilder.addQueryParameter("latitude", String.valueOf(changedLat));
-        urlBuilder.addQueryParameter("longitude", String.valueOf(changedLong));
+        urlBuilder.addQueryParameter("latitude", String.valueOf(gpsLat));
+        urlBuilder.addQueryParameter("longitude", String.valueOf(gpsLong));
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
@@ -1611,7 +1631,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                                 cameraPosition = new CameraPosition.Builder()
                                                         .target(point)
                                                         .bearing(20)
-                                                        .zoom(14)
+                                                        .zoom(12)
                                                         .build();
                                                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                                             }

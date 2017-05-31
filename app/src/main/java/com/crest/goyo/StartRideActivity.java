@@ -347,7 +347,7 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                             Log.e("TAG", "hasBearing = true");
                              cameraPosition = new CameraPosition.Builder()
                                     .target(loc)             // Sets the center of the map to current location
-                                    .zoom(20)                   // Sets the zoom
+                                    .zoom(15)                   // Sets the zoom
                                     .bearing(targetLocation.getBearing()) // Sets the orientation of the camera to east
                                     .tilt(0)                   // Sets the tilt of the camera to 0 degrees
                                     .build();                   // Creates a CameraPosition from the builder
@@ -356,8 +356,8 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                             Log.e("TAG", "hasBearing = false");
                              cameraPosition = new CameraPosition.Builder()
                                     .target(loc)             // Sets the center of the map to current location
-                                    .zoom(20)                   // Sets the zoom
-                                    .bearing(20) // Sets the orientation of the camera to east
+                                    .zoom(15)                   // Sets the zoom
+                                    .bearing(-20) // Sets the orientation of the camera to east
                                     .tilt(0)                   // Sets the tilt of the camera to 0 degrees
                                     .build();
                             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));

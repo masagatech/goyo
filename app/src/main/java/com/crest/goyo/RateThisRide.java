@@ -19,6 +19,7 @@ import com.crest.goyo.Utils.Preferences;
 import com.crest.goyo.VolleyLibrary.RequestInterface;
 import com.crest.goyo.VolleyLibrary.VolleyRequestClass;
 import com.crest.goyo.VolleyLibrary.VolleyTAG;
+import com.crest.goyo.logger.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -75,6 +76,7 @@ public class RateThisRide extends AppCompatActivity implements View.OnClickListe
                         }
                         tv_amount.setText("\u20B9"+" " + mAmount);
                         tv_pickup_from.setText(l_data.getString("pickup_address"));
+                        Log.d("########","dest add : "+l_data.getString("destination_address"));
                         tv_drop_location.setText(l_data.getString("destination_address"));
                         String date =  DateUtils.formatDateTime(getApplicationContext(), Long.parseLong(objData.getString("d_added")), DateUtils.FORMAT_SHOW_DATE);
                         String time = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong(objData.getString("d_added")), DateUtils.FORMAT_SHOW_TIME);

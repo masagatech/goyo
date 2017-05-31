@@ -34,7 +34,7 @@ import okhttp3.HttpUrl;
 public class SignUp extends AppCompatActivity implements View.OnClickListener {
     private TextView actionbar_title;
     private Button bt_submit;
-    private EditText et_full_name, et_email, et_mo_no, et_pasword, et_confirm_password;
+    private EditText et_full_name, et_email, et_mo_no, et_pasword, et_confirm_password,et_referral_code;
     private CustomDialog customDialog;
     private RadioGroup mGenderGrup;
     private RadioButton mGender;
@@ -67,6 +67,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         et_confirm_password = (EditText) findViewById(R.id.et_confirm_password);
         mGenderGrup = (RadioGroup) findViewById(R.id.g1);
         spinner_city_list = (Spinner) findViewById(R.id.spinner_city_list);
+        et_referral_code=(EditText)findViewById(R.id.et_referral_code);
 
         bt_submit.setOnClickListener(this);
 
@@ -161,6 +162,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         urlBuilder.addQueryParameter("v_email", et_email.getText().toString().trim());
         urlBuilder.addQueryParameter("v_phone", et_mo_no.getText().toString().trim());
         urlBuilder.addQueryParameter("v_password", et_pasword.getText().toString());
+        urlBuilder.addQueryParameter("refferal_code", et_referral_code.getText().toString());
         urlBuilder.addQueryParameter("v_device_token", FirebaseInstanceId.getInstance().getToken());
         urlBuilder.addQueryParameter("i_city_id", cityList.get(spinner_city_list.getSelectedItemPosition()).getId());
         String url = urlBuilder.build().toString();

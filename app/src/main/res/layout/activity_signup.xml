@@ -208,7 +208,23 @@
                     android:layout_marginBottom="@dimen/margin_bottom"
                     android:layout_marginTop="10dp"
                     android:background="@color/colorGrey"></View>
+                <EditText
+                    android:id="@+id/et_referral_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:hint="REFERRAL CODE"
+                    android:singleLine="true"
+                    android:textColor="@color/colorBlack"
+                    android:textColorHint="@color/colorGrey"
+                    android:textSize="@dimen/et_text" />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="@dimen/margin_bottom"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/colorGrey"></View>
                 <Button
                     android:id="@+id/bt_submit"
                     android:layout_width="match_parent"

@@ -1,5 +1,6 @@
 package com.crest.goyo;
 
+import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,7 +28,7 @@ public class CompleteRide extends AppCompatActivity implements View.OnClickListe
     private float mAmount = 0;
     private AlertDialog.Builder builder;
     private String mRideid;
-
+    private BroadcastReceiver mReceiveMessageFromNotification;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +45,8 @@ public class CompleteRide extends AppCompatActivity implements View.OnClickListe
         if (Constant.isOnline(getApplicationContext())) {
             completeRideAPI();
         }
+
+
     }
 
     private void completeRideAPI() {
@@ -129,4 +132,9 @@ public class CompleteRide extends AppCompatActivity implements View.OnClickListe
         builder.setIcon(R.drawable.ic_cancel);
         builder.show();
     }
+
+
+
+
+
 }
