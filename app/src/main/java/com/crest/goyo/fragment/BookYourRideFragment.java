@@ -369,10 +369,21 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
             if (ContextCompat.checkSelfPermission(getActivity(),
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
-                onMapReadyGettingLocation();
+                if(Preferences.getValue_String(getActivity(),"comefrom").equals("MyRides")){
+                    onMapReadyGettingLocationForConfirmBooking();
+                    Preferences.setValue(getActivity(),"comefrom","");
+                }else{
+                    onMapReadyGettingLocation();
+                }
+
             }
         } else {
-            onMapReadyGettingLocation();
+            if(Preferences.getValue_String(getActivity(),"comefrom").equals("MyRides")){
+                onMapReadyGettingLocationForConfirmBooking();
+                Preferences.setValue(getActivity(),"comefrom","");
+            }else{
+                onMapReadyGettingLocation();
+            }
         }
 
 
@@ -424,6 +435,272 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
             }
         });
 
+    }
+
+    private void onMapReadyGettingLocationForConfirmBooking() {
+
+
+//        buildGoogleApiClient();
+//        mGoogleApiClient.connect();
+        gps = new GPSTracker(getActivity(), getActivity());
+
+        if (gps.canGetLocation()) {
+            gpsLat = gps.getLatitude();
+            gpsLong = gps.getLongitude();
+            lay_cancel_book_ride.setVisibility(VISIBLE);
+            lay_map_selection_location.setVisibility(View.GONE);
+            lay_map_saved_location.setVisibility(View.VISIBLE);
+            getRideAPIForConfirmBooking();
+//            getAvalableVehiclesAPI();
+//            gpsLat = gps.getLatitude();
+//            gpsLong = gps.getLongitude();
+//            try {
+//                mMap.setMyLocationEnabled(true);
+//                origin = new LatLng(gpsLat, gpsLong);
+//                geocoder = new Geocoder(getActivity(), Locale.getDefault());
+//                List<Address> addresses;
+//                LocationManager locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
+//                addresses = geocoder.getFromLocation(gpsLat, gpsLong, 1);
+//                if (addresses.size() > 0) {
+//                    String address = addresses.get(0).getAddressLine(0);
+//                    String locality = addresses.get(0).getSubLocality();
+//                    String adminArea = addresses.get(0).getAdminArea();
+//                    cityCurrent = addresses.get(0).getLocality();
+//                    tv_pickup_from.setText("" + address + ", " + locality + ", " + cityCurrent + ", " + adminArea);
+//                    greenMarker = mMap.addMarker(new MarkerOptions()
+//                            .position(new LatLng(gpsLat, gpsLong))
+//                            .icon(BitmapDescriptorFactory.fromBitmap(Constant.setMarkerPin(getActivity(), R.drawable.marker_pickup))));
+//                    cameraPosition = new CameraPosition.Builder()
+//                            .target(new LatLng(gpsLat, gpsLong))
+//                            .zoom(15)
+//                            .build();
+//                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//
+//            }
+        } else {
+            android.app.AlertDialog.Builder alertDialog = new android.app.AlertDialog.Builder(mContext);
+            alertDialog.setTitle("GPS settings");
+            alertDialog.setMessage("Your GPS seems to be disabled, do you want to enable it?");
+            alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    mContext.startActivity(intent);
+                }
+            });
+            alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                    Intent intent = new Intent(Intent.ACTION_MAIN);
+                    intent.addCategory(Intent.CATEGORY_HOME);
+                    getActivity().finish();
+                    startActivity(intent);
+                }
+            });
+            alertDialog.show();
+        }
+    }
+
+    private void getRideAPIForConfirmBooking() {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_GET_RIDE).newBuilder();
+        urlBuilder.addQueryParameter("device", "ANDROID");
+        urlBuilder.addQueryParameter("lang", "en");
+        urlBuilder.addQueryParameter("login_id", Preferences.getValue_String(getActivity(), Preferences.USER_ID));
+        urlBuilder.addQueryParameter("v_token", Preferences.getValue_String(getActivity(), Preferences.USER_AUTH_TOKEN));
+        urlBuilder.addQueryParameter("i_ride_id", Preferences.getValue_String(getActivity(), Preferences.RIDE_ID));
+        String url = urlBuilder.build().toString();
+        String newurl = url.replaceAll(" ", "%20");
+        okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
+        VolleyRequestClassNew.allRequest(mContext, newurl, new RequestInterface() {
+            @Override
+            public void onResult(JSONObject response) {
+                try {
+                    int responce_status = response.getInt(VolleyTAG.status);
+                    String message = response.getString(VolleyTAG.message);
+                    if (responce_status == VolleyTAG.response_status) {
+                        JSONObject jsonObject = response.getJSONObject("data");
+                        JSONObject l_data = jsonObject.getJSONObject("l_data");
+                        JSONObject estimation = l_data.getJSONObject("estimation");
+                        String vehicle_type = l_data.getString("vehicle_type");
+                        String estimate_amount = estimation.getString("final_total");
+                        String pickup_address = l_data.getString("pickup_address");
+                        String destination_addres = l_data.getString("destination_address");
+                        tv_saved_pickup_from.setText(pickup_address);
+                        tv_saved_drop_location.setText(destination_addres);
+                        if (lay_cancel_book_ride.getVisibility() == VISIBLE) {
+                            mMap.clear();
+                            mMap.setMyLocationEnabled(true);
+                            ((MainActivity) getActivity()).getSupportActionBar().setTitle("PICKUP ARRIVING");
+                            Preferences.setValue(getActivity(), Preferences.DRIVER_ID, jsonObject.getString("i_driver_id").toString());
+                            JSONObject driver_data = jsonObject.getJSONObject("driver_data");
+                            tv_pin.setText("Your trip confirmation PIN : " + jsonObject.getString("v_pin"));
+                            tv_driver_name.setText(driver_data.getString("driver_name"));
+                            tv_ph_no.setText(driver_data.getString("driver_phone"));
+                            tv_vehicle_type_driver.setText(l_data.getString("vehicle_type"));
+                            if (driver_data.getString("driver_image").equals("")) {
+                                img_driver_profile.setImageResource(R.drawable.no_user);
+                            } else {
+                                Glide.with(getActivity()).load(driver_data.getString("driver_image"))
+                                        .crossFade()
+                                        .thumbnail(0.5f)
+                                        .bitmapTransform(new CircleTransform(getContext()))
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                        .into(img_driver_profile);
+                            }
+
+                            getDriverLocationAPIForConfirmBooking();
+                        }
+                    } else {
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void getDriverLocationAPIForConfirmBooking() {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_GET_DRIVER_LOCATIOIN).newBuilder();
+        urlBuilder.addQueryParameter("device", "ANDROID");
+        urlBuilder.addQueryParameter("lang", "en");
+        urlBuilder.addQueryParameter("i_driver_id", Preferences.getValue_String(getActivity(), Preferences.DRIVER_ID));
+        String url = urlBuilder.build().toString();
+        String newurl = url.replaceAll(" ", "%20");
+        okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
+        VolleyRequestClassNew.allRequest(mContext, newurl, new RequestInterface() {
+            @Override
+            public void onResult(JSONObject response) {
+                try {
+                    int responce_status = response.getInt(VolleyTAG.status);
+                    String message = response.getString(VolleyTAG.message);
+                    if (responce_status == VolleyTAG.response_status) {
+                        JSONObject jsonObject = response.getJSONObject("data");
+                        mMap.clear();
+                        driverLat = jsonObject.getDouble("l_latitude");
+                        driverLong = jsonObject.getDouble("l_longitude");
+                        final String plotting_icon=jsonObject.getString("plotting_icon");
+                        final LatLng driver = new LatLng(driverLat, driverLong);
+                        final LatLng customer = new LatLng(gpsLat, gpsLong);
+                        Thread thread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    URL url = new URL(plotting_icon);
+                                    final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Marker dr = mMap.addMarker(new MarkerOptions()
+                                                    .position(driver)
+                                                    .icon(BitmapDescriptorFactory.fromBitmap(bmp)));
+                                            Marker cu = mMap.addMarker(new MarkerOptions().position(customer).icon(BitmapDescriptorFactory.fromBitmap(Constant.setMarkerPin(getActivity(), R.drawable.marker_driver))));
+                                            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                                            builder.include(dr.getPosition());
+                                            builder.include(cu.getPosition());
+                                            LatLngBounds bounds = builder.build();
+                                            int width = getResources().getDisplayMetrics().widthPixels;
+                                            int height = getResources().getDisplayMetrics().heightPixels;
+                                            int padding = (int) (width * 0.10); // offset from edges of the map 10% of screen
+                                            cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+                                            mMap.animateCamera(cameraUpdate);
+                                            updateDriverLocationForConfirmBooking();
+                                        }
+                                    });
+
+                                } catch (MalformedURLException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }                            }
+                        });
+                        thread.start();
+                    } else {
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+
+                }
+            }
+        });
+
+
+    }
+
+    private void updateDriverLocationForConfirmBooking() {
+
+        h3.postDelayed(new Runnable() {
+            public void run() {
+                getDriverLocationAPIThreadForConfirmBooking();
+                h3.postDelayed(this, 6000); //now is every 2 minutes
+            }
+        }, 6000);
+    }
+
+    private void getDriverLocationAPIThreadForConfirmBooking() {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_GET_DRIVER_LOCATIOIN).newBuilder();
+        urlBuilder.addQueryParameter("device", "ANDROID");
+        urlBuilder.addQueryParameter("lang", "en");
+        urlBuilder.addQueryParameter("i_driver_id", Preferences.getValue_String(getActivity(), Preferences.DRIVER_ID));
+        String url = urlBuilder.build().toString();
+        String newurl = url.replaceAll(" ", "%20");
+        okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
+        VolleyRequestClassNew.allRequest(mContext, newurl, new RequestInterface() {
+            @Override
+            public void onResult(JSONObject response) {
+                try {
+                    int responce_status = response.getInt(VolleyTAG.status);
+                    String message = response.getString(VolleyTAG.message);
+                    if (responce_status == VolleyTAG.response_status) {
+                        JSONObject jsonObject = response.getJSONObject("data");
+                        mMap.clear();
+                        driverLat = jsonObject.getDouble("l_latitude");
+                        driverLong = jsonObject.getDouble("l_longitude");
+                        final String plotting_icon=jsonObject.getString("plotting_icon");
+                        final LatLng driver = new LatLng(driverLat, driverLong);
+                        final LatLng customer = new LatLng(gpsLat, gpsLong);
+                        Log.e("########","cu lat long :"+customer);
+                        Thread thread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    URL url = new URL(plotting_icon);
+                                    final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Marker dr = mMap.addMarker(new MarkerOptions()
+                                                    .position(driver)
+                                                    .icon(BitmapDescriptorFactory.fromBitmap(bmp)));
+                                            Marker cu = mMap.addMarker(new MarkerOptions().position(customer).icon(BitmapDescriptorFactory.fromBitmap(Constant.setMarkerPin(getActivity(), R.drawable.marker_driver))));
+                                            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                                            builder.include(dr.getPosition());
+                                            builder.include(cu.getPosition());
+                                            LatLngBounds bounds = builder.build();
+                                            int width = getResources().getDisplayMetrics().widthPixels;
+                                            int height = getResources().getDisplayMetrics().heightPixels;
+                                            int padding = (int) (width * 0.10); // offset from edges of the map 10% of screen
+                                            cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+                                            mMap.animateCamera(cameraUpdate);
+                                        }
+                                    });
+
+                                } catch (MalformedURLException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }                            }
+                        });
+                        thread.start();
+                    } else {
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+
+                }
+            }
+        });
     }
 
     private void onMapReadyGettingLocation() {
@@ -695,6 +972,15 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         if (myhandler != null) {
             myhandler.removeCallbacksAndMessages(null);
         }
+        if (h1 != null) {
+            h1.removeCallbacksAndMessages(null);
+        }
+        if (h2 != null) {
+            h2.removeCallbacksAndMessages(null);
+        }
+        if (h3 != null) {
+            h3.removeCallbacksAndMessages(null);
+        }
         initializeLogging();
     }
 
@@ -755,6 +1041,9 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                         }
                         if (h2 != null) {
                             h2.removeCallbacksAndMessages(null);
+                        }
+                        if (h3 != null) {
+                            h3.removeCallbacksAndMessages(null);
                         }
                         downloadUrl();
                     }
@@ -1067,9 +1356,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                         if (driverMarker != null) {
                             driverMarker.remove();
                         }
-                        if (vehicleMarker != null) {
-                            vehicleMarker.remove();
-                        }
                         driverLat = jsonObject.getDouble("l_latitude");
                         driverLong = jsonObject.getDouble("l_longitude");
                         final LatLng driver = new LatLng(driverLat, driverLong);
@@ -1085,12 +1371,10 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                         getActivity().runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                driverMarker.setPosition(driver);
-//                                                driverMarker = mMap.addMarker(new MarkerOptions()
-//                                                            .position(driver)
-//                                                            .icon(BitmapDescriptorFactory.fromBitmap(bmp)));
-
-
+//                                                driverMarker.setPosition(driver);
+                                                driverMarker = mMap.addMarker(new MarkerOptions()
+                                                            .position(driver)
+                                                            .icon(BitmapDescriptorFactory.fromBitmap(bmp)));
                                                 customerMarker = mMap.addMarker(new MarkerOptions().position(customer).icon(BitmapDescriptorFactory.fromBitmap(Constant.setMarkerPin(getActivity(), R.drawable.marker_driver))));
                                                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
                                                 builder.include(driverMarker.getPosition());
@@ -1134,7 +1418,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
-        VolleyRequestClassNew.allRequest(mContext, newurl, new RequestInterface() {
+        VolleyRequestClass.allRequest(mContext, newurl, new RequestInterface() {
             @Override
             public void onResult(JSONObject response) {
                 try {
@@ -1155,7 +1439,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                     e.printStackTrace();
                 }
             }
-        });
+        },true);
 
     }
 
@@ -1260,7 +1544,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
 
     private Handler h1 = new Handler();
     private Handler h2 = new Handler();
-
+    private Handler h3 = new Handler();
 
     private void updateVehicleListLongTime() {
         if (h1 != null) {
@@ -1982,6 +2266,9 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         }
         if (h2 != null) {
             h2.removeCallbacksAndMessages(null);
+        }
+        if (h3 != null) {
+            h3.removeCallbacksAndMessages(null);
         }
     }
 

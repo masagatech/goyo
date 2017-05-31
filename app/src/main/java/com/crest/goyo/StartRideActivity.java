@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -21,6 +22,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -36,6 +38,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.crest.goyo.FCM.MyFirebaseMessagingService;
 import com.crest.goyo.Utils.Constant;
 import com.crest.goyo.Utils.FileUtils;
 import com.crest.goyo.Utils.GPSTracker;
@@ -132,7 +135,7 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         builder = new AlertDialog.Builder(StartRideActivity.this, R.style.MyAlertDialogStyle);
-
+        getMessageFromNotification();
         iv_share.setOnClickListener(this);
         bt_sos.setOnClickListener(this);
 
@@ -357,7 +360,7 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                              cameraPosition = new CameraPosition.Builder()
                                     .target(loc)             // Sets the center of the map to current location
                                     .zoom(15)                   // Sets the zoom
-                                    .bearing(-20) // Sets the orientation of the camera to east
+                                    .bearing(targetLocation.getBearing()) // Sets the orientation of the camera to east
                                     .tilt(0)                   // Sets the tilt of the camera to 0 degrees
                                     .build();
                             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -741,9 +744,41 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
         }
 //        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
     }
+    private void getMessageFromNotification() {
+        mReceiveMessageFromNotification = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                android.util.Log.d(TAG, "data: " + "app open notif START RIDE main activity 1");
+                 if (intent.getAction().equals(MyFirebaseMessagingService.COMPLETE_RIDE)) {
+                    android.util.Log.d(TAG, "data: " + "app open notif main activity");
+                    if (intent.getExtras() != null) {
+                        android.util.Log.d(TAG, "data: " + "app open notif main activity");
+                        String mRideid = intent.getStringExtra("i_ride_id");
+                        Intent in = new Intent(StartRideActivity.this, CompleteRide.class);
+                        in.putExtra("i_ride_id", mRideid);
+                        startActivity(in);
+                        finishAffinity();
+                    }
+                }
+            }
+        };
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+//        App.activityPaused();
+        Log.d("##########","PAUSE");
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(mReceiveMessageFromNotification);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+//        App.activityResumed();
 
-
-
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiveMessageFromNotification,
+                new IntentFilter(MyFirebaseMessagingService.COMPLETE_RIDE));
+        Log.e("#########", "Receiver : ");
+    }
 }

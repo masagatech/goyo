@@ -126,7 +126,7 @@ public class RateThisRide extends AppCompatActivity implements View.OnClickListe
         actionbar_title=(TextView)findViewById(R.id.actionbar_title);
         bt_rate_now=(Button)findViewById(R.id.bt_rate_now);
         tv_pickup_from=(TextView)findViewById(R.id.tv_pickup_from);
-        tv_drop_location=(TextView)findViewById(R.id.tv_pickup_from);
+        tv_drop_location=(TextView)findViewById(R.id.tv_drop_location);
         rating_bar=(RatingBar)findViewById(R.id.rating_bar);
         et_comment=(EditText)findViewById(R.id.et_comment);
         tv_ride_time=(TextView)findViewById(R.id.tv_ride_time);

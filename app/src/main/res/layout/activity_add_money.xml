@@ -67,6 +67,7 @@
                 android:layout_marginTop="8dp"
                 android:background="@android:color/transparent"
                 android:maxLines="1"
+                android:inputType="number"
                 android:singleLine="true"
                 android:textColor="@color/colorBlack"
                 android:textSize="14dp" />

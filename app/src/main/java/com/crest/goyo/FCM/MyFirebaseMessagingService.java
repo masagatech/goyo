@@ -70,9 +70,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 SendMessageToMainActivity(mTitle, mBody);
                 return;
             }
-//            if (mType.equalsIgnoreCase("user_ride_complete")) {
-//                SendMessageToCompleteRide(ride_id);
-//            }
+            if (mType.equalsIgnoreCase("user_ride_complete")) {
+                SendMessageToCompleteRide(ride_id);
+                return;
+            }
 
         }
         if (mType.equals("user_ride_complete")) {

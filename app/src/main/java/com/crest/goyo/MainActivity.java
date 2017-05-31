@@ -499,8 +499,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     }
 
+                }else if (intent.getAction().equals(MyFirebaseMessagingService.COMPLETE_RIDE)) {
+                    android.util.Log.d(TAG, "data: " + "app open notif main activity");
+                    if (intent.getExtras() != null) {
+                        android.util.Log.d(TAG, "data: " + "app open notif main activity");
+                        String mRideid = intent.getStringExtra("i_ride_id");
+                        Intent in = new Intent(MainActivity.this, CompleteRide.class);
+                        in.putExtra("i_ride_id", mRideid);
+                        startActivity(in);
+                    }
+                    }
+
                 }
-            }
         };
     }
 

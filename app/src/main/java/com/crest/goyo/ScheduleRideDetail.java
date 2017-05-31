@@ -85,11 +85,11 @@ public class ScheduleRideDetail extends AppCompatActivity implements View.OnClic
                         JSONObject jsonObject = response.getJSONObject("data");
                         JSONObject l_data = jsonObject.getJSONObject("l_data");
                         String vehicle_type = l_data.getString("vehicle_type");
-                        String estimate_amount = l_data.getString("estimate_amount");
+//                        String estimate_amount = l_data.getString("estimate_amount");
                         String pickup_address = l_data.getString("pickup_address");
                         String destination_addres = l_data.getString("destination_address");
                         StringTokenizer tokens = new StringTokenizer(l_data.getString("ride_time"), " ");
-                        tv_total.setText("\u20B9" + " " + estimate_amount);
+//                        tv_total.setText("\u20B9" + " " + estimate_amount);
                         tv_vehicle_type.setText(vehicle_type);
                         tv_saved_pickup_from.setText(pickup_address);
                         tv_saved_drop_location.setText(destination_addres);

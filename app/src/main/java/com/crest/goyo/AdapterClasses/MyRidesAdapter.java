@@ -16,6 +16,7 @@ import com.crest.goyo.MainActivity;
 import com.crest.goyo.ModelClasses.MyRidesModel;
 import com.crest.goyo.R;
 import com.crest.goyo.StartMyRidesDetail;
+import com.crest.goyo.Utils.Preferences;
 
 import java.util.List;
 
@@ -90,7 +91,8 @@ public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.MyView> 
                 }else if(list.get(position).getStatus().equals("confirm")){
                     Intent intent = new Intent(context, MainActivity.class);
                     intent.putExtra("rideID",list.get(position).getId());
-                    intent.putExtra("comeFrom","MyRides");
+                    Preferences.setValue(context,"comefrom","MyRides");
+                    Preferences.setValue(context,Preferences.RIDE_ID,list.get(position).getId());
                     context.startActivity(intent);
                 }else{
                     Intent intent = new Intent(context, CompleteMyRidesDetail.class);
