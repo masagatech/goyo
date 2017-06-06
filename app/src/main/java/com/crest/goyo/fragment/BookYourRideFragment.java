@@ -154,7 +154,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
     private String dialogMessage;
     private String AM_PM = " AM", mm_precede = "";
     private int vehicleStatus;
-    boolean isVehicleAvail;
     private String CHARGE_SERVICE_TAX, CHARGE_MIN_CHARGE, CHARGE_BASE_FARE, CHARGE_UPTO_KM, CHARGE_UPTO_KM_CHARGE, CHARGE_AFTER_KM, CHARGE_RIDE_TIME_PICKUP_CHARGE, CHARGE_RIDE_TIME_WAIT_CHARGE;
     private Dialog dialog;
     private Handler myhandler;
@@ -279,9 +278,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.lay_ride_now:
-                if (isVehicleAvail) {
-                    rideRequestValidations();
-                }
+                rideRequestValidations();
                 break;
 
             case R.id.lay_schedule_now:
@@ -587,18 +584,22 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                         final String plotting_icon = jsonObject.getString("plotting_icon");
                         final LatLng driver = new LatLng(driverLat, driverLong);
                         final LatLng customer = new LatLng(gpsLat, gpsLong);
+
+
                         Thread thread = new Thread(new Runnable() {
                             @Override
                             public void run() {
                                 try {
                                     URL url = new URL(plotting_icon);
                                     final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                    final Bitmap newBitmap = getResizedBitmap(bmp, 70, 70);
                                     getActivity().runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             Marker dr = mMap.addMarker(new MarkerOptions()
                                                     .position(driver)
-                                                    .icon(BitmapDescriptorFactory.fromBitmap(bmp)));
+                                                    .icon(BitmapDescriptorFactory.fromBitmap(newBitmap)));
+
                                             Marker cu = mMap.addMarker(new MarkerOptions().position(customer).icon(BitmapDescriptorFactory.fromBitmap(Constant.setMarkerPin(getActivity(), R.drawable.marker_driver))));
                                             LatLngBounds.Builder builder = new LatLngBounds.Builder();
                                             builder.include(dr.getPosition());
@@ -1816,7 +1817,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                     Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                 } else {
                     try {
-                        isVehicleAvail = true;
                         updateVehicleListLongTime();
                         JSONArray data = response.getJSONArray("data");
                         if (vehicleMarker != null) {
@@ -1914,7 +1914,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                     android.util.Log.e("Hector", "onResult: Vehicle Status is 0");
                 } else {
                     try {
-                        isVehicleAvail = true;
                         JSONArray data = response.getJSONArray("data");
                         if (vehicleMarker != null) {
                             vehicleMarker.remove();
@@ -1970,7 +1969,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                         e.printStackTrace();
                     }
                 }
-
             }
         });
     }

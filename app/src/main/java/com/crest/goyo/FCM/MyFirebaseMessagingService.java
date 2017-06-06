@@ -41,7 +41,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         mType = remoteMessage.getData().get("type");
         mTitle = remoteMessage.getData().get("title");
         mBody = remoteMessage.getData().get("body");
-
         Log.e(TAG, "NOTIF TAG : mType = " + mType);
         Log.e(TAG, " NOTIF TAG : mTitle = " + mTitle);
         Log.e(TAG, "NOTIF TAG : mBody = " + mBody);

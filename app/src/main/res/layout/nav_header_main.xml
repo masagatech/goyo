@@ -66,7 +66,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:background="@color/colorWhite"
-            android:padding="10dp"></View>
+            android:padding="10dp" />
 
         <TextView
             android:id="@+id/logout"
