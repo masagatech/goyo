@@ -4,7 +4,6 @@
     android:layout_height="match_parent">
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:map="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -13,30 +12,37 @@
         android:layout_marginBottom="125dp"
         tools:context="com.crest.goyo.MainActivity" />
 
-    <include layout="@layout/map_select_location" android:visibility="visible"></include>
-    <include layout="@layout/map_saved_location"  android:visibility="gone"></include>
+    <include
+        layout="@layout/map_select_location"
+        android:visibility="visible" />
+
+    <include
+        layout="@layout/map_saved_location"
+        android:visibility="gone" />
 
     <include
         layout="@layout/map_bottom_book_your_ride_vehicle_detail"
-        android:visibility="gone"></include>
+        android:visibility="gone" />
 
     <include
         layout="@layout/map_bottom_book_your_ride"
-        android:visibility="visible"></include>
+        android:visibility="visible" />
 
     <include
         layout="@layout/map_bottom_cancel_your_ride"
-        android:visibility="gone"></include>
+        android:visibility="gone" />
 
     <include
         layout="@layout/map_bottom_start_your_ride"
-        android:visibility="gone"></include>
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="bottom">
-    <include
-        layout="@layout/map_bottom_schedule_your_ride"
-        android:visibility="gone"></include>
-</LinearLayout>
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom">
+
+        <include
+            layout="@layout/map_bottom_schedule_your_ride"
+            android:visibility="gone" />
+    </LinearLayout>
 </FrameLayout>

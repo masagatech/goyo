@@ -115,8 +115,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
 
-
-
     private void sendNotificationPayment() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("from", "notifServicePayment");
@@ -212,7 +210,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentIntent(pendingIntent);
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(05 /* ID of notification */, notificationBuilder.build());
+        notificationManager.notify(05, notificationBuilder.build());
+         /* 05 is the ID of notification */
     }
 
     private void SendMessageToDeitician(String rideId) {
@@ -237,6 +236,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
         LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
     }
+
     private void SendMessageToCompleteRide(String ride_id) {
         Intent registrationComplete = null;
         try {
@@ -248,6 +248,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
         LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
     }
+
     private void SendMessageNotification() {
         Intent registrationComplete = null;
         try {
