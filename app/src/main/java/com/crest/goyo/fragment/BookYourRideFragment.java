@@ -1303,13 +1303,16 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                             public void run() {
                                 try {
                                     URL url = new URL(vehicleTypes.get(posVehicleTypes).getPlotting_icon());
+
                                     final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                    final Bitmap newBitmap = getResizedBitmap(bmp, 70, 70);
                                     getActivity().runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             driverMarker = mMap.addMarker(new MarkerOptions()
                                                     .position(driver)
-                                                    .icon(BitmapDescriptorFactory.fromBitmap(bmp)));
+                                                    .icon(BitmapDescriptorFactory.fromBitmap(newBitmap)));
+
                                             customerMarker = mMap.addMarker(new MarkerOptions().position(customer).icon(BitmapDescriptorFactory.fromBitmap(Constant.setMarkerPin(getActivity(), R.drawable.marker_driver))));
                                             LatLngBounds.Builder builder = new LatLngBounds.Builder();
                                             builder.include(driverMarker.getPosition());
@@ -1375,13 +1378,14 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                     } else {
                                         URL url = new URL(vehicleTypes.get(posVehicleTypes).getPlotting_icon());
                                         final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                        final Bitmap newBitmap = getResizedBitmap(bmp, 70, 70);
                                         getActivity().runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
 //                                                driverMarker.setPosition(driver);
                                                 driverMarker = mMap.addMarker(new MarkerOptions()
                                                         .position(driver)
-                                                        .icon(BitmapDescriptorFactory.fromBitmap(bmp)));
+                                                        .icon(BitmapDescriptorFactory.fromBitmap(newBitmap)));
                                                 customerMarker = mMap.addMarker(new MarkerOptions().position(customer).icon(BitmapDescriptorFactory.fromBitmap(Constant.setMarkerPin(getActivity(), R.drawable.marker_driver))));
                                                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
                                                 builder.include(driverMarker.getPosition());
