@@ -167,6 +167,9 @@
         <activity
             android:name=".school.MyKidsRegistration"
             android:screenOrientation="portrait" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="2cc1c9e453ef447c6d6e1b4270811b3b028da0a4" />
     </application>
 
 </manifest>
