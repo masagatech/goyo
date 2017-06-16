@@ -3,14 +3,17 @@ package com.crest.goyo.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.crest.goyo.R;
 import com.crest.goyo.Utils.Constant;
 import com.crest.goyo.Utils.Preferences;
@@ -36,12 +39,15 @@ public class TariffCardFragment extends Fragment {
     private ArrayAdapter<String> vehicleListAdapter;
     private ArrayAdapter<String> cityListAdapter;
     private List<String> vehicleTypeList = new ArrayList<>();
+    private List<String> vehicleImageTypeList = new ArrayList<>();
+
     private List<String> cityData = new ArrayList<String>();
     private ArrayList<String> cityArray = new ArrayList<String>();
     private int cityId = 0;
     private List<String> vehicleData = new ArrayList<String>();
     private ArrayList<String> vehicleArray = new ArrayList<String>();
     private int vehicleId = 0;
+    ImageView image_vehical_type;
 
     public TariffCardFragment() {
     }
@@ -71,8 +77,8 @@ public class TariffCardFragment extends Fragment {
                 vehicleId = position;
                 try {
                     vehicleArray.get(vehicleId);
-
                     getTeriffCardAPI(spinner_city.getSelectedItemId(), spinner_vehicle.getSelectedItemId());
+
                 } catch (Exception e) {
 
                 }
@@ -100,10 +106,10 @@ public class TariffCardFragment extends Fragment {
                 try {
                     cityArray.get(cityId);
                     getTeriffCardAPI(spinner_city.getSelectedItemId(), spinner_vehicle.getSelectedItemId());
-                }catch (Exception e){
+
+                } catch (Exception e) {
 
                 }
-
             }
 
             @Override
@@ -160,6 +166,7 @@ public class TariffCardFragment extends Fragment {
                 String value = String.valueOf(success);
                 android.util.Log.e("value", "    " + value);
                 if (value.equals("0")) {
+                    Log.e("Value", "onResult: Value 0 is");
                 } else {
                     try {
                         JSONObject data = response.getJSONObject("data");
@@ -173,10 +180,8 @@ public class TariffCardFragment extends Fragment {
                         e.printStackTrace();
                     }
                 }
-
             }
         }, false);
-
     }
 
     private void getTeriffCardAPI(long city, long vehicle) {
@@ -199,6 +204,10 @@ public class TariffCardFragment extends Fragment {
                     if (responce_status == VolleyTAG.response_status) {
                         JSONObject jsonObject = response.getJSONObject("data");
                         JSONObject l_data = jsonObject.getJSONObject("l_data");
+
+                        /*Hector*/
+                        Glide.with(getActivity()).load(l_data.getString("list_icon")).placeholder(R.drawable.ic_tariff_vehicle).into(image_vehical_type);
+
                         JSONObject charges = l_data.getJSONObject("charges");
                         tv_base_fare.setText("\u20B9" + " " + charges.getString("base_fare"));
                         tv_upto_km_label.setText("0 - " + charges.getString("upto_km") + " KM");
@@ -208,7 +217,8 @@ public class TariffCardFragment extends Fragment {
                         tv_ride_time_charge.setText("\u20B9" + " " + charges.getString("ride_time_charge") + " per Min");
                         tv_min_fare.setText("\u20B9" + " " + charges.getString("min_charge"));
                         tv_ride_time_charges.setText("\u20B9" + " " + charges.getString("ride_time_pick_charge") + " per Min");
-                        tv_service_tax.setText("\u20B9" + " " + charges.getString("ride_time_pick_charge"));
+                        tv_service_tax.setText("\u20B9" + " " + charges.getString("service_tax"));
+
                     } else {
 
                     }
@@ -218,8 +228,6 @@ public class TariffCardFragment extends Fragment {
                 }
             }
         }, true);
-
-
     }
 
     private void initUI() {
@@ -241,6 +249,6 @@ public class TariffCardFragment extends Fragment {
         spinner_city = (Spinner) view.findViewById(R.id.spinner_city);
         tv_min_fare = (TextView) view.findViewById(R.id.tv_min_fare);
         spinner_vehicle = (Spinner) view.findViewById(R.id.spinner_vehicle);
+        image_vehical_type = (ImageView) view.findViewById(R.id.image_vehical_type);
     }
-
 }

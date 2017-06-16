@@ -297,7 +297,9 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
             }
         });
     }
+
     private Handler h1 = new Handler();
+
     private void updateDriverLocation() {
 
         h1.postDelayed(new Runnable() {
@@ -344,11 +346,11 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                         Location targetLocation = new Location("");//provider name is unnecessary
                         targetLocation.setLatitude(driverLat);//your coords of course
                         targetLocation.setLongitude(driverLong);
-                        Log.e("TAG", "targetLocation "+targetLocation);
+                        Log.e("TAG", "targetLocation " + targetLocation);
 //                        float distanceInMeters =  targetLocation.distanceTo(location);
                         if (targetLocation.hasBearing()) {
                             Log.e("TAG", "hasBearing = true");
-                             cameraPosition = new CameraPosition.Builder()
+                            cameraPosition = new CameraPosition.Builder()
                                     .target(loc)             // Sets the center of the map to current location
                                     .zoom(15)                   // Sets the zoom
                                     .bearing(targetLocation.getBearing()) // Sets the orientation of the camera to east
@@ -357,7 +359,7 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                         } else {
                             Log.e("TAG", "hasBearing = false");
-                             cameraPosition = new CameraPosition.Builder()
+                            cameraPosition = new CameraPosition.Builder()
                                     .target(loc)             // Sets the center of the map to current location
                                     .zoom(15)                   // Sets the zoom
                                     .bearing(targetLocation.getBearing()) // Sets the orientation of the camera to east
@@ -403,6 +405,12 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                     if (responce_status == VolleyTAG.response_status) {
                         JSONObject jsonObject = response.getJSONObject("data");
                         JSONObject l_data = jsonObject.getJSONObject("l_data");
+
+                        /*hector*/
+                        JSONObject vehicle_type_data = jsonObject.getJSONObject("vehicle_type_data");
+                        android.util.Log.e("Vehicle Image", "Start Ride Activity" + vehicle_type_data.getString("plotting_icon"));
+                        Preferences.setValue(getApplicationContext(), Preferences.VEHICLES_IMG, vehicle_type_data.getString("plotting_icon"));
+
                         JSONObject driver_data = jsonObject.getJSONObject("driver_data");
                         pickup_latitude = Double.parseDouble(l_data.getString("pickup_latitude"));
                         pickup_longitude = Double.parseDouble(l_data.getString("pickup_longitude"));
@@ -744,12 +752,13 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
         }
 //        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
     }
+
     private void getMessageFromNotification() {
         mReceiveMessageFromNotification = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 android.util.Log.d(TAG, "data: " + "app open notif START RIDE main activity 1");
-                 if (intent.getAction().equals(MyFirebaseMessagingService.COMPLETE_RIDE)) {
+                if (intent.getAction().equals(MyFirebaseMessagingService.COMPLETE_RIDE)) {
                     android.util.Log.d(TAG, "data: " + "app open notif main activity");
                     if (intent.getExtras() != null) {
                         android.util.Log.d(TAG, "data: " + "app open notif main activity");
@@ -768,7 +777,7 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
     public void onPause() {
         super.onPause();
 //        App.activityPaused();
-        Log.d("##########","PAUSE");
+        Log.d("##########", "PAUSE");
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(mReceiveMessageFromNotification);
     }
 

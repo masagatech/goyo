@@ -5,9 +5,9 @@ package com.crest.goyo.ModelClasses;
  */
 public class MyRidesModel {
 
-    String id,status,ride_time,vehicle_type,pickup_address,destination_address,driver_name;
+    String id,status,ride_time,vehicle_type,pickup_address,destination_address,driver_name,v_ride_code,driver_v_id;
 
-    public MyRidesModel(String id, String status, String ride_time, String vehicle_type, String pickup_address, String destination_address, String driver_name) {
+  /*  public MyRidesModel(String id, String status, String ride_time, String vehicle_type, String pickup_address, String destination_address, String driver_name) {
         this.id = id;
         this.status = status;
         this.ride_time = ride_time;
@@ -15,11 +15,50 @@ public class MyRidesModel {
         this.pickup_address = pickup_address;
         this.destination_address = destination_address;
         this.driver_name = driver_name;
+    }*/
+
+    public MyRidesModel(String id, String status, String ride_time, String vehicle_type, String pickup_address, String destination_address, String driver_name, String v_ride_code, String driver_v_id) {
+        this.id = id;
+        this.status = status;
+        this.ride_time = ride_time;
+        this.vehicle_type = vehicle_type;
+        this.pickup_address = pickup_address;
+        this.destination_address = destination_address;
+        this.driver_name = driver_name;
+        this.v_ride_code = v_ride_code;
+        this.driver_v_id = driver_v_id;
+    }
+
+    public String getDriver_v_id() {
+        return driver_v_id;
+    }
+
+    public void setDriver_v_id(String driver_v_id) {
+        this.driver_v_id = driver_v_id;
     }
 
     public String getId() {
         return id;
     }
+
+    public String getV_ride_code() {
+        return v_ride_code;
+    }
+
+    public void setV_ride_code(String v_ride_code) {
+        this.v_ride_code = v_ride_code;
+    }
+
+    /*public MyRidesModel(String id, String status, String ride_time, String vehicle_type, String pickup_address, String destination_address, String driver_name, String v_ride_code) {
+        this.id = id;
+        this.status = status;
+        this.ride_time = ride_time;
+        this.vehicle_type = vehicle_type;
+        this.pickup_address = pickup_address;
+        this.destination_address = destination_address;
+        this.driver_name = driver_name;
+        this.v_ride_code = v_ride_code;
+    }*/
 
     public void setId(String id) {
         this.id = id;

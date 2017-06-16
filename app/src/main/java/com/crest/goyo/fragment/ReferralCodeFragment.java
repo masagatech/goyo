@@ -4,11 +4,13 @@ package com.crest.goyo.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crest.goyo.R;
 import com.crest.goyo.Utils.Constant;
@@ -23,7 +25,7 @@ import org.json.JSONObject;
 import okhttp3.HttpUrl;
 
 
-public class ReferralCodeFragment extends Fragment implements View.OnClickListener{
+public class ReferralCodeFragment extends Fragment implements View.OnClickListener {
 
     private TextView actionbar_title, tv_code, tv_earn_money;
     private Button bt_invite;
@@ -51,24 +53,22 @@ public class ReferralCodeFragment extends Fragment implements View.OnClickListen
     }
 
 
-
     private void initUI() {
 
-        actionbar_title=(TextView)view.findViewById(R.id.actionbar_title);
-        tv_code=(TextView)view.findViewById(R.id.tv_code);
-        tv_earn_money=(TextView)view.findViewById(R.id.tv_earn_money);
-        bt_invite=(Button)view.findViewById(R.id.bt_invite);
+        actionbar_title = (TextView) view.findViewById(R.id.actionbar_title);
+        tv_code = (TextView) view.findViewById(R.id.tv_code);
+        tv_earn_money = (TextView) view.findViewById(R.id.tv_earn_money);
+        bt_invite = (Button) view.findViewById(R.id.bt_invite);
         actionbar_title.setText(R.string.actionbar_referralcode);
-
-
         bt_invite.setOnClickListener(this);
     }
+
     private void getReferralCode() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_REFERRAL_CODE).newBuilder();
         urlBuilder.addQueryParameter("device", "ANDROID");
         urlBuilder.addQueryParameter("lang", "en");
-        urlBuilder.addQueryParameter("login_id",Preferences.getValue_String(getActivity(),Preferences.USER_ID));
-        urlBuilder.addQueryParameter("v_token", Preferences.getValue_String(getActivity(),Preferences.USER_AUTH_TOKEN));
+        urlBuilder.addQueryParameter("login_id", Preferences.getValue_String(getActivity(), Preferences.USER_ID));
+        urlBuilder.addQueryParameter("v_token", Preferences.getValue_String(getActivity(), Preferences.USER_AUTH_TOKEN));
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         VolleyRequestClass.allRequest(getActivity(), newurl, new RequestInterface() {
@@ -78,17 +78,17 @@ public class ReferralCodeFragment extends Fragment implements View.OnClickListen
                     int responce_status = response.getInt(VolleyTAG.status);
                     if (responce_status == VolleyTAG.response_status) {
                         JSONObject jsonObject = response.getJSONObject("data");
-                        if(jsonObject.getString("v_referral_code").equals("")){
+                        if (jsonObject.getString("v_referral_code").equals("")) {
                             tv_code.setVisibility(View.GONE);
                             tv_earn_money.setText("No Referral Code Available");
                             bt_invite.setEnabled(false);
-                        }else{
+                        } else {
                             tv_code.setText(jsonObject.getString("v_referral_code"));
-                            tv_earn_money.setText("Share your referral code and get "+"\u20B9"+" "+jsonObject.getString("earn_money")+". So share your code and get your money.");
+                            tv_earn_money.setText("Share your referral code and get " + "\u20B9" + " " + jsonObject.getString("earn_money") + ". So share your code and get your money.");
                         }
 
                     } else {
-
+                        Log.e("Error", "onResult: Error response null");
                     }
 
                 } catch (JSONException e) {
@@ -97,17 +97,56 @@ public class ReferralCodeFragment extends Fragment implements View.OnClickListen
             }
         }, true);
     }
+
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.bt_invite:
+
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_SEND);
                 intent.putExtra(Intent.EXTRA_TEXT, tv_code.getText().toString());
                 intent.setType("text/plain");
-                startActivity(intent);
-                break;
-        }
+                startActivity(Intent.createChooser(intent, "Share"));
 
+                /*BottomSheetDialog dialog = new BottomSheetDialog(getContext());
+                dialog.setContentView(R.layout.layout_share_referral_dialog);
+                ImageView imgMassage = (ImageView) dialog.findViewById(R.id.imgViewMessage);
+                ImageView imgWhatsapp = (ImageView) dialog.findViewById(R.id.imgViewWhatsapp);
+                assert imgMassage != null;
+                imgMassage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        shareMessage();
+                    }
+                });
+                assert imgWhatsapp != null;
+                imgWhatsapp.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        shareOnWhatsApp();
+                    }
+                });
+                dialog.show();
+                break;*/
+        }
+    }
+
+    void shareMessage() {
+        Intent smsIntent = new Intent(Intent.ACTION_VIEW);
+        smsIntent.setType("vnd.android-dir/mms-sms");
+        Toast.makeText(getContext(), "There is no sms app available", Toast.LENGTH_SHORT).show();
+        smsIntent.putExtra("sms_body", tv_code.getText().toString().trim());
+        startActivity(smsIntent);
+    }
+
+    void shareOnWhatsApp() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_TEXT, tv_code.getText().toString().trim());
+        intent.setType("text/plain");
+        intent.setPackage("com.whatsapp");
+        startActivity(intent);
     }
 }

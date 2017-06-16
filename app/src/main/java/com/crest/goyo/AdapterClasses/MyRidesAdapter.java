@@ -44,16 +44,18 @@ public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.MyView> 
     @Override
     public void onBindViewHolder(MyRidesAdapter.MyView holder, final int position) {
 
-
         holder.tv_dr_name.setText("" + list.get(position).getDriver_name());
         holder.tv_vehicle_detail.setText("" + list.get(position).getVehicle_type());
 
         holder.tv_pickup.setText("" + list.get(position).getPickup_address() + " to");
         holder.tv_drop.setText("" + list.get(position).getDestination_address());
 
-        String date =  DateUtils.formatDateTime(context, Long.parseLong(list.get(position).getRide_time()), DateUtils.FORMAT_SHOW_DATE);
+        holder.tv_ride_code.setText("Ride Code : " + list.get(position).getV_ride_code());
+        holder.tv_driver_id.setText("Driver Id : " + list.get(position).getDriver_v_id());
+
+        String date = DateUtils.formatDateTime(context, Long.parseLong(list.get(position).getRide_time()), DateUtils.FORMAT_SHOW_DATE);
         String time = DateUtils.formatDateTime(context, Long.parseLong(list.get(position).getRide_time()), DateUtils.FORMAT_SHOW_TIME);
-        holder.tv_date_time.setText("" +date+" "+ time);
+        holder.tv_date_time.setText("" + date + " " + time);
 
         if (list.get(position).getStatus().equals("complete")) {
             holder.view_status.setBackgroundResource(R.color.colorGreen);
@@ -67,11 +69,11 @@ public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.MyView> 
             holder.view_status.setBackgroundResource(R.color.colorRed);
             holder.tv_ride_status.setText("" + list.get(position).getStatus());
             holder.tv_ride_status.setTextColor(context.getResources().getColor(R.color.colorRed));
-        }else if(list.get(position).getStatus().equals("start")){
+        } else if (list.get(position).getStatus().equals("start")) {
             holder.view_status.setBackgroundResource(R.color.colorPrimary);
             holder.tv_ride_status.setText("" + list.get(position).getStatus());
             holder.tv_ride_status.setTextColor(context.getResources().getColor(R.color.colorPrimary));
-        }else if(list.get(position).getStatus().equals("confirm")){
+        } else if (list.get(position).getStatus().equals("confirm")) {
             holder.view_status.setBackgroundResource(R.color.colorBrown);
             holder.tv_ride_status.setText("" + list.get(position).getStatus());
             holder.tv_ride_status.setTextColor(context.getResources().getColor(R.color.colorBrown));
@@ -80,23 +82,23 @@ public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.MyView> 
             @Override
             public void onClick(View v) {
 
-                if(list.get(position).getStatus().equals("cancel")){
+                if (list.get(position).getStatus().equals("cancel")) {
                     Intent intent = new Intent(context, CancelMyRidesDetail.class);
-                    intent.putExtra("rideID",list.get(position).getId());
+                    intent.putExtra("rideID", list.get(position).getId());
                     context.startActivity(intent);
-                }else if(list.get(position).getStatus().equals("start")){
+                } else if (list.get(position).getStatus().equals("start")) {
                     Intent intent = new Intent(context, StartMyRidesDetail.class);
-                    intent.putExtra("rideID",list.get(position).getId());
+                    intent.putExtra("rideID", list.get(position).getId());
                     context.startActivity(intent);
-                }else if(list.get(position).getStatus().equals("confirm")){
+                } else if (list.get(position).getStatus().equals("confirm")) {
                     Intent intent = new Intent(context, MainActivity.class);
-                    intent.putExtra("rideID",list.get(position).getId());
-                    Preferences.setValue(context,"comefrom","MyRides");
-                    Preferences.setValue(context,Preferences.RIDE_ID,list.get(position).getId());
+                    intent.putExtra("rideID", list.get(position).getId());
+                    Preferences.setValue(context, "comefrom", "MyRides");
+                    Preferences.setValue(context, Preferences.RIDE_ID, list.get(position).getId());
                     context.startActivity(intent);
-                }else{
+                } else {
                     Intent intent = new Intent(context, CompleteMyRidesDetail.class);
-                    intent.putExtra("rideID",list.get(position).getId());
+                    intent.putExtra("rideID", list.get(position).getId());
                     context.startActivity(intent);
                 }
 
@@ -105,14 +107,13 @@ public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.MyView> 
     }
 
 
-
     @Override
     public int getItemCount() {
         return list.size();
     }
 
     public class MyView extends RecyclerView.ViewHolder {
-        TextView tv_dr_name, tv_vehicle_detail, tv_ride_status, tv_date_time, tv_pickup, tv_drop;
+        TextView tv_dr_name, tv_vehicle_detail, tv_ride_status, tv_date_time, tv_pickup, tv_drop, tv_ride_code, tv_driver_id;
         LinearLayout lay_my_rides;
         View view_status;
 
@@ -127,6 +128,8 @@ public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.MyView> 
             tv_drop = (TextView) itemView.findViewById(R.id.tv_drop);
             lay_my_rides = (LinearLayout) itemView.findViewById(R.id.lay_my_rides);
             view_status = (View) itemView.findViewById(R.id.view_status);
+            tv_ride_code = (TextView) itemView.findViewById(R.id.tv_ride_code);
+            tv_driver_id = (TextView) itemView.findViewById(R.id.tv_driver_id);
 
         }
     }

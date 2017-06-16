@@ -100,7 +100,7 @@ public class MyRidesFragment extends Fragment implements View.OnClickListener {
                         for (int i = 0; i < data.length(); i++) {
                             JSONObject objData = data.getJSONObject(i);
                             {
-                                rideList.add(new MyRidesModel(objData.getString("id"),objData.getString("status"),objData.getString("ride_time"),objData.getString("vehicle_type"),objData.getString("pickup_address"),objData.getString("destination_address"),objData.getString("driver_name")));
+                                rideList.add(new MyRidesModel(objData.getString("id"),objData.getString("status"),objData.getString("ride_time"),objData.getString("vehicle_type"),objData.getString("pickup_address"),objData.getString("destination_address"),objData.getString("driver_name"),objData.getString("v_ride_code"),objData.getString("driver_v_id")));
                             }
 
                             myRidesAdapter = new MyRidesAdapter(rideList);

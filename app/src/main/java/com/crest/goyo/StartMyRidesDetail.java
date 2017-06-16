@@ -69,6 +69,12 @@ public class StartMyRidesDetail extends AppCompatActivity {
                         JSONObject l_data = jsonObject.getJSONObject("l_data");
                         tv_pickup_from.setText(l_data.getString("pickup_address"));
                         tv_drop_loc.setText(l_data.getString("destination_address"));
+
+                        /*Hector*/
+                        JSONObject vehicle_type_data = jsonObject.getJSONObject("vehicle_type_data");
+                        android.util.Log.e("Vehicle Image", "StartMyRideDetails: " + vehicle_type_data.getString("plotting_icon"));
+                        Preferences.setValue(getApplicationContext(), Preferences.VEHICLES_IMG, vehicle_type_data.getString("plotting_icon"));
+
                         try {
                             String date = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong((jsonObject.getString("d_time"))), DateUtils.FORMAT_SHOW_DATE);
                             String time = DateUtils.formatDateTime(getApplicationContext(), Long.parseLong(jsonObject.getString("d_time")), DateUtils.FORMAT_SHOW_TIME);

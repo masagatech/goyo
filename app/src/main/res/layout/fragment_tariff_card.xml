@@ -30,8 +30,8 @@
                     android:gravity="center|start">
 
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
                         android:src="@drawable/ic_tariff_city" />
                 </LinearLayout>
 
@@ -51,8 +51,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="CHOOSE CITY"
                         android:layout_marginLeft="8dp"
+                        android:text="CHOOSE CITY"
                         android:textSize="12dp" />
                 </LinearLayout>
             </LinearLayout>
@@ -69,11 +69,11 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1.7"
                     android:gravity="center|start">
-
+                    <!--Hector-->
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_tariff_vehicle" />
+                        android:id="@+id/image_vehical_type"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -93,8 +93,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="CHOOSE CATAGORY"
                         android:layout_marginLeft="8dp"
+                        android:text="CHOOSE CATAGORY"
                         android:textSize="12dp" />
                 </LinearLayout>
 
@@ -143,13 +143,14 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="2">
+
                 <TextView
                     android:id="@+id/tv_base_fare_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@color/colorBlack"
-                    android:text="Base fare"/>
+                    android:text="Base fare"
+                    android:textColor="@color/colorBlack" />
 
                 <TextView
                     android:id="@+id/tv_base_fare"
@@ -157,27 +158,28 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textAlignment="textEnd"
-                    android:textColor="@color/colorBlack"
-                  />
+                    android:textColor="@color/colorBlack" />
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/colorGrey"
+                android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"></View>
+                android:background="@color/colorGrey"></View>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="2">
+
                 <TextView
                     android:id="@+id/tv_upto_km_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@color/colorBlack"
-                    />
+                    android:textColor="@color/colorBlack" />
 
                 <TextView
                     android:id="@+id/tv_upto_km"
@@ -185,27 +187,28 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textAlignment="textEnd"
-                    android:textColor="@color/colorBlack"
-                    />
+                    android:textColor="@color/colorBlack" />
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/colorGrey"
+                android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"></View>
+                android:background="@color/colorGrey"></View>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="2">
+
                 <TextView
                     android:id="@+id/tv_after_km_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@color/colorBlack"
-                    />
+                    android:textColor="@color/colorBlack" />
 
                 <TextView
                     android:id="@+id/tv_after_km"
@@ -213,28 +216,30 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textAlignment="textEnd"
-                    android:textColor="@color/colorBlack"
-                    />
+                    android:textColor="@color/colorBlack" />
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/colorGrey"
+                android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"></View>
+                android:background="@color/colorGrey"></View>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="2">
+
                 <TextView
                     android:id="@+id/tv_ride_time_charge_label"
 
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@color/colorBlack"
-                    android:text="Ride time charges"/>
+                    android:text="Ride time charges"
+                    android:textColor="@color/colorBlack" />
 
                 <TextView
                     android:id="@+id/tv_ride_time_charge"
@@ -242,34 +247,37 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textAlignment="textEnd"
-                    android:textColor="@color/colorBlack"
-                    />
+                    android:textColor="@color/colorBlack" />
             </LinearLayout>
+
             <TextView
                 android:id="@+id/tv_ride_time_charge_detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Wait time is chargeable."/>
+                android:text="Wait time is chargeable." />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/colorGrey"
+                android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"></View>
+                android:background="@color/colorGrey"></View>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="2">
+
                 <TextView
                     android:id="@+id/tv_min_fare_label"
 
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@color/colorBlack"
-                    android:text="Minimum fare"/>
+                    android:text="Minimum fare"
+                    android:textColor="@color/colorBlack" />
 
                 <TextView
                     android:id="@+id/tv_min_fare"
@@ -277,28 +285,30 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textAlignment="textEnd"
-                    android:textColor="@color/colorBlack"
-             />
+                    android:textColor="@color/colorBlack" />
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/colorGrey"
+                android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"></View>
+                android:background="@color/colorGrey"></View>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="2">
+
                 <TextView
                     android:id="@+id/tv_ride_time_charges_label"
 
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@color/colorBlack"
-                    android:text="Ride time charges"/>
+                    android:text="Ride time charges"
+                    android:textColor="@color/colorBlack" />
 
                 <TextView
                     android:id="@+id/tv_ride_time_charges"
@@ -306,32 +316,35 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textAlignment="textEnd"
-                    android:textColor="@color/colorBlack"
-                    />
+                    android:textColor="@color/colorBlack" />
             </LinearLayout>
+
             <TextView
                 android:id="@+id/tv_ride_time_charges_detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Pick time is chargeable."/>
+                android:text="Pick time is chargeable." />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/colorGrey"
+                android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"></View>
+                android:background="@color/colorGrey" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="2">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@color/colorBlack"
-                    android:text="Service tax"/>
+                    android:text="Service tax"
+                    android:textColor="@color/colorBlack" />
 
                 <TextView
                     android:id="@+id/tv_service_tax"
@@ -339,22 +352,23 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textAlignment="textEnd"
-                    android:textColor="@color/colorBlack"
-                    />
+                    android:textColor="@color/colorBlack" />
             </LinearLayout>
+
             <TextView
                 android:id="@+id/tv_service_tax_detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp"
-                android:text="Service tax is payable."/>
+                android:layout_marginTop="8dp"
+                android:text="Service tax is payable." />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/colorGrey"
+                android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"></View>
+                android:background="@color/colorGrey"></View>
         </LinearLayout>
     </ScrollView>
 

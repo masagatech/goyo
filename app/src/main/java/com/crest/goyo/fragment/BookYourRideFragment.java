@@ -523,6 +523,14 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                     if (responce_status == VolleyTAG.response_status) {
                         JSONObject jsonObject = response.getJSONObject("data");
                         JSONObject l_data = jsonObject.getJSONObject("l_data");
+
+
+                         /*hector*/
+                        JSONObject vehicle_type_data = jsonObject.getJSONObject("vehicle_type_data");
+                        android.util.Log.e("Vehicle Image", "Book Your Fagment 2" + vehicle_type_data.getString("plotting_icon"));
+                        Preferences.setValue(getContext(), Preferences.VEHICLES_IMG, vehicle_type_data.getString("plotting_icon"));
+
+
                         JSONObject estimation = l_data.getJSONObject("estimation");
                         String vehicle_type = l_data.getString("vehicle_type");
                         String estimate_amount = estimation.getString("final_total");
@@ -1210,6 +1218,13 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                     if (responce_status == VolleyTAG.response_status) {
                         JSONObject jsonObject = response.getJSONObject("data");
                         JSONObject l_data = jsonObject.getJSONObject("l_data");
+
+                          /*hector*/
+                        JSONObject vehicle_type_data = jsonObject.getJSONObject("vehicle_type_data");
+                        android.util.Log.e("Vehicle Image", "BookYourFragment" + vehicle_type_data.getString("plotting_icon"));
+                        Preferences.setValue(getContext(), Preferences.VEHICLES_IMG, vehicle_type_data.getString("plotting_icon"));
+
+
                         JSONObject estimation = l_data.getJSONObject("estimation");
                         String vehicle_type = l_data.getString("vehicle_type");
                         String estimate_amount = estimation.getString("final_total");
@@ -1303,7 +1318,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                             public void run() {
                                 try {
                                     URL url = new URL(vehicleTypes.get(posVehicleTypes).getPlotting_icon());
-
                                     final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                                     final Bitmap newBitmap = getResizedBitmap(bmp, 70, 70);
                                     getActivity().runOnUiThread(new Runnable() {
@@ -1762,7 +1776,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                         e.printStackTrace();
                     }
                 }
-
             }
         });
     }
@@ -1852,8 +1865,8 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                                 /*vehicleMarker = mMap.addMarker(new MarkerOptions()
                                                         .position(point)
                                                         .icon(BitmapDescriptorFactory.fromBitmap(bmp)));*/
-                                                /*Hector Change*/
 
+                                                /*Hector Change*/
                                                 vehicleMarker = mMap.addMarker(new MarkerOptions()
                                                         .position(point)
                                                         .icon(BitmapDescriptorFactory.fromBitmap(newBitmap)));
@@ -1883,12 +1896,10 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
     public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
 
         int width = bm.getWidth();
-
         int height = bm.getHeight();
-
         float scaleWidth = ((float) newWidth) / width;
-
         float scaleHeight = ((float) newHeight) / height;
+
         // create a matrix for the manipulation
         Matrix matrix = new Matrix();
         // resize the bit map

@@ -1,12 +1,17 @@
 package com.crest.goyo;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crest.goyo.FCM.MyFirebaseInstanceIDService;
 import com.crest.goyo.Utils.Constant;
 import com.crest.goyo.Utils.CustomDialog;
 import com.crest.goyo.Utils.GPSTracker;
@@ -36,6 +42,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private CustomDialog dialog;
     GPSTracker gps;
     double latitude, longitude;
+    int REQUEST_INTERNET = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +50,33 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_login);
 
+        /*hector*/
+        if (!isNetworkAvailable()) {
+            //Show Information about why you need the permission
+            AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
+            builder.setTitle("Internet Permission");
+            builder.setMessage("Internet Permission Needed.");
+            builder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    /*startActivity(new Intent(Settings.ACTION_NETWORK_OPERATOR_SETTINGS));*/
+
+                    dialog.cancel();
+                    startService(new Intent(Login.this, MyFirebaseInstanceIDService.class));
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startService(new Intent(Login.this, MyFirebaseInstanceIDService.class));
+                    finish();
+                }
+            });
+            builder.show();
+        }
+
         initUI();
+
 
         Log.e("TAG", "checkSelfPermission");
         if (ActivityCompat.checkSelfPermission(Login.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -60,7 +93,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
             return;
         }
-
 
     }
 
@@ -83,6 +115,20 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         tv_forgot_password.setOnClickListener(this);
         bt_signup.setOnClickListener(this);
         bt_login.setOnClickListener(this);
+    }
+
+    /*hector*/
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startService(new Intent(Login.this, MyFirebaseInstanceIDService.class));
     }
 
     @Override
@@ -123,6 +169,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                     latitude = gps.getLatitude();
                     longitude = gps.getLongitude();
                     Log.d("######", "lat: " + latitude + "long :" + longitude);
+
+                    startService(new Intent(Login.this, MyFirebaseInstanceIDService.class));
                     userLogin();
                 } else {
                     gps.showSettingsAlert();
@@ -151,6 +199,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         urlBuilder.addQueryParameter("v_username", et_email.getText().toString().trim());
         urlBuilder.addQueryParameter("v_password", et_password.getText().toString());
         urlBuilder.addQueryParameter("v_device_token", FirebaseInstanceId.getInstance().getToken());
+        Log.e("Firebase Device Token", "userLoginAPI: " + FirebaseInstanceId.getInstance().getToken());
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
@@ -165,6 +214,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         JSONObject jsonObject = response.getJSONObject("data");
                         Preferences.setValue(getApplicationContext(), Preferences.USER_ID, jsonObject.getString("id"));
                         Preferences.setValue(getApplicationContext(), Preferences.USER_AUTH_TOKEN, jsonObject.getString("v_token"));
+                        Preferences.setValue(getApplicationContext(), Preferences.V_ID, jsonObject.getString("v_id"));
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
 

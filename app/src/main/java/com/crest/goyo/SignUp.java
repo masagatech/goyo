@@ -1,7 +1,12 @@
 package com.crest.goyo;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -34,18 +39,41 @@ import okhttp3.HttpUrl;
 public class SignUp extends AppCompatActivity implements View.OnClickListener {
     private TextView actionbar_title;
     private Button bt_submit;
-    private EditText et_full_name, et_email, et_mo_no, et_pasword, et_confirm_password,et_referral_code;
+    private EditText et_full_name, et_email, et_mo_no, et_pasword, et_confirm_password, et_referral_code;
     private CustomDialog customDialog;
     private RadioGroup mGenderGrup;
     private RadioButton mGender;
     private Spinner spinner_city_list;
     private ArrayAdapter<String> cityListAdapter;
     private List<CityModel> cityList = new ArrayList<>();
+    final static int REQUEST_INTERNET = 100;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_signup);
+
+
+        /*hector*/
+        if (!isNetworkAvailable()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
+            builder.setTitle("Internet Permission");
+            builder.setMessage("Internet Permission Needed.");
+            builder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+            builder.show();
+        }
 
         initUI();
 
@@ -67,7 +95,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         et_confirm_password = (EditText) findViewById(R.id.et_confirm_password);
         mGenderGrup = (RadioGroup) findViewById(R.id.g1);
         spinner_city_list = (Spinner) findViewById(R.id.spinner_city_list);
-        et_referral_code=(EditText)findViewById(R.id.et_referral_code);
+        et_referral_code = (EditText) findViewById(R.id.et_referral_code);
 
         bt_submit.setOnClickListener(this);
 
@@ -86,6 +114,15 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 break;
         }
     }
+
+    /*hector*/
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
 
     private void userSignup() {
 
@@ -121,6 +158,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
         }
     }
+
     private void getCitiesAPI() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.GET_CITIES).newBuilder();
         urlBuilder.addQueryParameter("device", "ANDROID");
@@ -136,10 +174,10 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                     String message = response.getString(VolleyTAG.message);
                     if (responce_status == VolleyTAG.response_status) {
                         JSONArray data = response.getJSONArray("data");
-                        Log.e("TAG","City length = "+data.length());
-                        for (int i = 0; i <data.length(); i++) {
+                        Log.e("TAG", "City length = " + data.length());
+                        for (int i = 0; i < data.length(); i++) {
                             JSONObject objData = data.getJSONObject(i);
-                            CityModel cityModel = new CityModel(objData.getString("id"),objData.getString("v_name"));
+                            CityModel cityModel = new CityModel(objData.getString("id"), objData.getString("v_name"));
                             cityList.add(cityModel);
                             cityListAdapter.add(cityModel.getName());
                         }

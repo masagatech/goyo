@@ -1,32 +1,25 @@
 package com.crest.goyo.school;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.crest.goyo.AdapterClasses.clnt_mykids_listAdapter;
 import com.crest.goyo.ModelClasses.MyKidsTrips;
-import com.crest.goyo.ModelClasses.model_tripdata;
 import com.crest.goyo.R;
 import com.crest.goyo.Utils.CustomDialog;
 import com.crest.goyo.Utils.Global;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
-
-import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

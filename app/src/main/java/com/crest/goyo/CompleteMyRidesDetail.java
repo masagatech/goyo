@@ -3,6 +3,7 @@ package com.crest.goyo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.crest.goyo.Utils.Constant;
 import com.crest.goyo.Utils.Preferences;
 import com.crest.goyo.VolleyLibrary.RequestInterface;
+import com.crest.goyo.VolleyLibrary.VolleyRequestClass;
 import com.crest.goyo.VolleyLibrary.VolleyRequestClassNew;
 import com.crest.goyo.VolleyLibrary.VolleyTAG;
 
@@ -80,7 +82,7 @@ public class CompleteMyRidesDetail extends AppCompatActivity {
         urlBuilder.addQueryParameter("lang", "en");
         urlBuilder.addQueryParameter("login_id", Preferences.getValue_String(getApplicationContext(), Preferences.USER_ID));
         urlBuilder.addQueryParameter("v_token", Preferences.getValue_String(getApplicationContext(), Preferences.USER_AUTH_TOKEN));
-        urlBuilder.addQueryParameter("i_ride_id",rideID);
+        urlBuilder.addQueryParameter("i_ride_id", rideID);
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
@@ -93,6 +95,14 @@ public class CompleteMyRidesDetail extends AppCompatActivity {
                     if (responce_status == VolleyTAG.response_status) {
                         JSONObject jsonObject = response.getJSONObject("data");
                         JSONObject l_data = jsonObject.getJSONObject("l_data");
+
+                          /*hector*/
+                        JSONObject vehicle_type_data = jsonObject.getJSONObject("vehicle_type_data");
+                        android.util.Log.e("Vehicle Image", "Start Ride Activity" + vehicle_type_data.getString("plotting_icon"));
+                        Preferences.setValue(getApplicationContext(), Preferences.VEHICLES_IMG, vehicle_type_data.getString("plotting_icon"));
+
+
+
                         JSONObject rate = jsonObject.getJSONObject("rate");
                         tv_pickup_from.setText(l_data.getString("pickup_address"));
                         tv_drop_loc.setText(l_data.getString("destination_address"));
@@ -189,6 +199,27 @@ public class CompleteMyRidesDetail extends AppCompatActivity {
 //        }, true);
 //
 //    }
+
+    void myMehtod() {
+        HttpUrl.Builder builder = HttpUrl.parse(Constant.VERIFY_ACCOUNT).newBuilder();
+        builder.addQueryParameter("", "");
+        builder.addQueryParameter("", "");
+        builder.addQueryParameter("", "");
+        String url = builder.build().toString();
+        String newUrl = url.replaceAll(" ", "%20");
+        VolleyRequestClass.allRequest(this, newUrl, new RequestInterface() {
+            @Override
+            public void onResult(JSONObject jsonObject) {
+                try {
+                    if (jsonObject.getInt("status") == 1) {
+                        Log.e("Hector", "onResult: ");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, true);
+    }
 
     private void initUI() {
 

@@ -42,7 +42,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         mTitle = remoteMessage.getData().get("title");
         mBody = remoteMessage.getData().get("body");
         Log.e(TAG, "NOTIF TAG : mType = " + mType);
-        Log.e(TAG, " NOTIF TAG : mTitle = " + mTitle);
+        Log.e(TAG, "NOTIF TAG : mTitle = " + mTitle);
         Log.e(TAG, "NOTIF TAG : mBody = " + mBody);
         Log.e(TAG, "NOTIF TAG : data = " + remoteMessage.getData());
 
@@ -74,6 +74,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 return;
             }
 
+
         }
         if (mType.equals("user_ride_complete")) {
             sendNotificationComplete();
@@ -93,6 +94,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "data: " + "app close notif");
             sendNotificationRideCancel();
         }
+
+        /*hector*/
+        if (mType.equalsIgnoreCase("user_driver_arrived")) {
+            sendNotification();
+        }
+
+
         SendMessageNotification();
         // TODO(developer): Handle FCM messages here.
         Log.d(TAG, "data: " + remoteMessage.getData());
@@ -279,6 +287,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     .setContentIntent(pendingIntent);
             NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(11 /* ID of notification */, notificationBuilder.build());
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }

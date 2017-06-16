@@ -14,6 +14,8 @@ public class Preferences {
     public static final String DRIVER_ID = "DRIVER_ID";
     public static final String ADD_MONEY = "ADD_MONEY";
     public static final String NO_VEHICLES = "NO_VEHICLES";
+    public static final String VEHICLES_IMG = "VEHICLES_IMG";
+    public static final String V_ID = "V_ID";
 
 
     public static void setValue(Context context, String Key, String Value) {

@@ -8,216 +8,243 @@
     android:orientation="vertical"
     tools:context="com.crest.goyo.Login">
 
-    <include layout="@layout/action_bar_home"></include>
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <LinearLayout
+    <include layout="@layout/action_bar_home" />
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/layout_margin"
-        android:orientation="vertical"
-        android:weightSum="2">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:gravity="center">
+            android:layout_margin="@dimen/layout_margin"
+            android:orientation="vertical"
+            android:weightSum="2">
 
-            <com.crest.goyo.CustomeViews.CircleImageView
-                android:id="@+id/img_profile"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:paddingTop="10dp"
-                android:src="@drawable/add_image" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <EditText
-                android:id="@+id/et_first_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:hint="@string/hint_edit_profile_first_name"
-                android:singleLine="true"
-                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
-                android:textColor="@color/colorBlack"
-                android:textColorHint="@color/colorGrey"
-                android:textSize="@dimen/et_text" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/colorGrey"></View>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:layout_weight="1.5"
+                android:gravity="center">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="Gender"
-                    android:textColor="@color/colorBlack" />
-
-                <RadioGroup
-                    android:id="@+id/g1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:orientation="horizontal">
-
-                    <RadioButton
-                        android:id="@+id/r1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="Male" />
-
-                    <RadioButton
-                        android:id="@+id/r2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Female" />
-
-                </RadioGroup>
-
+                <com.crest.goyo.CustomeViews.CircleImageView
+                    android:id="@+id/img_profile"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:paddingTop="10dp"
+                    android:src="@drawable/add_image" />
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/colorGrey"></View>
-            <EditText
-                android:id="@+id/et_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_et"
-                android:background="@android:color/transparent"
-                android:hint="@string/hint_edit_profile_email"
-                android:singleLine="true"
-                android:textColor="@color/colorBlack"
-                android:textColorHint="@color/colorGrey"
-                android:textSize="@dimen/et_text" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/colorGrey"></View>
-
-            <EditText
-                android:id="@+id/et_mo_number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_et"
-                android:background="@android:color/transparent"
-                android:hint="@string/hint_edit_profile_mobile"
-                android:inputType="number"
-                android:singleLine="true"
-                android:textColor="@color/colorBlack"
-                android:textColorHint="@color/colorGrey"
-                android:textSize="@dimen/et_text" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="@dimen/margin_bottom"
-                android:layout_marginTop="10dp"
-                android:background="@color/colorGrey"></View>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:weightSum="2">
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:orientation="vertical">
 
-                <TextView
+
+                <EditText
+                    android:id="@+id/et_customer_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Select city :"
-                    android:textColor="@color/colorButton"
-                    android:textSize="10dp" />
-
-                <Spinner
-                    android:id="@+id/spinner_city_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp"
-                    android:layout_weight="0.5"
-                    android:layout_marginBottom="8dp"
-                    android:background="@color/colorWhite"></Spinner>
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorGrey"></View>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-                android:weightSum="2">
-
-                <TextView
-                    android:id="@+id/et_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
                     android:background="@android:color/transparent"
-                    android:hint="CHANGE PASSWORD : "
-                    android:inputType="textPassword"
+                    android:enabled="false"
+                    android:singleLine="true"
+                    android:textColor="@color/colorDisable"
+                    android:textColorHint="@color/colorGrey"
+                    android:textSize="@dimen/et_text" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/colorGrey" />
+
+                <EditText
+                    android:id="@+id/et_first_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@android:color/transparent"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+                    android:hint="@string/hint_edit_profile_first_name"
                     android:singleLine="true"
                     android:textColor="@color/colorBlack"
                     android:textColorHint="@color/colorGrey"
                     android:textSize="@dimen/et_text" />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/colorGrey" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1.5"
-                    android:gravity="end">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
 
-                    <ImageView
-                        android:id="@+id/iv_edit"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:paddingBottom="6dp"
-                        android:paddingLeft="6dp"
-                        android:src="@drawable/ic_edit" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Gender"
+                        android:textColor="@color/colorBlack" />
+
+                    <RadioGroup
+                        android:id="@+id/g1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/r1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:text="Male" />
+
+                        <RadioButton
+                            android:id="@+id/r2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Female" />
+
+                    </RadioGroup>
+
                 </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/colorGrey" />
+
+                <EditText
+                    android:id="@+id/et_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_et"
+                    android:background="@android:color/transparent"
+                    android:enabled="false"
+                    android:hint="@string/hint_edit_profile_email"
+                    android:singleLine="true"
+                    android:textColor="@color/colorDisable"
+                    android:textColorHint="@color/colorGrey"
+                    android:textSize="@dimen/et_text" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/colorGrey" />
+
+                <EditText
+                    android:id="@+id/et_mo_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_et"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/hint_edit_profile_mobile"
+                    android:inputType="number"
+                    android:singleLine="true"
+                    android:textColor="@color/colorBlack"
+                    android:textColorHint="@color/colorGrey"
+                    android:textSize="@dimen/et_text" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="@dimen/margin_bottom"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/colorGrey" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Select city :"
+                        android:textColor="@color/colorButton"
+                        android:textSize="10dp" />
+
+                    <Spinner
+                        android:id="@+id/spinner_city_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_weight="0.5"
+                        android:background="@color/colorWhite" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorGrey" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:id="@+id/et_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:background="@android:color/transparent"
+                        android:hint="CHANGE PASSWORD : "
+                        android:inputType="textPassword"
+                        android:singleLine="true"
+                        android:textColor="@color/colorBlack"
+                        android:textColorHint="@color/colorGrey"
+                        android:textSize="@dimen/et_text" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.5"
+                        android:gravity="end">
+
+                        <ImageView
+                            android:id="@+id/iv_edit"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:paddingBottom="6dp"
+                            android:paddingLeft="6dp"
+                            android:src="@drawable/ic_edit" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="@dimen/margin_bottom"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/colorGrey" />
+
+                <Button
+                    android:id="@+id/bt_save"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="@dimen/margin_button"
+                    android:background="@drawable/black_button"
+                    android:text="@string/button_edit_profile_save"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorWhite" />
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="@dimen/margin_bottom"
-                android:layout_marginTop="10dp"
-                android:background="@color/colorGrey"></View>
-
-            <Button
-                android:id="@+id/bt_save"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="3dp"
-                android:layout_marginTop="@dimen/margin_button"
-                android:background="@drawable/black_button"
-                android:text="@string/button_edit_profile_save"
-                android:textAllCaps="true"
-                android:textColor="@color/colorWhite" />
         </LinearLayout>
-
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
 </LinearLayout>
