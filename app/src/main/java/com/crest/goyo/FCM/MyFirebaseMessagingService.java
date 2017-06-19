@@ -32,20 +32,24 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static final String MESAGE_ERROR = "MessageError";
     public static final String MESSAGE_NOTIFICATION = "MessageNotification";
 
+
     @Override
     public void onMessageReceived(final RemoteMessage remoteMessage) {
         //notifData= String.valueOf(remoteMessage);
 
-//        if(mType!=null & !mType.isEmpty()){
+        //if(mType!=null & !mType.isEmpty()){
         ride_id = remoteMessage.getData().get("i_ride_id");
         mType = remoteMessage.getData().get("type");
         mTitle = remoteMessage.getData().get("title");
         mBody = remoteMessage.getData().get("body");
+
+
+        Log.e("Remote Message", "onMessageReceived: " + remoteMessage.toString());
+        Log.e(TAG, "NOTIF TAG : mRide Id= " + ride_id);
         Log.e(TAG, "NOTIF TAG : mType = " + mType);
         Log.e(TAG, "NOTIF TAG : mTitle = " + mTitle);
         Log.e(TAG, "NOTIF TAG : mBody = " + mBody);
         Log.e(TAG, "NOTIF TAG : data = " + remoteMessage.getData());
-
 
         //this is added by pratik
         if (mType != null) {
@@ -73,31 +77,37 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 SendMessageToCompleteRide(ride_id);
                 return;
             }
-
-
         }
-        if (mType.equals("user_ride_complete")) {
-            sendNotificationComplete();
-        }
-        if (mType.equals("user_ride_start")) {
-            sendNotification();
-        }
-        if (mType.equals("user_ride_wallet_payment")) {
-            paid_amount = remoteMessage.getData().get("paid_wallet_amount");
-            sendNotificationPayment();
-        }
-        if (mType.equals("user_ride_cancel_charge")) {
-            deduct_amount = remoteMessage.getData().get("deduct_amount");
-            sendNotificationCancelCharge();
-        }
-        if (mType.equals("user_ride_cancel")) {
-            Log.d(TAG, "data: " + "app close notif");
-            sendNotificationRideCancel();
-        }
+        if (mType != null) {
+            if (mType.equals("user_ride_complete")) {
+                sendNotificationComplete();
+            }
+            if (mType.equals("user_ride_start")) {
+                sendNotification();
+            }
+            if (mType.equals("user_ride_wallet_payment")) {
+                paid_amount = remoteMessage.getData().get("paid_wallet_amount");
+                sendNotificationPayment();
+            }
+            if (mType.equals("user_ride_cancel_charge")) {
+                deduct_amount = remoteMessage.getData().get("deduct_amount");
+                sendNotificationCancelCharge();
+            }
+            if (mType.equals("user_ride_cancel")) {
+                Log.d(TAG, "data: " + "app close notif");
+                sendNotificationRideCancel();
+            }
 
         /*hector*/
-        if (mType.equalsIgnoreCase("user_driver_arrived")) {
-            sendNotification();
+            if (mType.equalsIgnoreCase("user_driver_arrived")) {
+                sendNotification();
+            }
+            if (mType.equalsIgnoreCase("user_manual_update")) {
+                sendNotificationUserManualUpdate();
+            }
+
+        } else {
+            Log.e(TAG, "Notification Type = Null");
         }
 
 
@@ -112,7 +122,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 // Handle message within 10 seconds
                 handleNow();
             }
-
         }
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
@@ -291,6 +300,25 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+
+    /*hector*/
+    private void sendNotificationUserManualUpdate() {
+        Intent intent = new Intent(this, StartRideActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+                PendingIntent.FLAG_ONE_SHOT);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_taxi)
+                .setContentTitle(mTitle)
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setContentIntent(pendingIntent);
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(07 /* ID of notification */, notificationBuilder.build());
     }
 }
 

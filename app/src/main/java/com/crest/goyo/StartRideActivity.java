@@ -408,7 +408,6 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
 
                         /*hector*/
                         JSONObject vehicle_type_data = jsonObject.getJSONObject("vehicle_type_data");
-                        android.util.Log.e("Vehicle Image", "Start Ride Activity" + vehicle_type_data.getString("plotting_icon"));
                         Preferences.setValue(getApplicationContext(), Preferences.VEHICLES_IMG, vehicle_type_data.getString("plotting_icon"));
 
                         JSONObject driver_data = jsonObject.getJSONObject("driver_data");

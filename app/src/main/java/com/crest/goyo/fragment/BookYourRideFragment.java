@@ -116,7 +116,6 @@ import static android.view.View.VISIBLE;
 
 public class BookYourRideFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     // TODO: Rename parameter arguments, choose names that match
-
     private TextView tv_surcharge, tv_pin, tv_driver_name, tv_vehicle_type_driver, tv_ph_no, tv_saved_drop_location, tv_saved_pickup_from, tv_total, tv_vehicle_type, tv_pickup_date, tv_pickup_time, tv_pickup_from, tv_drop_location;
     private LinearLayout lay_total, lay_map_saved_location, lay_map_selection_location, lay_drop_location, lay_pickup_from, lay_ride_now, lay_book_your_ride_detail, tv_enter_promocode, lay_book_your_ride, lay_confirm_booking, lay_cancel_booking, lay_ride_later, lay_schedule_your_ride, lay_schedule_cancel, lay_booking_back, lay_cancel_book_ride, lay_schedule_now;
     private Button bt_call;
@@ -527,7 +526,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
 
                          /*hector*/
                         JSONObject vehicle_type_data = jsonObject.getJSONObject("vehicle_type_data");
-                        android.util.Log.e("Vehicle Image", "Book Your Fagment 2" + vehicle_type_data.getString("plotting_icon"));
                         Preferences.setValue(getContext(), Preferences.VEHICLES_IMG, vehicle_type_data.getString("plotting_icon"));
 
 
@@ -1048,7 +1046,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                 Toast.makeText(getActivity(), "Please enter drop location", Toast.LENGTH_SHORT).show();
             } else {
                 if (vehicleStatus == 0) {
-                    Toast.makeText(getActivity(), "No vehicles available.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "No vehicles found.", Toast.LENGTH_SHORT).show();
                 } else {
                     if (Constant.isOnline(getActivity())) {
                         if (h1 != null) {
@@ -1085,6 +1083,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                 final String message = response.optString("message").toString();
                 String value = String.valueOf(success);
                 if (value.equals("0")) {
+                    android.util.Log.e("GetVehicleTypeCharge", "onResult: Zero Value");
                 } else {
                     try {
                         JSONObject data = response.getJSONObject("data");
@@ -1134,9 +1133,8 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         String sensor = "sensor=true";
         String parameters = str_origin + "&" + str_dest + "&" + sensor;
         String output = "json";
-        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters.trim();
 
-        return url;
+        return "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters.trim();
     }
 
     private void saveRideAPI() {
@@ -2155,7 +2153,8 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                         createPickupDropMarkers();
                         if (Constant.isOnline(getActivity())) {
                             getVehiclesListAPI(vehicleTypes.get(position).getType());
-                            getVehicleTypeCharge(vehicleTypes.get(position).getType());
+                            if (vehicleTypes.get(position).getType().length() > 0)
+                                getVehicleTypeCharge(vehicleTypes.get(position).getType());
                         }
                     }
                 })
@@ -2170,7 +2169,8 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                         createPickupDropMarkers();
                         if (Constant.isOnline(getActivity())) {
                             getVehiclesListAPI(vehicleTypes.get(position).getType());
-                            getVehicleTypeCharge(vehicleTypes.get(position).getType());
+                            if (vehicleTypes.get(position).getType().length() > 0)
+                                getVehicleTypeCharge(vehicleTypes.get(position).getType());
                         }
                     }
                 })

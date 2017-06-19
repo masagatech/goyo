@@ -72,7 +72,6 @@ public class StartMyRidesDetail extends AppCompatActivity {
 
                         /*Hector*/
                         JSONObject vehicle_type_data = jsonObject.getJSONObject("vehicle_type_data");
-                        android.util.Log.e("Vehicle Image", "StartMyRideDetails: " + vehicle_type_data.getString("plotting_icon"));
                         Preferences.setValue(getApplicationContext(), Preferences.VEHICLES_IMG, vehicle_type_data.getString("plotting_icon"));
 
                         try {

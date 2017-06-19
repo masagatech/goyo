@@ -3,7 +3,6 @@ package com.crest.goyo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -11,7 +10,6 @@ import android.widget.TextView;
 import com.crest.goyo.Utils.Constant;
 import com.crest.goyo.Utils.Preferences;
 import com.crest.goyo.VolleyLibrary.RequestInterface;
-import com.crest.goyo.VolleyLibrary.VolleyRequestClass;
 import com.crest.goyo.VolleyLibrary.VolleyRequestClassNew;
 import com.crest.goyo.VolleyLibrary.VolleyTAG;
 
@@ -98,9 +96,7 @@ public class CompleteMyRidesDetail extends AppCompatActivity {
 
                           /*hector*/
                         JSONObject vehicle_type_data = jsonObject.getJSONObject("vehicle_type_data");
-                        android.util.Log.e("Vehicle Image", "Start Ride Activity" + vehicle_type_data.getString("plotting_icon"));
                         Preferences.setValue(getApplicationContext(), Preferences.VEHICLES_IMG, vehicle_type_data.getString("plotting_icon"));
-
 
 
                         JSONObject rate = jsonObject.getJSONObject("rate");
@@ -199,27 +195,6 @@ public class CompleteMyRidesDetail extends AppCompatActivity {
 //        }, true);
 //
 //    }
-
-    void myMehtod() {
-        HttpUrl.Builder builder = HttpUrl.parse(Constant.VERIFY_ACCOUNT).newBuilder();
-        builder.addQueryParameter("", "");
-        builder.addQueryParameter("", "");
-        builder.addQueryParameter("", "");
-        String url = builder.build().toString();
-        String newUrl = url.replaceAll(" ", "%20");
-        VolleyRequestClass.allRequest(this, newUrl, new RequestInterface() {
-            @Override
-            public void onResult(JSONObject jsonObject) {
-                try {
-                    if (jsonObject.getInt("status") == 1) {
-                        Log.e("Hector", "onResult: ");
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, true);
-    }
 
     private void initUI() {
 

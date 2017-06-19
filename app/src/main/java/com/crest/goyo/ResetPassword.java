@@ -70,7 +70,7 @@ public class ResetPassword extends AppCompatActivity implements View.OnClickList
                     et_retry_password.setError("Please enter same password.");
                 }
             } else {
-                et_new_password.setError("Password must be six to ten charachets.");
+                et_new_password.setError("Password must be six to ten characters.");
             }
         }
     }
@@ -109,7 +109,6 @@ public class ResetPassword extends AppCompatActivity implements View.OnClickList
 
             }
         }, true);
-
 
     }
 
