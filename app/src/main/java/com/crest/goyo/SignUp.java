@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -47,6 +48,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
     private ArrayAdapter<String> cityListAdapter;
     private List<CityModel> cityList = new ArrayList<>();
     final static int REQUEST_INTERNET = 100;
+    String imei;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +111,9 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.bt_submit:
 
+                TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                imei = telephonyManager.getDeviceId();
+                Log.e("IMEI", "onClick: "+imei );
                 userSignup();
 
                 break;
@@ -203,6 +208,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         urlBuilder.addQueryParameter("refferal_code", et_referral_code.getText().toString());
         urlBuilder.addQueryParameter("v_device_token", FirebaseInstanceId.getInstance().getToken());
         urlBuilder.addQueryParameter("i_city_id", cityList.get(spinner_city_list.getSelectedItemPosition()).getId());
+        urlBuilder.addQueryParameter("v_imei_number", imei);
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();

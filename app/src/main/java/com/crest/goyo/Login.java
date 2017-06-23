@@ -78,8 +78,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         initUI();
 
 
-        Log.e("TAG", "checkSelfPermission");
-        if (ActivityCompat.checkSelfPermission(Login.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(Login.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
                 //If the user has denied the permission previously your code will come to this block
                 //Here you can explain why you need this permission
@@ -89,11 +90,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
             Log.e("TAG", "checkSelfPermission out");
             //And finally ask for the permission
-            ActivityCompat.requestPermissions(Login.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 05);
+            ActivityCompat.requestPermissions(Login.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.READ_PHONE_STATE}, 05);
 
             return;
         }
-
     }
 
     private void initUI() {
