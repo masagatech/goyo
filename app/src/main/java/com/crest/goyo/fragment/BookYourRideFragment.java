@@ -1391,7 +1391,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                         URL url = new URL(vehicleTypes.get(posVehicleTypes).getPlotting_icon());
                                         final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                                         final Bitmap newBitmap = getResizedBitmap(bmp, 70, 70);
-                                        getActivity().runOnUiThread(new Runnable() {
+                                        getActivity().runOnUiThread(new Runnable() { // java.lang.NullPointerException: Attempt to invoke virtual method 'void android.support.v4.app.FragmentActivity.runOnUiThread(java.lang.Runnable)' on a null object reference
                                             @Override
                                             public void run() {
 //                                                driverMarker.setPosition(driver);

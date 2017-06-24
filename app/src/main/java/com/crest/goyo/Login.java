@@ -13,6 +13,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -43,7 +44,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     GPSTracker gps;
     double latitude, longitude;
     int REQUEST_INTERNET = 100;
-
+    String imei;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -181,6 +182,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void userLogin() {
+        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        imei = telephonyManager.getDeviceId();
+        Log.e("IMEI", "onClick: "+imei );
         if (et_email.getText().toString().equals("")) {
             et_email.setError("Please enter email or mobie no.");
         } else {
@@ -200,6 +204,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         urlBuilder.addQueryParameter("v_username", et_email.getText().toString().trim());
         urlBuilder.addQueryParameter("v_password", et_password.getText().toString());
         urlBuilder.addQueryParameter("v_device_token", FirebaseInstanceId.getInstance().getToken());
+        urlBuilder.addQueryParameter("v_imei_number", imei);
         Log.e("Firebase Device Token", "userLoginAPI: " + FirebaseInstanceId.getInstance().getToken());
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
