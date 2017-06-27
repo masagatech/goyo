@@ -134,10 +134,10 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         if (et_full_name.getText().toString().equals("")) {
             et_full_name.setError("Please enter full name.");
         } else {
-            if (et_email.getText().toString().equals("")) {
+            if (et_email.getText().toString().trim().equals("")) {
                 et_email.setError("Please enter email.");
             } else {
-                if (et_email.getText().toString().matches(Constant.emailPattern)) {
+                if (et_email.getText().toString().trim().matches(Constant.emailPattern)) {
                     if (et_mo_no.getText().toString().length() == 10) {
                         if (et_pasword.getText().toString().length() >= 6) {
                             if (et_pasword.getText().toString().matches(et_confirm_password.getText().toString())) {
@@ -160,7 +160,6 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                     et_email.setError("Please enter valid email.");
                 }
             }
-
         }
     }
 
