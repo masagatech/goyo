@@ -34,6 +34,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
@@ -153,6 +154,15 @@ public class FileUtils {
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         progressBar.setVisibility(View.VISIBLE);
 
+    }
+    public static String setDate(Context context,String mTimeStamp){
+        String mTime = "";
+        String date =  DateUtils.formatDateTime(context, Long.parseLong(mTimeStamp)
+                , DateUtils.FORMAT_SHOW_DATE);
+        String time = DateUtils.formatDateTime(context, Long.parseLong(mTimeStamp),
+                DateUtils.FORMAT_SHOW_TIME);
+        mTime = date +" At "+time;
+        return mTime;
     }
 
     public static void hideProgressBar(Activity context,ProgressBar progressBar){

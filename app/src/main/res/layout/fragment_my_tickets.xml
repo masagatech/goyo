@@ -1,0 +1,43 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="5dp">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rc_my_tickets"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_above="@+id/txt_add_new_ticket"/>
+
+    <TextView
+        android:id="@+id/txt_add_new_ticket"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_start_ride"
+        android:layout_alignParentBottom="true"
+        android:text="add support ticket"
+        android:textAllCaps="true"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:layout_margin="5dp"
+        android:textSize="18dp"/>
+
+    <TextView
+        android:id="@+id/txt_lable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="There are no tickets available"
+        android:textSize="24dp"
+        android:visibility="gone"/>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+
+</RelativeLayout>

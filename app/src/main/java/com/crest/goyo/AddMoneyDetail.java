@@ -335,13 +335,18 @@ public class AddMoneyDetail extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Log.i(TAG, "Success - Payment ID : " + data.getStringExtra(SdkConstants.PAYMENT_ID));
                 String paymentId = data.getStringExtra(SdkConstants.PAYMENT_ID);
+                Log.e("Hector paymentId ", "onActivityResult: "+paymentId );
 //                showDialogMessage("Payment Success Id : " + paymentId);
                 addMoneyAPI(paymentId);
             } else if (resultCode == RESULT_CANCELED) {
                 Log.i(TAG, "failure");
                 showDialogMessage("cancelled");
+                String paymentId = data.getStringExtra(SdkConstants.PAYMENT_ID);
+                Log.e("Hector paymentId ", "onActivityResult: "+paymentId );
             } else if (resultCode == PayUmoneySdkInitilizer.RESULT_FAILED) {
                 Log.i("app_activity", "failure");
+                String paymentId = data.getStringExtra(SdkConstants.PAYMENT_ID);
+                Log.e("Hector paymentId ", "onActivityResult: "+paymentId );
 
                 if (data != null) {
                     if (data.getStringExtra(SdkConstants.RESULT).equals("cancel")) {

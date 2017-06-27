@@ -41,6 +41,14 @@
             android:icon="@drawable/ic_feedback"
             android:title="@string/nav_Feedback" />
         <item
+            android:id="@+id/nav_mytickets"
+            android:icon="@drawable/ticket"
+            android:title="@string/nav_mytickets" />
+        <item
+            android:id="@+id/nav_faq"
+            android:icon="@drawable/faq"
+            android:title="@string/nav_faq" />
+        <item
             android:id="@+id/nav_terms_conditions"
             android:icon="@drawable/t_c_logo"
             android:title="@string/nav_terms" />

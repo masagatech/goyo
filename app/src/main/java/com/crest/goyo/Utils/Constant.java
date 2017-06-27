@@ -52,6 +52,15 @@ public class Constant {
     public static final String URL_REMOVE_PROMO_CODE = BASE_URL + "rideRemovePromotionCode";
     public static final String START_RIDE = BASE_URL + "rideSendTrackLink";
     public static final String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
+
+
+    public static final String GET_MY_TICKET = BASE_URL + "getMyTickets";
+    public static final String GET_SUPPORT_TYPE = BASE_URL + "supportGetTypes";
+    public static final String CREATE_TICKET = BASE_URL + "ticketCreate";
+    public static final String GET_FAQ_TYPES = BASE_URL + "faqGetTypes";
+
+
     public static boolean CHECK_GPS = true;
 
     public static boolean isOnline(Context c) {
