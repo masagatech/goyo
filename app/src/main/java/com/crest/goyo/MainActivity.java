@@ -41,7 +41,7 @@ import com.crest.goyo.fragment.FAQFragment;
 import com.crest.goyo.fragment.FeedbackFragment;
 import com.crest.goyo.fragment.MyRidesFragment;
 import com.crest.goyo.fragment.MyTicketsFragment;
-import com.crest.goyo.fragment.MyWalletFragment;
+import com.crest.goyo.fragment.MainWalletFragment;
 import com.crest.goyo.fragment.NotificationsFragment;
 import com.crest.goyo.fragment.PromotionCodeFragment;
 import com.crest.goyo.fragment.ReferralCodeFragment;
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (menuFragment != null) {
             if (menuFragment.equals("notifServicePayment")) {
                 setUpNavigationView();
-                MyWalletFragment myWalletFragment = new MyWalletFragment();
+                MainWalletFragment myWalletFragment = new MainWalletFragment();
                 Fragment fragment = getHomeFragment();
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 fragmentTransaction.commitAllowingStateLoss();
             } else if (menuFragment.equals("notifServiceRideCancelCharge")) {
                 setUpNavigationView();
-                MyWalletFragment myWalletFragment = new MyWalletFragment();
+                MainWalletFragment myWalletFragment = new MainWalletFragment();
                 Fragment fragment = getHomeFragment();
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (addMoney != null) {
                 if (addMoney.equals("sucessAddMoney")) {
                     setUpNavigationView();
-                    MyWalletFragment myWalletFragment = new MyWalletFragment();
+                    MainWalletFragment myWalletFragment = new MainWalletFragment();
                     Fragment fragment = getHomeFragment();
                     FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
@@ -284,7 +284,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ReferralCodeFragment referralCodeFragment = new ReferralCodeFragment();
                 return referralCodeFragment;
             case 5:
-                MyWalletFragment myWalletFragment = new MyWalletFragment();
+                MainWalletFragment myWalletFragment = new MainWalletFragment();
                 return myWalletFragment;
             case 6:
                 NotificationsFragment notificationsFragment = new NotificationsFragment();

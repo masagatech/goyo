@@ -55,6 +55,7 @@ public class Constant {
 
 
 
+    public static final String UPDATE_LOCATION  = BASE_URL + "userLocationUpdate";
     public static final String GET_MY_TICKET = BASE_URL + "getMyTickets";
     public static final String GET_SUPPORT_TYPE = BASE_URL + "supportGetTypes";
     public static final String CREATE_TICKET = BASE_URL + "ticketCreate";
