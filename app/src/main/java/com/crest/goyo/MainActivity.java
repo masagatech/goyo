@@ -37,9 +37,11 @@ import com.crest.goyo.VolleyLibrary.RequestInterface;
 import com.crest.goyo.VolleyLibrary.VolleyRequestClass;
 import com.crest.goyo.VolleyLibrary.VolleyTAG;
 import com.crest.goyo.fragment.BookYourRideFragment;
+import com.crest.goyo.fragment.FAQFragment;
 import com.crest.goyo.fragment.FeedbackFragment;
 import com.crest.goyo.fragment.MyRidesFragment;
-import com.crest.goyo.fragment.MyWalletFragment;
+import com.crest.goyo.fragment.MyTicketsFragment;
+import com.crest.goyo.fragment.MainWalletFragment;
 import com.crest.goyo.fragment.NotificationsFragment;
 import com.crest.goyo.fragment.PromotionCodeFragment;
 import com.crest.goyo.fragment.ReferralCodeFragment;
@@ -77,6 +79,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG_FEEDBACK = "FEEDBACK";
     private static final String TAG_TERMS_CONDITIONS = "TERMS AND CONDITIONS";
     private static final String TAG_MY_KIDS = "MY KID";
+    private static final String TAG_MY_TICKET = "MY TICKET";
+    private static final String TAG_FAQ = "FAQ";
     private AlertDialog.Builder builder;
     private String TAG = "MainActivity";
     public static String CURRENT_TAG = TAG_BOOK_YOUR_RIDE;
@@ -113,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (menuFragment != null) {
             if (menuFragment.equals("notifServicePayment")) {
                 setUpNavigationView();
-                MyWalletFragment myWalletFragment = new MyWalletFragment();
+                MainWalletFragment myWalletFragment = new MainWalletFragment();
                 Fragment fragment = getHomeFragment();
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
@@ -126,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 fragmentTransaction.commitAllowingStateLoss();
             } else if (menuFragment.equals("notifServiceRideCancelCharge")) {
                 setUpNavigationView();
-                MyWalletFragment myWalletFragment = new MyWalletFragment();
+                MainWalletFragment myWalletFragment = new MainWalletFragment();
                 Fragment fragment = getHomeFragment();
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
@@ -144,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (addMoney != null) {
                 if (addMoney.equals("sucessAddMoney")) {
                     setUpNavigationView();
-                    MyWalletFragment myWalletFragment = new MyWalletFragment();
+                    MainWalletFragment myWalletFragment = new MainWalletFragment();
                     Fragment fragment = getHomeFragment();
                     FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
@@ -280,7 +284,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ReferralCodeFragment referralCodeFragment = new ReferralCodeFragment();
                 return referralCodeFragment;
             case 5:
-                MyWalletFragment myWalletFragment = new MyWalletFragment();
+                MainWalletFragment myWalletFragment = new MainWalletFragment();
                 return myWalletFragment;
             case 6:
                 NotificationsFragment notificationsFragment = new NotificationsFragment();
@@ -289,9 +293,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 FeedbackFragment feedbackFragment = new FeedbackFragment();
                 return feedbackFragment;
             case 8:
+                MyTicketsFragment myTicketsFragment = new MyTicketsFragment();
+                return myTicketsFragment;
+            case 9:
+                FAQFragment faqFragment = new FAQFragment();
+                return faqFragment;
+            case 10:
                 TermsAndConditionsFragment termsAndConditionsFragment = new TermsAndConditionsFragment();
                 return termsAndConditionsFragment;
-            case 9:
+            case 11:
                 MyKids mykidsFragment = new MyKids();
                 return mykidsFragment;
             default:
@@ -351,13 +361,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         actionbar_title.setText(R.string.nav_Feedback);
                         CURRENT_TAG = TAG_FEEDBACK;
                         break;
-                    case R.id.nav_terms_conditions:
+                    case R.id.nav_mytickets:
                         navItemIndex = 8;
+                        actionbar_title.setText(R.string.nav_mytickets);
+                        CURRENT_TAG = TAG_MY_TICKET;
+                        break;
+                    case R.id.nav_faq:
+                        navItemIndex = 9;
+                        actionbar_title.setText(R.string.nav_faq);
+                        CURRENT_TAG = TAG_FAQ;
+                        break;
+                    case R.id.nav_terms_conditions:
+                        navItemIndex = 10;
                         actionbar_title.setText(R.string.nav_terms);
                         CURRENT_TAG = TAG_TERMS_CONDITIONS;
                         break;
                     case R.id.nav_my_kids:
-                        navItemIndex = 9;
+                        navItemIndex = 11;
                         actionbar_title.setText(R.string.nav_my_kids);
                         CURRENT_TAG = TAG_MY_KIDS;
                         break;
@@ -499,7 +519,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     }
 
-                }else if (intent.getAction().equals(MyFirebaseMessagingService.COMPLETE_RIDE)) {
+                } else if (intent.getAction().equals(MyFirebaseMessagingService.COMPLETE_RIDE)) {
                     android.util.Log.d(TAG, "data: " + "app open notif main activity");
                     if (intent.getExtras() != null) {
                         android.util.Log.d(TAG, "data: " + "app open notif main activity");
@@ -508,9 +528,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         in.putExtra("i_ride_id", mRideid);
                         startActivity(in);
                     }
-                    }
-
                 }
+
+            }
         };
     }
 

@@ -185,7 +185,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         imei = telephonyManager.getDeviceId();
         Log.e("IMEI", "onClick: "+imei );
-        if (et_email.getText().toString().equals("")) {
+        if (et_email.getText().toString().trim().equals("")) {
             et_email.setError("Please enter email or mobie no.");
         } else {
             if (et_password.getText().toString().equals("")) {
@@ -202,7 +202,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_LOGIN).newBuilder();
         urlBuilder.addQueryParameter("device", "ANDROID");
         urlBuilder.addQueryParameter("v_username", et_email.getText().toString().trim());
-        urlBuilder.addQueryParameter("v_password", et_password.getText().toString());
+        urlBuilder.addQueryParameter("v_password", et_password.getText().toString().trim());
         urlBuilder.addQueryParameter("v_device_token", FirebaseInstanceId.getInstance().getToken());
         urlBuilder.addQueryParameter("v_imei_number", imei);
         Log.e("Firebase Device Token", "userLoginAPI: " + FirebaseInstanceId.getInstance().getToken());
