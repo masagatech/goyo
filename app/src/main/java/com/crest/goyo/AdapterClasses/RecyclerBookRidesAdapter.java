@@ -52,10 +52,8 @@ public class RecyclerBookRidesAdapter extends RecyclerView.Adapter<RecyclerBookR
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onClick(View v) {
-
                 row_index=position;
                 notifyDataSetChanged();
-
             }
         });
         Glide.with(context).load(list.get(position).getList_icon())

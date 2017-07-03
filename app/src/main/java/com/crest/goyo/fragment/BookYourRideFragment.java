@@ -152,6 +152,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
     private String cityCurrent;
     private String dialogMessage;
     private String AM_PM = " AM", mm_precede = "";
+    /*hector*/
     private int vehicleStatus;
     private String CHARGE_SERVICE_TAX, CHARGE_MIN_CHARGE, CHARGE_BASE_FARE, CHARGE_UPTO_KM, CHARGE_UPTO_KM_CHARGE, CHARGE_AFTER_KM, CHARGE_RIDE_TIME_PICKUP_CHARGE, CHARGE_RIDE_TIME_WAIT_CHARGE;
     private Dialog dialog;
@@ -196,6 +197,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
+
         isChooseAddress = false;
         initializeMap();
         initUI(view);
@@ -951,7 +953,11 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                         String address = addresses.get(0).getAddressLine(0);
                         String locality = addresses.get(0).getSubLocality();
                         String adminArea = addresses.get(0).getAdminArea();
-                        cityCurrent = addresses.get(0).getLocality();
+
+                        cityCurrent = "";
+                        if (addresses.get(0).getLocality() != null && !addresses.get(0).getLocality().isEmpty())
+                            cityCurrent = addresses.get(0).getLocality();
+
                         updatedAddres = address + ", " + locality + ", " + cityCurrent + ", " + adminArea;
                         if (!isChooseAddress) {
                             tv_pickup_from.setText(updatedAddres);
@@ -964,7 +970,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                         .position(latLng)
                                         .icon(BitmapDescriptorFactory.fromBitmap(Constant.setMarkerPin(getActivity(), R.drawable.marker_pickup))));
                             }
-
                         }
                     }
 
@@ -1508,7 +1513,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         urlBuilder.addQueryParameter("lang", "en");
         urlBuilder.addQueryParameter("login_id", Preferences.getValue_String(getActivity(), Preferences.USER_ID));
         urlBuilder.addQueryParameter("v_token", Preferences.getValue_String(getActivity(), Preferences.USER_AUTH_TOKEN));
-//        urlBuilder.addQueryParameter("city", cityCurrent);
+//      urlBuilder.addQueryParameter("city", cityCurrent);
         urlBuilder.addQueryParameter("v_code", et_add_promocode.getText().toString());
         urlBuilder.addQueryParameter("i_ride_id", Preferences.getValue_String(getActivity(), Preferences.RIDE_ID));
 

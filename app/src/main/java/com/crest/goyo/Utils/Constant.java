@@ -53,8 +53,6 @@ public class Constant {
     public static final String START_RIDE = BASE_URL + "rideSendTrackLink";
     public static final String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
-
-
     public static final String UPDATE_LOCATION  = BASE_URL + "userLocationUpdate";
     public static final String GET_MY_TICKET = BASE_URL + "getMyTickets";
     public static final String GET_SUPPORT_TYPE = BASE_URL + "supportGetTypes";
