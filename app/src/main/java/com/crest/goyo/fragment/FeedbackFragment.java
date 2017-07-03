@@ -62,9 +62,14 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener {
 
         bt_rate_now.setOnClickListener(this);
 
-        rate=rating.getRating();
-    }
 
+        rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                rate = rating;
+            }
+        });
+    }
 
     @Override
     public void onClick(View v) {
@@ -79,8 +84,8 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_GIVE_FEEDBACK).newBuilder();
         urlBuilder.addQueryParameter("device", "ANDROID");
         urlBuilder.addQueryParameter("lang", "en");
-        urlBuilder.addQueryParameter("login_id", Preferences.getValue_String(getActivity(),Preferences.USER_ID));
-        urlBuilder.addQueryParameter("v_token", Preferences.getValue_String(getActivity(),Preferences.USER_AUTH_TOKEN));
+        urlBuilder.addQueryParameter("login_id", Preferences.getValue_String(getActivity(), Preferences.USER_ID));
+        urlBuilder.addQueryParameter("v_token", Preferences.getValue_String(getActivity(), Preferences.USER_AUTH_TOKEN));
         urlBuilder.addQueryParameter("i_rate", String.valueOf(rate));
         urlBuilder.addQueryParameter("l_comment", et_feedback.getText().toString().trim());
         String url = urlBuilder.build().toString();
@@ -95,7 +100,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener {
                     if (responce_status == VolleyTAG.response_status) {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                     } else {
-                       et_feedback.setText("");
+                        et_feedback.setText("");
                         rating.setRating(0);
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                     }

@@ -92,7 +92,7 @@ public class ChangePassword extends AppCompatActivity implements View.OnClickLis
     private void changePasswordAPI() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_CHANGE_PASSWORD).newBuilder();
         urlBuilder.addQueryParameter("device", "ANDROID");
-        urlBuilder.addQueryParameter("id", Preferences.getValue_String(getApplicationContext(), Preferences.USER_ID));
+        urlBuilder.addQueryParameter("login_id", Preferences.getValue_String(getApplicationContext(), Preferences.USER_ID));
         urlBuilder.addQueryParameter("v_token", Preferences.getValue_String(getApplicationContext(), Preferences.USER_AUTH_TOKEN));
         urlBuilder.addQueryParameter("v_password", et_confirm_password.getText().toString());
         urlBuilder.addQueryParameter("v_old_password", et_old_password.getText().toString());

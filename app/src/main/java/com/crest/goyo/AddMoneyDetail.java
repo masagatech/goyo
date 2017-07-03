@@ -132,14 +132,13 @@ public class AddMoneyDetail extends AppCompatActivity {
 //        });
 
 
-
     private void addMoneyAPI(String paymentId) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_ADD_MONEY).newBuilder();
         urlBuilder.addQueryParameter("device", "ANDROID");
         urlBuilder.addQueryParameter("lang", "en");
         urlBuilder.addQueryParameter("login_id", Preferences.getValue_String(getApplicationContext(), Preferences.USER_ID));
         urlBuilder.addQueryParameter("v_token", Preferences.getValue_String(getApplicationContext(), Preferences.USER_AUTH_TOKEN));
-        urlBuilder.addQueryParameter("f_amount",mAmount);
+        urlBuilder.addQueryParameter("f_amount", mAmount);
         urlBuilder.addQueryParameter("v_payment_mode", "payu");
         urlBuilder.addQueryParameter("transaction_id", paymentId);
 
@@ -154,9 +153,9 @@ public class AddMoneyDetail extends AppCompatActivity {
                     String message = response.getString(VolleyTAG.message);
                     if (responce_status == VolleyTAG.response_status) {
                         JSONObject jsonObject = response.getJSONObject("data");
-                        Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
-                        Intent intent=new Intent(getApplicationContext(),MainActivity.class);
-                        intent.putExtra("addMoney","sucessAddMoney");
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        intent.putExtra("addMoney", "sucessAddMoney");
                         startActivity(intent);
                     } else {
 
@@ -176,20 +175,20 @@ public class AddMoneyDetail extends AppCompatActivity {
         actionbar_title = (TextView) findViewById(R.id.actionbar_title);
         lay_wallet_detail = (LinearLayout) findViewById(R.id.lay_wallet_detail);
         et_card = (EditText) findViewById(R.id.et_card);
-        et_cvv=(EditText)findViewById(R.id.et_cvv);
+        et_cvv = (EditText) findViewById(R.id.et_cvv);
         et_exp_date = (EditText) findViewById(R.id.et_exp_date);
         bt_add_money = (Button) findViewById(R.id.bt_add_money);
 
         actionbar_title.setText("ADD MONEY");
     }
 
-
+    //onClickListener (Do not find for the Click Listener its has been already set From XML)
     public void makePayment(View view) {
         String phone = "8882434664";
         String productName = "product_name";
         String firstName = "piyush";
         String txnId = "0nf7" + System.currentTimeMillis();
-        String email="piyush.jain@payu.in";
+        String email = "piyush.jain@payu.in";
         String sUrl = "https://test.payumoney.com/mobileapp/payumoney/success.php";
         String fUrl = "https://test.payumoney.com/mobileapp/payumoney/failure.php";
         String udf1 = "";
@@ -198,8 +197,8 @@ public class AddMoneyDetail extends AppCompatActivity {
         String udf4 = "";
         String udf5 = "";
         boolean isDebug = true;
-        String key = "dRQuiA";
-        String merchantId = "4928174" ;
+        String key = "dRQuiA"; //need to be registered in the PayuMoney.com from wherer you will get the key
+        String merchantId = "4928174"; // as above from where you can get the MerchantID
         PayUmoneySdkInitilizer.PaymentParam.Builder builder = new PayUmoneySdkInitilizer.PaymentParam.Builder();
         builder.setAmount(getAmount())
                 .setTnxId(txnId)
@@ -239,7 +238,6 @@ public class AddMoneyDetail extends AppCompatActivity {
         paymentParam.setMerchantHash(serverCalculatedHash);
 
         PayUmoneySdkInitilizer.startPaymentActivityForResult(MyActivity.this, paymentParam);*/
-
     }
 
     private void calculateServerSideHashAndInitiatePayment(final PayUmoneySdkInitilizer.PaymentParam paymentParam) {
@@ -253,7 +251,6 @@ public class AddMoneyDetail extends AppCompatActivity {
             public void onResponse(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
-
                     if (jsonObject.has(SdkConstants.STATUS)) {
                         String status = jsonObject.optString(SdkConstants.STATUS);
                         if (status != null || status.equals("1")) {
@@ -300,6 +297,7 @@ public class AddMoneyDetail extends AppCompatActivity {
         };
         Volley.newRequestQueue(this).add(jsonObjectRequest);
     }
+
     private double getAmount() {
         Double amount = Double.valueOf(mAmount);
         if (isDouble(String.valueOf(amount))) {
@@ -310,6 +308,7 @@ public class AddMoneyDetail extends AppCompatActivity {
             return amount;
         }
     }
+
     private boolean isDouble(String str) {
         try {
             Double.parseDouble(str);
@@ -330,24 +329,18 @@ public class AddMoneyDetail extends AppCompatActivity {
             } else {
                 showDialogMessage("Unable to get Status of Payment");
             }*/
-
-
             if (resultCode == RESULT_OK) {
                 Log.i(TAG, "Success - Payment ID : " + data.getStringExtra(SdkConstants.PAYMENT_ID));
                 String paymentId = data.getStringExtra(SdkConstants.PAYMENT_ID);
-                Log.e("Hector paymentId ", "onActivityResult: "+paymentId );
-//                showDialogMessage("Payment Success Id : " + paymentId);
+//              showDialogMessage("Payment Success Id : " + paymentId);
                 addMoneyAPI(paymentId);
             } else if (resultCode == RESULT_CANCELED) {
                 Log.i(TAG, "failure");
                 showDialogMessage("cancelled");
                 String paymentId = data.getStringExtra(SdkConstants.PAYMENT_ID);
-                Log.e("Hector paymentId ", "onActivityResult: "+paymentId );
             } else if (resultCode == PayUmoneySdkInitilizer.RESULT_FAILED) {
                 Log.i("app_activity", "failure");
                 String paymentId = data.getStringExtra(SdkConstants.PAYMENT_ID);
-                Log.e("Hector paymentId ", "onActivityResult: "+paymentId );
-
                 if (data != null) {
                     if (data.getStringExtra(SdkConstants.RESULT).equals("cancel")) {
 
@@ -362,6 +355,7 @@ public class AddMoneyDetail extends AppCompatActivity {
             }
         }
     }
+
     private void showDialogMessage(String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(TAG);
