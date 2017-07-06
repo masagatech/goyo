@@ -31,4 +31,7 @@ public class CustomDialog {
             dialog.dismiss();
         }
     }
+
+    public class MyViewHolder {
+    }
 }

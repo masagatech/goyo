@@ -1399,7 +1399,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                         getActivity().runOnUiThread(new Runnable() { // java.lang.NullPointerException: Attempt to invoke virtual method 'void android.support.v4.app.FragmentActivity.runOnUiThread(java.lang.Runnable)' on a null object reference // solved
                                             @Override
                                             public void run() {
-//                                                driverMarker.setPosition(driver);
                                                 driverMarker = mMap.addMarker(new MarkerOptions()
                                                         .position(driver)
                                                         .icon(BitmapDescriptorFactory.fromBitmap(newBitmap)));
@@ -1520,7 +1519,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
-        VolleyRequestClassNew.allRequest(mContext, newurl, new RequestInterface() {
+        VolleyRequestClass.allRequest(mContext, newurl, new RequestInterface() {
             @Override
             public void onResult(JSONObject response) {
                 try {
@@ -1543,7 +1542,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                     e.printStackTrace();
                 }
             }
-        });
+        }, true);
     }
 
     private void updateDriverLocation() {

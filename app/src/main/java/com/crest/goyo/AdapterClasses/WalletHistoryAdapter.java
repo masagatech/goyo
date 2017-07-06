@@ -35,12 +35,8 @@ public class WalletHistoryAdapter extends RecyclerView.Adapter<WalletHistoryAdap
 
     @Override
     public void onBindViewHolder(WalletHistoryAdapter.MyView holder, final int position) {
-
-
         holder.tv_title.setText("" + list.get(position).getMessage());
         holder.tv_from.setText("From : " + list.get(position).getFrom());
-
-
     }
 
 

@@ -134,8 +134,8 @@ public class UpdateLocationService extends Service implements GoogleApiClient.Co
 
         mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(2 * 1000)
-                .setFastestInterval(2 * 1000);
+                .setInterval(5000)
+                .setFastestInterval(5000);
         Log.i("LOG_TAG", "onStartCommand-->" + startId);
         googleApiClient.connect();
         return START_NOT_STICKY;

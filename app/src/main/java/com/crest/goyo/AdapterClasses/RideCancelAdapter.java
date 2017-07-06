@@ -19,7 +19,7 @@ import java.util.List;
  * Created by annie on 15/4/17.
  */
 
-public class RideCancelAdapter extends RecyclerView.Adapter<RideCancelAdapter.MyView>{
+public class RideCancelAdapter extends RecyclerView.Adapter<RideCancelAdapter.MyView> {
 
     List<RideCancelModel> list;
     private Context context;
@@ -42,11 +42,9 @@ public class RideCancelAdapter extends RecyclerView.Adapter<RideCancelAdapter.My
 
         holder.tv_req_can.setText("" + list.get(position).getTv_req_can());
 
-
         holder.mRootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Preferences.setValue(context.getApplicationContext(),"cancel_id",list.get(position).getmRideId());
                 index = position;
                 notifyDataSetChanged();
             }
@@ -55,18 +53,16 @@ public class RideCancelAdapter extends RecyclerView.Adapter<RideCancelAdapter.My
         holder.rb_req_can.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Preferences.setValue(context.getApplicationContext(),"cancel_id",list.get(position).getmRideId());
                 index = position;
                 notifyDataSetChanged();
             }
         });
-
-        if (index == position){
+        if (index == position) {
+            Preferences.setValue(context.getApplicationContext(), "cancel_id", list.get(position).getmRideId());
             holder.rb_req_can.setChecked(true);
-        }else {
+        } else {
             holder.rb_req_can.setChecked(false);
         }
-
     }
 
     @Override
@@ -77,17 +73,15 @@ public class RideCancelAdapter extends RecyclerView.Adapter<RideCancelAdapter.My
     public class MyView extends RecyclerView.ViewHolder {
         private TextView tv_req_can;
         private RadioButton rb_req_can;
-        private  RelativeLayout mRootView;
+        private RelativeLayout mRootView;
 
 
         public MyView(View itemView) {
             super(itemView);
 
-            mRootView = (RelativeLayout)itemView.findViewById(R.id.rl_root_ridecancle);
+            mRootView = (RelativeLayout) itemView.findViewById(R.id.rl_root_ridecancle);
             rb_req_can = (RadioButton) itemView.findViewById(R.id.rb_req_can);
             tv_req_can = (TextView) itemView.findViewById(R.id.tv_req_can);
-//            rl_ride_cancel = (RelativeLayout) itemView.findViewById(R.id.rl_ride_cancel);
-
         }
     }
 

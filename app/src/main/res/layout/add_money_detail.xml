@@ -31,16 +31,14 @@
             android:layout_margin="3dp"
             android:background="@drawable/select_loaction"
             android:elevation="3dp"
-            android:visibility="gone"
             android:orientation="vertical"
-            android:padding="10dp">
-
+            android:padding="10dp"
+            android:visibility="gone">
 
             <RadioButton
                 android:id="@+id/rb_debit_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
                 android:text="Debit/Credit card"
                 android:textSize="16dp"
                 app:buttonTint="@color/colorPrimary" />
@@ -58,7 +56,7 @@
                     android:layout_height="1dp"
                     android:layout_marginBottom="8dp"
                     android:layout_marginTop="8dp"
-                    android:background="@color/colorGrey"></View>
+                    android:background="@color/colorGrey" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -141,8 +139,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Wallet"
-                android:visibility="gone"
                 android:textSize="16dp"
+                android:visibility="gone"
                 app:buttonTint="@color/colorPrimary" />
 
             <LinearLayout
@@ -152,57 +150,11 @@
                 android:orientation="vertical"
                 android:visibility="visible">
 
-
-                <LinearLayout
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerPaymentMethods"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/grey_corner"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="8dp">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/payumoney_logo" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="PayUmoney"
-                            android:visibility="gone"
-                            android:textSize="22dp" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:background="@drawable/grey_corner"
-                        android:gravity="center"
-                        android:visibility="gone"
-                        android:orientation="vertical"
-                        android:padding="8dp">
-
-                        <ImageView
-                            android:layout_width="80dp"
-                            android:layout_height="40dp"
-                            android:src="@drawable/mobi_icon" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="MobiKwik"
-                            android:textSize="16dp" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
             </LinearLayout>
 
 
@@ -222,7 +174,6 @@
             android:layout_marginBottom="3dp"
             android:background="@drawable/black_button"
             android:textAllCaps="true"
-            android:onClick="makePayment"
             android:textColor="@color/colorWhite" />
     </LinearLayout>
 </LinearLayout>
