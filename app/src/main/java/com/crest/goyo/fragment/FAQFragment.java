@@ -97,8 +97,10 @@ public class FAQFragment extends Fragment {
         mProgressBar = (ProgressBar) mView.findViewById(R.id.progress_bar);
         mLabel = (TextView) mView.findViewById(R.id.txt_lable);
 
-        getFaqTypes();
-
+        if(Constant.isOnline(getContext()))
+        {
+            getFaqTypes();
+        }
 
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             int previousGrp = -1;
@@ -222,7 +224,10 @@ public class FAQFragment extends Fragment {
                 public void onClick(View v) {
                     String quary = mQuary.getText().toString().trim();
                     if(!quary.isEmpty() && quary != null){
-                        createTicket(expandedListText.getId(),quary,mQuary);
+                        if(Constant.isOnline(getContext()))
+                        {
+                            createTicket(expandedListText.getId(),quary,mQuary);
+                        }
                     }else {
                         mQuary.setError("Please enter quary");
                     }

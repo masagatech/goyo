@@ -76,7 +76,6 @@ public class ChangePassword extends AppCompatActivity implements View.OnClickLis
                     if (et_confirm_password.getText().toString().matches(et_new_password.getText().toString())) {
                         if (Constant.isOnline(getApplicationContext())) {
                             changePasswordAPI();
-
                         }
                     } else {
                         et_confirm_password.setError("Please enter same password.");

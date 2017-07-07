@@ -75,7 +75,10 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_rate_now:
-                validation();
+                if(Constant.isOnline(getContext()))
+                {
+                    validation();
+                }
                 break;
         }
     }

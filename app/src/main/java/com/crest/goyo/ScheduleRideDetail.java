@@ -61,7 +61,10 @@ public class ScheduleRideDetail extends AppCompatActivity implements View.OnClic
         mHour = calendar.get(Calendar.HOUR_OF_DAY);
         mMinute = calendar.get(Calendar.MINUTE);
 
-        getRideAPI();
+        if(Constant.isOnline(ScheduleRideDetail.this))
+        {
+            getRideAPI();
+        }
 
     }
 

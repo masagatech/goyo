@@ -77,7 +77,10 @@ public class TariffCardFragment extends Fragment {
                 vehicleId = position;
                 try {
                     vehicleArray.get(vehicleId);
-                    getTeriffCardAPI(spinner_city.getSelectedItemId(), spinner_vehicle.getSelectedItemId());
+                    if(Constant.isOnline(getContext()))
+                    {
+                        getTeriffCardAPI(spinner_city.getSelectedItemId(), spinner_vehicle.getSelectedItemId());
+                    }
 
                 } catch (Exception e) {
 
@@ -105,7 +108,10 @@ public class TariffCardFragment extends Fragment {
                 cityId = position;
                 try {
                     cityArray.get(cityId);
-                    getTeriffCardAPI(spinner_city.getSelectedItemId(), spinner_vehicle.getSelectedItemId());
+                    if(Constant.isOnline(getContext()))
+                    {
+                        getTeriffCardAPI(spinner_city.getSelectedItemId(), spinner_vehicle.getSelectedItemId());
+                    }
 
                 } catch (Exception e) {
 

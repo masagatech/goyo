@@ -34,7 +34,10 @@ public class CompleteMyRidesDetail extends AppCompatActivity {
 
         if (getIntent().getExtras() != null) {
             rideID = getIntent().getStringExtra("rideID");
-            getRideAPI();
+            if(Constant.isOnline(CompleteMyRidesDetail.this))
+            {
+                getRideAPI();
+            }
         }
 //
 //        if(getIntent().getExtras()!=null){

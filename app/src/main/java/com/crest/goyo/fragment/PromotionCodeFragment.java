@@ -1,15 +1,11 @@
 package com.crest.goyo.fragment;
 
 
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +15,6 @@ import com.crest.goyo.AdapterClasses.PromotionCodeAdapter;
 import com.crest.goyo.ModelClasses.PromotionCodeModel;
 import com.crest.goyo.R;
 import com.crest.goyo.Utils.Constant;
-import com.crest.goyo.Utils.GPSTracker;
 import com.crest.goyo.Utils.Preferences;
 import com.crest.goyo.VolleyLibrary.RequestInterface;
 import com.crest.goyo.VolleyLibrary.VolleyRequestClass;
@@ -29,14 +24,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 import okhttp3.HttpUrl;
-
-import static android.content.Context.LOCATION_SERVICE;
 
 
 public class PromotionCodeFragment extends Fragment {
@@ -44,11 +34,11 @@ public class PromotionCodeFragment extends Fragment {
     private RecyclerView rv_promotion_code;
     private View view;
     PromotionCodeAdapter promotionCodeAdapter;
-    public static ArrayList<PromotionCodeModel> codeList;
-    private Geocoder geocoder;
+    public static ArrayList<PromotionCodeModel> codeList = new ArrayList<>();
+    /*private Geocoder geocoder;
     private GPSTracker gps;
     private double latitude,longitude;
-    private String cityCurrent;
+    private String cityCurrent;*/
     private LinearLayout no_promotion_code,lay_recyclerview;
 
     @Override
@@ -64,8 +54,7 @@ public class PromotionCodeFragment extends Fragment {
         view= inflater.inflate(R.layout.fragment_promotion_code, container, false);
 
         initUI();
-        gps = new GPSTracker(getActivity(), getActivity());
-        LocationManager locationManager = (LocationManager)getActivity().getSystemService(LOCATION_SERVICE);
+        /*gps = new GPSTracker(getActivity(), getActivity());
         if (gps.canGetLocation()) {
             latitude = gps.getLatitude();
             longitude = gps.getLongitude();
@@ -83,17 +72,11 @@ public class PromotionCodeFragment extends Fragment {
             }
         } else {
             gps.showSettingsAlert();
-        }
+        }*/
 
+        getPromotionCodesAPI();
 
-
-
-
-        codeList = new ArrayList<PromotionCodeModel>();
         return view;
-
-
-
 
     }
 
@@ -104,7 +87,7 @@ public class PromotionCodeFragment extends Fragment {
         urlBuilder.addQueryParameter("lang", "en");
         urlBuilder.addQueryParameter("login_id", Preferences.getValue_String(getActivity(),Preferences.USER_ID));
         urlBuilder.addQueryParameter("v_token", Preferences.getValue_String(getActivity(),Preferences.USER_AUTH_TOKEN));
-        urlBuilder.addQueryParameter("city", cityCurrent);
+        urlBuilder.addQueryParameter("city", Preferences.getValue_String(getActivity(),Preferences.CITY));
 
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");

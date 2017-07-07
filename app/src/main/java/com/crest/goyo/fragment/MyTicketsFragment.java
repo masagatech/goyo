@@ -110,11 +110,16 @@ public class MyTicketsFragment extends Fragment {
             }
         });
 
-        getSupportTypes();
 
-        setMyTicketsAdapter();
+        if(Constant.isOnline(getContext()))
+        {
+            getSupportTypes();
 
-        getMyTicketApi();
+            setMyTicketsAdapter();
+
+            getMyTicketApi();
+        }
+
 
     }
 

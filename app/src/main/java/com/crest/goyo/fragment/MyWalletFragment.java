@@ -82,7 +82,7 @@ public class MyWalletFragment extends Fragment implements View.OnClickListener {
                     int responce_status = response.getInt(VolleyTAG.status);
                     String message = response.getString(VolleyTAG.message);
                     if (responce_status == VolleyTAG.response_status) {
-                        JSONObject data=response.getJSONObject("data");
+                        JSONObject data = response.getJSONObject("data");
                         JSONArray history = data.getJSONArray("wallet_history");
                         for (int i = 0; i < history.length(); i++) {
                             JSONObject objData = history.getJSONObject(i);
@@ -113,7 +113,7 @@ public class MyWalletFragment extends Fragment implements View.OnClickListener {
     private void initUI() {
         bt_add_money = (Button) view.findViewById(R.id.bt_add_money);
         tv_amount = (TextView) view.findViewById(R.id.tv_amount);
-        rv_history=(RecyclerView)view.findViewById(R.id.rv_history);
+        rv_history = (RecyclerView) view.findViewById(R.id.rv_history);
         bt_add_money.setOnClickListener(this);
     }
 

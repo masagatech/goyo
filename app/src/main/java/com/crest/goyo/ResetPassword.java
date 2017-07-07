@@ -65,7 +65,10 @@ public class ResetPassword extends AppCompatActivity implements View.OnClickList
         } else {
             if (et_new_password.getText().toString().length() >= 6) {
                 if (et_new_password.getText().toString().equals(et_retry_password.getText().toString())) {
-                    userResetPasswordAPI();
+                    if(Constant.isOnline(ResetPassword.this))
+                    {
+                        userResetPasswordAPI();
+                    }
                 } else {
                     et_retry_password.setError("Please enter same password.");
                 }

@@ -60,13 +60,19 @@ public class VerifyAccountActivity extends AppCompatActivity {
         mVeryfy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                verify_mobileno_api(mMobileNo.getText().toString(), mVarifyCode.getText().toString());
+                if(Constant.isOnline(VerifyAccountActivity.this))
+                {
+                    verify_mobileno_api(mMobileNo.getText().toString(), mVarifyCode.getText().toString());
+                }
             }
         });
         mResendOtp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                resend_otp_api(id, mobile);
+                if(Constant.isOnline(VerifyAccountActivity.this))
+                {
+                    resend_otp_api(id, mobile);
+                }
             }
         });
     }

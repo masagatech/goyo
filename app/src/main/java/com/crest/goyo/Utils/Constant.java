@@ -53,11 +53,13 @@ public class Constant {
     public static final String START_RIDE = BASE_URL + "rideSendTrackLink";
     public static final String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
-    public static final String UPDATE_LOCATION  = BASE_URL + "userLocationUpdate";
+    public static final String UPDATE_LOCATION = BASE_URL + "userLocationUpdate";
     public static final String GET_MY_TICKET = BASE_URL + "getMyTickets";
     public static final String GET_SUPPORT_TYPE = BASE_URL + "supportGetTypes";
     public static final String CREATE_TICKET = BASE_URL + "ticketCreate";
     public static final String GET_FAQ_TYPES = BASE_URL + "faqGetTypes";
+    public static final String GET_PAYMENT_METHODS = BASE_URL + "getPaymentMethods";
+    public static final String ADD_MONEY= BASE_URL + "addMoney";
 
 
     public static boolean CHECK_GPS = true;
@@ -74,8 +76,8 @@ public class Constant {
         return false;
     }
 
-    public static Bitmap setMarkerPin(Context context, int pin){
-        BitmapDrawable bitmapdraw = (BitmapDrawable)context.getResources().getDrawable(pin);
+    public static Bitmap setMarkerPin(Context context, int pin) {
+        BitmapDrawable bitmapdraw = (BitmapDrawable) context.getResources().getDrawable(pin);
         Bitmap bitmap = bitmapdraw.getBitmap();
         return Bitmap.createScaledBitmap(bitmap, 70, 70, false);
     }

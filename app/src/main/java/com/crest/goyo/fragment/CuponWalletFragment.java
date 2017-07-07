@@ -64,7 +64,10 @@ public class CuponWalletFragment extends Fragment implements View.OnClickListene
         rv_my_wallet.setLayoutManager(mLayoutManager);
         rv_my_wallet.setItemAnimator(new DefaultItemAnimator());
         rv_my_wallet.setAdapter(myWalletAdapter);
-        my_wallet_api();
+        if(Constant.isOnline(getContext()))
+        {
+            my_wallet_api();
+        }
 
         return view;
     }

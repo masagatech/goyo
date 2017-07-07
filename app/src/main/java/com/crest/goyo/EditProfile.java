@@ -288,7 +288,10 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
                         int selectedId = mGenderGrup.getCheckedRadioButtonId();
                         mGender = (RadioButton) findViewById(selectedId);
                         String gender = mGender.getText().toString();
-                        executeMultipartPost(gender);
+                        if(Constant.isOnline(EditProfile.this))
+                        {
+                            executeMultipartPost(gender);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

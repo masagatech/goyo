@@ -180,7 +180,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         getMessageFromNotification();
 //        rideCancelByDriverNotify();
-        getUserProfileAPI();
+        if(Constant.isOnline(MainActivity.this))
+        {
+            getUserProfileAPI();
+        }
 
     }
 
@@ -445,7 +448,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(mIntent);
                 break;
             case R.id.logout:
-                user_logout();
+                if(Constant.isOnline(MainActivity.this))
+                {
+                    user_logout();
+                }
                 break;
         }
     }
@@ -498,6 +504,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Intent in = new Intent(MainActivity.this, StartRideActivity.class);
                         in.putExtra("i_ride_id", mRideid);
                         startActivity(in);
+                        finish();
                     }
                 } else if (intent.getAction().equals(MyFirebaseMessagingService.RIDE_CANCEL_BY_DRIVER)) {
                     android.util.Log.d(TAG, "data: " + "app open notif main activity");
@@ -516,7 +523,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
                         });
                         builder.show();
-
                     }
 
                 } else if (intent.getAction().equals(MyFirebaseMessagingService.COMPLETE_RIDE)) {
