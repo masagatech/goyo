@@ -134,8 +134,8 @@ public class UpdateLocationService extends Service implements GoogleApiClient.Co
 
         mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(5000)
-                .setFastestInterval(5000);
+                .setInterval(10000)
+                .setFastestInterval(10000);
         Log.i("LOG_TAG", "onStartCommand-->" + startId);
         googleApiClient.connect();
         return START_NOT_STICKY;
@@ -160,6 +160,7 @@ public class UpdateLocationService extends Service implements GoogleApiClient.Co
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.i("TAG","onDestroy");
         if (googleApiClient != null && googleApiClient.isConnected()) {
             stopLocationUpdates();
             googleApiClient.disconnect();
@@ -167,8 +168,10 @@ public class UpdateLocationService extends Service implements GoogleApiClient.Co
         }
     }
 
-    protected void stopLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+    public void stopLocationUpdates() {
+        if(googleApiClient.isConnected()){
+            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+        }
     }
 
     private void initializeLocationManager() {

@@ -10,18 +10,14 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -52,9 +48,7 @@ import com.crest.goyo.logger.Log;
 import com.crest.goyo.other.CircleTransform;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.LocationSource;
@@ -79,7 +73,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import okhttp3.HttpUrl;
 
@@ -87,7 +80,7 @@ import okhttp3.HttpUrl;
  * Created by brittany on 5/1/17.
  */
 
-public class StartRideActivity extends AppCompatActivity implements View.OnClickListener, LocationSource.OnLocationChangedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class StartRideActivity extends AppCompatActivity implements View.OnClickListener, LocationSource.OnLocationChangedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private TextView actionbar_title, tv_dr_name, tv_type, tv_pin;
     private ImageView iv_share, img_profile;
     private String mRideid, comeFrom;
@@ -103,7 +96,8 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
     private ImageButton bt_sos, bt_track;
     private String driverId;
     private AlertDialog.Builder builder;
-    private Double latitude, longitude, driverLat, driverLong;
+    private Double driverLat, driverLong;
+    private Double latitude, longitude;
     private LatLng pickupLatLng, dropLatLng;
     private Location mLastLocation;
     private double pickup_latitude, pickup_longitude, destination_latitude, destination_longitude;
@@ -112,12 +106,10 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
     private LinearLayout mShare;
     GoogleApiClient mGoogleApiClient;
     LocationRequest mLocationRequest;
-    private Geocoder geocoder;
-    private String cityCurrent;
-    private Location location;
+    //private Geocoder geocoder;
+    //private String cityCurrent;
     private LocationManager locManager;
-    private double currentLat, currentLong;
-    private LatLng currentLatLong;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -127,8 +119,11 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
         if (getIntent().getExtras() != null) {
             mRideid = getIntent().getExtras().getString("i_ride_id", "");
             comeFrom = getIntent().getExtras().getString("comeFrom", "");
-        } else {
         }
+
+        Log.e("TAG","stopService()");
+
+        stopService(new Intent(StartRideActivity.this,UpdateLocationService.class));
 
         initUI();
 
@@ -151,7 +146,6 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
             public void onClick(View v) {
                 if(Constant.isOnline(StartRideActivity.this))
                 {
-
                     sendTrackableLink();
                 }
             }
@@ -191,7 +185,6 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                 }
             }
         });
-
         dialog.show();
         Window window = dialog.getWindow();
         window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -527,6 +520,7 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
         return data;
     }
 
+
     private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
         @Override
         protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
@@ -604,7 +598,7 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
         urlBuilder.addQueryParameter("login_id", Preferences.getValue_String(getApplicationContext(), Preferences.USER_ID));
         urlBuilder.addQueryParameter("v_token", Preferences.getValue_String(getApplicationContext(), Preferences.USER_AUTH_TOKEN));
         urlBuilder.addQueryParameter("i_ride_id", mRideid);
-        urlBuilder.addQueryParameter("city", cityCurrent);
+        urlBuilder.addQueryParameter("city", Preferences.getValue_String(getApplicationContext(), Preferences.CITY));
         urlBuilder.addQueryParameter("l_latitude", String.valueOf(latitude));
         urlBuilder.addQueryParameter("l_longitude", String.valueOf(longitude));
         String url = urlBuilder.build().toString();
@@ -640,11 +634,7 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
         if (gps.canGetLocation()) {
             latitude = gps.getLatitude();
             longitude = gps.getLongitude();
-//            Location currentLocation = new Location("");//provider name is unnecessary
-//            currentLocation.setLatitude(latitude);//your coords of course
-//            currentLocation.setLongitude(longitude);
-//
-//            float distanceInMeters =  targetLocation.distanceTo(location);
+            gps.stopGpsTrackerLocationUpdate();
         } else {
             gps.showSettingsAlert();
         }
@@ -652,7 +642,7 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
             // TODO: Consider calling
             return;
         }
-        geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+        /*geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
         locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         location = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -687,9 +677,9 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
             {
                 getRideAPI(mMap);
             }
-        }
+        }*/
 
-
+        getRideAPI(mMap);
     }
 
     @Override
@@ -699,7 +689,9 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
             h1.removeCallbacksAndMessages(null);
         }
         if (comeFrom.equals("startRideDetail")) {
-            finish();
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         } else {
             permissionDialog();
         }
@@ -712,7 +704,9 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -728,21 +722,10 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onConnected(Bundle bundle) {
-
-        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-        if (mLastLocation != null) {
-        }
-
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(1000); //5 seconds
-        mLocationRequest.setFastestInterval(1000); //3 seconds
+        mLocationRequest.setInterval(8000); //5 seconds
+        mLocationRequest.setFastestInterval(8000); //3 seconds
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        //mLocationRequest.setSmallestDisplacement(0.1F); //1/10 meter
-
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-
-
     }
 
     @Override
@@ -757,18 +740,8 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onLocationChanged(Location location) {
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        currentLatLong = latLng;
-        List<Address> addresses;
-        try {
-            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-            if (addresses.size() > 0) {
-                Log.d("#######", "city : " + cityCurrent);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
     }
 
     private void getMessageFromNotification() {

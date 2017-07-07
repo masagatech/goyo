@@ -27,11 +27,7 @@ public class Splash extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             mRideId = getIntent().getExtras().getString("i_ride_id", "");
             mType = getIntent().getExtras().getString("type", "");
-        } else {
-
         }
-
-        startService(new Intent(this,UpdateLocationService.class));
 
         new Handler().postDelayed(new Runnable() {
             @Override

@@ -45,6 +45,7 @@ public class StartMyRidesDetail extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), StartRideActivity.class);
                 intent.putExtra("i_ride_id", rideID);
                 intent.putExtra("comeFrom", "startRideDetail");
+                finish();
                 startActivity(intent);
             }
         });

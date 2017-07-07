@@ -55,6 +55,7 @@ import com.crest.goyo.ModelClasses.RecyclerBookRideModel;
 import com.crest.goyo.ModelClasses.RideCancelModel;
 import com.crest.goyo.R;
 import com.crest.goyo.ScheduleRideDetail;
+import com.crest.goyo.UpdateLocationService;
 import com.crest.goyo.Utils.Constant;
 import com.crest.goyo.Utils.GPSTracker;
 import com.crest.goyo.Utils.Preferences;
@@ -213,8 +214,9 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
             }
         });
 
-        return view;
+        getActivity().startService(new Intent(getActivity(),UpdateLocationService.class));
 
+        return view;
     }
 
     private void removePrompcodeAPI() {
@@ -354,8 +356,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                         "tel", phone, null));
                 startActivity(phoneIntent);
                 break;
-
-
         }
 
     }
@@ -405,6 +405,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                             String locality = addresses.get(0).getSubLocality();
                             String adminArea = addresses.get(0).getAdminArea();
                             cityCurrent = addresses.get(0).getLocality();
+                            Preferences.setValue(getActivity(), Preferences.CITY, cityCurrent);
                             tv_pickup_from.setText("" + address + ", " + locality + ", " + cityCurrent + ", " + adminArea);
                             if (greenMarker != null) {
                                 greenMarker.remove();
@@ -420,7 +421,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
 
-//                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(changedLat, changedLong), 15));
+//                          mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(changedLat, changedLong), 15));
                             isChooseAddress = false;
                         }
 
@@ -433,8 +434,8 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                             .bearing(20)
                             .zoom(18).build();
                     mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-//                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(changedLat, changedLong), 15));
-//                    isChooseAddress = false;
+//                  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(changedLat, changedLong), 15));
+//                 isChooseAddress = false;
                 }
 
                 return true;
@@ -747,13 +748,14 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                     origin = new LatLng(gpsLat, gpsLong);
                     geocoder = new Geocoder(getActivity(), Locale.getDefault());
                     List<Address> addresses;
-                    LocationManager locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
                     addresses = geocoder.getFromLocation(gpsLat, gpsLong, 1);
                     if (addresses.size() > 0) {
                         String address = addresses.get(0).getAddressLine(0);
                         String locality = addresses.get(0).getSubLocality();
                         String adminArea = addresses.get(0).getAdminArea();
                         cityCurrent = addresses.get(0).getLocality();
+                        Log.w("city","City = "+cityCurrent);
+                        Preferences.setValue(getActivity(), Preferences.CITY, cityCurrent);
                         tv_pickup_from.setText("" + address + ", " + locality + ", " + cityCurrent + ", " + adminArea);
                         greenMarker = mMap.addMarker(new MarkerOptions()
                                 .position(new LatLng(gpsLat, gpsLong))

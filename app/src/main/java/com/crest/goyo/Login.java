@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -24,7 +23,6 @@ import android.widget.Toast;
 import com.crest.goyo.FCM.MyFirebaseInstanceIDService;
 import com.crest.goyo.Utils.Constant;
 import com.crest.goyo.Utils.CustomDialog;
-import com.crest.goyo.Utils.GPSTracker;
 import com.crest.goyo.Utils.Preferences;
 import com.crest.goyo.VolleyLibrary.RequestInterface;
 import com.crest.goyo.VolleyLibrary.VolleyRequestClass;
@@ -41,8 +39,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private Button bt_login, bt_signup;
     private EditText et_password, et_email;
     private CustomDialog dialog;
-    GPSTracker gps;
-    double latitude, longitude;
+    /*GPSTracker gps;
+    double latitude, longitude;*/
     int REQUEST_INTERNET = 100;
     String imei;
     @Override
@@ -77,7 +75,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         }
 
         initUI();
-
 
         if (ActivityCompat.checkSelfPermission(Login.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -148,35 +145,19 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 break;
             case R.id.btn_login:
 
-                Log.e("TAG", "checkSelfPermission");
-                if (ActivityCompat.checkSelfPermission(Login.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-                        //If the user has denied the permission previously your code will come to this block
-                        //Here you can explain why you need this permission
-                        //Explain here why you need this permission
-                        Log.e("TAG", "checkSelfPermission in");
-                    }
-
-                    Log.e("TAG", "checkSelfPermission out");
-                    //And finally ask for the permission
-                    ActivityCompat.requestPermissions(Login.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 05);
-
-                    return;
-                }
-
-                gps = new GPSTracker(v.getContext(), Login.this);
-                LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                /*gps = new GPSTracker(v.getContext(), Login.this);
                 if (gps.canGetLocation()) {
 
                     latitude = gps.getLatitude();
                     longitude = gps.getLongitude();
                     Log.d("######", "lat: " + latitude + "long :" + longitude);
-
                     startService(new Intent(Login.this, MyFirebaseInstanceIDService.class));
                     userLogin();
                 } else {
                     gps.showSettingsAlert();
-                }
+                }*/
+
+                userLogin();
                 break;
         }
     }
@@ -221,6 +202,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         Preferences.setValue(getApplicationContext(), Preferences.USER_ID, jsonObject.getString("id"));
                         Preferences.setValue(getApplicationContext(), Preferences.USER_AUTH_TOKEN, jsonObject.getString("v_token"));
                         Preferences.setValue(getApplicationContext(), Preferences.V_ID, jsonObject.getString("v_id"));
+                        Preferences.setValue(getApplicationContext(), Preferences.CITY, "Ahmedabad");
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
 
