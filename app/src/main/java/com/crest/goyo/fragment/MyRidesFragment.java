@@ -74,8 +74,6 @@ public class MyRidesFragment extends Fragment implements View.OnClickListener {
         if(Constant.isOnline(getActivity())){
             getDriverRidesAPI();
         }
-
-
     }
 
     private void getDriverRidesAPI() {

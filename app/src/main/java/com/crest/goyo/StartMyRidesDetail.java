@@ -32,7 +32,10 @@ public class StartMyRidesDetail extends AppCompatActivity {
 
         if (getIntent().getExtras() != null) {
             rideID = getIntent().getStringExtra("rideID");
-            getRideAPI();
+            if(Constant.isOnline(StartMyRidesDetail.this))
+            {
+                getRideAPI();
+            }
         }
 
 

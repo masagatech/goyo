@@ -149,7 +149,11 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
         bt_track.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendTrackableLink();
+                if(Constant.isOnline(StartRideActivity.this))
+                {
+
+                    sendTrackableLink();
+                }
             }
         });
 
@@ -180,7 +184,10 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                 } else if (phone.length() != 10) {
                     mPhoneNo.setError("Please enter correct phone number");
                 } else {
-                    send_sharable_linl_api(mRideid, phone, progressBar11, dialog);
+                    if(Constant.isOnline(StartRideActivity.this))
+                    {
+                        send_sharable_linl_api(mRideid, phone, progressBar11, dialog);
+                    }
                 }
             }
         });
@@ -304,7 +311,10 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
 
         h1.postDelayed(new Runnable() {
             public void run() {
-                getDriverLocationAPIThread();
+                if(Constant.isOnline(StartRideActivity.this))
+                {
+                    getDriverLocationAPIThread();
+                }
                 h1.postDelayed(this, 3000); //now is every 2 minutes
             }
         }, 3000);
@@ -432,7 +442,10 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                         pickupLatLng = new LatLng(pickup_latitude, pickup_longitude);
                         dropLatLng = new LatLng(destination_latitude, destination_longitude);
                         drawRoot(googleMap, pickupLatLng, dropLatLng);
-                        getDriverLocationAPI();
+                        if(Constant.isOnline(StartRideActivity.this))
+                        {
+                            getDriverLocationAPI();
+                        }
                     }
 
 
@@ -655,7 +668,10 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                getRideAPI(mMap);
+                if(Constant.isOnline(StartRideActivity.this))
+                {
+                    getRideAPI(mMap);
+                }
             }
         } else {
             List<Address> addresses;
@@ -667,7 +683,10 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            getRideAPI(mMap);
+            if(Constant.isOnline(StartRideActivity.this))
+            {
+                getRideAPI(mMap);
+            }
         }
 
 

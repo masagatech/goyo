@@ -32,7 +32,7 @@ public class GPSTracker extends Service implements LocationListener {
     Location location; // location
     double latitude; // latitude
     double longitude; // longitude
-    double speed,direction;
+    double speed, direction;
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
     protected LocationManager locationManager;
@@ -40,16 +40,23 @@ public class GPSTracker extends Service implements LocationListener {
 
     public GPSTracker() {
     }
+
     public GPSTracker(Context context, Activity activity) {
         this.mContext = context;
         this.activity = activity;
-        getLocation();
+        if (Constant.isOnline(context)) {
+            getLocation();
+        }
     }
+
     public GPSTracker(Activity activity) {
 
         this.activity = activity;
-        getLocation();
+        if (Constant.isOnline(activity)) {
+            getLocation();
+        }
     }
+
     public Location getLocation() {
         try {
             locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
@@ -108,9 +115,6 @@ public class GPSTracker extends Service implements LocationListener {
         return location;
     }
 
-    public void stopUsingGPS() {
-
-    }
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(final Location location) {
@@ -137,22 +141,25 @@ public class GPSTracker extends Service implements LocationListener {
         }
     };
 
-    public double getLatitude(){
-        if(location != null){
+    public double getLatitude() {
+        if (location != null) {
             latitude = location.getLatitude();
         }
         return latitude;
     }
-    public double getLongitude(){
-        if(location != null){
+
+    public double getLongitude() {
+        if (location != null) {
             longitude = location.getLongitude();
         }
         return longitude;
     }
+
     public boolean canGetLocation() {
         return this.canGetLocation;
     }
-    public void showSettingsAlert(){
+
+    public void showSettingsAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
         alertDialog.setTitle("GPS settings");
         alertDialog.setMessage("Your GPS seems to be disabled, do you want to enable it?");
@@ -165,7 +172,7 @@ public class GPSTracker extends Service implements LocationListener {
         alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
-                Constant.CHECK_GPS=false;
+                Constant.CHECK_GPS = false;
             }
         });
         alertDialog.show();
@@ -173,10 +180,10 @@ public class GPSTracker extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        if(location != null){
+        if (location != null) {
             speed = location.getSpeed();
             direction = location.getBearing();
-            Toast.makeText(mContext,""+location,Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "" + location, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -199,5 +206,11 @@ public class GPSTracker extends Service implements LocationListener {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    public void stopGpsTrackerLocationUpdate(){
+        locationManager.removeUpdates(mLocationListener);
+        locationManager = null;
+        Log.i("LLNikunj","GPSTracker removeUpdates()");
     }
 }

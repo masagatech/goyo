@@ -296,7 +296,10 @@ public class AddMoneyDetail extends AppCompatActivity implements View.OnClickLis
             if (resultCode == RESULT_OK) {
                 Log.i(TAG, "Success - Payment ID : " + data.getStringExtra(SdkConstants.PAYMENT_ID));
                 String paymentId = data.getStringExtra(SdkConstants.PAYMENT_ID);
-                addMoneyApiCall(paymentId);
+                if(Constant.isOnline(AddMoneyDetail.this))
+                {
+                    addMoneyApiCall(paymentId);
+                }
             } else if (resultCode == RESULT_CANCELED) {
                 Log.i(TAG, "failure");
                 showDialogMessage("cancelled");

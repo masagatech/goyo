@@ -197,7 +197,10 @@ public class UpdateLocationService extends Service implements GoogleApiClient.Co
             gpsLat = location.getLatitude();
             gpsLong = location.getLongitude();
             Log.e("UpdateLocation", "onLocationChanged: " + gpsLat + " " + gpsLong);
-            update_location(gpsLat, gpsLong);
+            if(Constant.isOnline(UpdateLocationService.this))
+            {
+                update_location(gpsLat, gpsLong);
+            }
         }
     }
 }

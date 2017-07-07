@@ -201,13 +201,15 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         isChooseAddress = false;
         initializeMap();
         initUI(view);
-        loadCalanderView();
+        //loadCalanderView();
         recyclerviewItemClick();
 
         mCanclePromocode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                removePrompcodeAPI();
+                if (Constant.isOnline(getActivity())) {
+                    removePrompcodeAPI();
+                }
             }
         });
 
@@ -298,7 +300,9 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
             case R.id.lay_ride_later:
                 lay_book_your_ride.setVisibility(View.GONE);
                 lay_schedule_your_ride.setVisibility(VISIBLE);
-                getAvalableVehiclesAPI();
+                if (Constant.isOnline(getContext())) {
+                    getAvalableVehiclesAPI();
+                }
                 break;
 
             case R.id.lay_schedule_cancel:
@@ -449,10 +453,15 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         if (gps.canGetLocation()) {
             gpsLat = gps.getLatitude();
             gpsLong = gps.getLongitude();
+            gps.stopGpsTrackerLocationUpdate();
             lay_cancel_book_ride.setVisibility(VISIBLE);
             lay_map_selection_location.setVisibility(View.GONE);
             lay_map_saved_location.setVisibility(View.VISIBLE);
-            getRideAPIForConfirmBooking();
+
+            if (Constant.isOnline(getActivity())) {
+                getRideAPIForConfirmBooking();
+            }
+
 //            getAvalableVehiclesAPI();
 //            gpsLat = gps.getLatitude();
 //            gpsLong = gps.getLongitude();
@@ -558,8 +567,9 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                                         .into(img_driver_profile);
                             }
-
-                            getDriverLocationAPIForConfirmBooking();
+                            if (Constant.isOnline(getContext())) {
+                                getDriverLocationAPIForConfirmBooking();
+                            }
                         }
                     } else {
                     }
@@ -646,7 +656,9 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
 
         h3.postDelayed(new Runnable() {
             public void run() {
-                getDriverLocationAPIThreadForConfirmBooking();
+                if (Constant.isOnline(getContext())) {
+                    getDriverLocationAPIThreadForConfirmBooking();
+                }
                 h3.postDelayed(this, 6000); //now is every 2 minutes
             }
         }, 6000);
@@ -723,34 +735,39 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         mGoogleApiClient.connect();
         gps = new GPSTracker(getActivity(), getActivity());
         if (gps.canGetLocation()) {
-            getAvalableVehiclesAPI();
+            if (Constant.isOnline(getContext())) {
+                getAvalableVehiclesAPI();
+            }
             gpsLat = gps.getLatitude();
             gpsLong = gps.getLongitude();
-            try {
-                mMap.setMyLocationEnabled(true);
-                origin = new LatLng(gpsLat, gpsLong);
-                geocoder = new Geocoder(getActivity(), Locale.getDefault());
-                List<Address> addresses;
-                LocationManager locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
-                addresses = geocoder.getFromLocation(gpsLat, gpsLong, 1);
-                if (addresses.size() > 0) {
-                    String address = addresses.get(0).getAddressLine(0);
-                    String locality = addresses.get(0).getSubLocality();
-                    String adminArea = addresses.get(0).getAdminArea();
-                    cityCurrent = addresses.get(0).getLocality();
-                    tv_pickup_from.setText("" + address + ", " + locality + ", " + cityCurrent + ", " + adminArea);
-                    greenMarker = mMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(gpsLat, gpsLong))
-                            .icon(BitmapDescriptorFactory.fromBitmap(Constant.setMarkerPin(getActivity(), R.drawable.marker_pickup))));
-                    cameraPosition = new CameraPosition.Builder()
-                            .target(new LatLng(gpsLat, gpsLong))
-                            .zoom(15)
-                            .build();
-                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+            gps.stopGpsTrackerLocationUpdate();
+            if (Constant.isOnline(getContext())) {
+                try {
+                    mMap.setMyLocationEnabled(true);
+                    origin = new LatLng(gpsLat, gpsLong);
+                    geocoder = new Geocoder(getActivity(), Locale.getDefault());
+                    List<Address> addresses;
+                    LocationManager locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
+                    addresses = geocoder.getFromLocation(gpsLat, gpsLong, 1);
+                    if (addresses.size() > 0) {
+                        String address = addresses.get(0).getAddressLine(0);
+                        String locality = addresses.get(0).getSubLocality();
+                        String adminArea = addresses.get(0).getAdminArea();
+                        cityCurrent = addresses.get(0).getLocality();
+                        tv_pickup_from.setText("" + address + ", " + locality + ", " + cityCurrent + ", " + adminArea);
+                        greenMarker = mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(gpsLat, gpsLong))
+                                .icon(BitmapDescriptorFactory.fromBitmap(Constant.setMarkerPin(getActivity(), R.drawable.marker_pickup))));
+                        cameraPosition = new CameraPosition.Builder()
+                                .target(new LatLng(gpsLat, gpsLong))
+                                .zoom(15)
+                                .build();
+                        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
 
+                }
             }
         } else {
             android.app.AlertDialog.Builder alertDialog = new android.app.AlertDialog.Builder(mContext);
@@ -812,7 +829,9 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                 gpsLat = origin.latitude;
                 gpsLong = origin.longitude;
                 mMap.clear();
-                getVehiclesListAPI(vehicleTypes.get(posVehicleTypes).getType());
+                if (Constant.isOnline(getContext())) {
+                    getVehiclesListAPI(vehicleTypes.get(posVehicleTypes).getType());
+                }
                 greenMarker = mMap.addMarker(new MarkerOptions()
                         .position(greenLatLng)
                         .title("" + place.getName())
@@ -1063,7 +1082,9 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                         if (h3 != null) {
                             h3.removeCallbacksAndMessages(null);
                         }
-                        downloadUrl();
+                        if (Constant.isOnline(getContext())) {
+                            downloadUrl();
+                        }
                     }
                 }
             }
@@ -1422,15 +1443,13 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                 }
                             }
                         });
-                        thread.start();
+                        thread.start();  // Error Here.
                     } else {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
 
                 }
-
-
             }
         });
 
@@ -1562,7 +1581,9 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         }
         h1.postDelayed(new Runnable() {
             public void run() {
-                getVehiclesListAPIThread(vehicleTypes.get(posVehicleTypes).getType());     // this method will contain your almost-finished HTTP calls
+                if (Constant.isOnline(getContext())) {
+                    getVehiclesListAPIThread(vehicleTypes.get(posVehicleTypes).getType());     // this method will contain your almost-finished HTTP calls
+                }
                 h1.postDelayed(this, 6000);
             }
         }, 6000);
@@ -1579,7 +1600,9 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         }
         h2.postDelayed(new Runnable() {
             public void run() {
-                getVehiclesListAPIThread(vehicleTypes.get(posVehicleTypes).getType());
+                if (Constant.isOnline(getContext())) {
+                    getVehiclesListAPIThread(vehicleTypes.get(posVehicleTypes).getType());
+                }
                 h2.postDelayed(this, 30000); //now is every 2 minutes
             }
         }, 30000);
@@ -1768,8 +1791,10 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                         }
 
                         try {
-                            getVehiclesListAPI(vehicleTypes.get(posVehicleTypes).getType());
-                            getVehicleTypeCharge(vehicleTypes.get(0).getType());
+                            if (Constant.isOnline(getContext())) {
+                                getVehiclesListAPI(vehicleTypes.get(posVehicleTypes).getType());
+                                getVehicleTypeCharge(vehicleTypes.get(0).getType());
+                            }
                         } catch (Exception e) {
 
                         }

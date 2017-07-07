@@ -145,7 +145,10 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                                     int selectedId = mGenderGrup.getCheckedRadioButtonId();
                                     mGender = (RadioButton) findViewById(selectedId);
                                     String gender = mGender.getText().toString();
-                                    userSignupAPI(gender);
+                                    if(Constant.isOnline(SignUp.this))
+                                    {
+                                        userSignupAPI(gender);
+                                    }
                                 }
                             } else {
                                 et_confirm_password.setError("Please enter same password");

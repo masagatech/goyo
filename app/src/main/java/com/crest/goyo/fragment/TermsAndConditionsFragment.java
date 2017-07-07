@@ -53,7 +53,10 @@ public class TermsAndConditionsFragment extends Fragment implements View.OnClick
         view = inflater.inflate(R.layout.terms_and_conditions, container, false);
 
         initUI();
-        validation();
+        if(Constant.isOnline(getContext()))
+        {
+            validation();
+        }
         return view;
     }
 
