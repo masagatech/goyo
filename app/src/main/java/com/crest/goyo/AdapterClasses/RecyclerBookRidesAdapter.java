@@ -56,11 +56,13 @@ public class RecyclerBookRidesAdapter extends RecyclerView.Adapter<RecyclerBookR
                 notifyDataSetChanged();
             }
         });
+
         Glide.with(context).load(list.get(position).getList_icon())
                 .crossFade()
                 .thumbnail(0.5f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.iv_vehicle);
+
         if(row_index==position){
             holder.lay_my_rides.setBackgroundResource(R.color.colorPrimary);
         }

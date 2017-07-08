@@ -38,7 +38,6 @@ public class StartMyRidesDetail extends AppCompatActivity {
             }
         }
 
-
         tv_track.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

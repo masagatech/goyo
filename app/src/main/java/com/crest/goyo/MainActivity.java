@@ -7,6 +7,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,9 +43,9 @@ import com.crest.goyo.VolleyLibrary.VolleyTAG;
 import com.crest.goyo.fragment.BookYourRideFragment;
 import com.crest.goyo.fragment.FAQFragment;
 import com.crest.goyo.fragment.FeedbackFragment;
+import com.crest.goyo.fragment.MainWalletFragment;
 import com.crest.goyo.fragment.MyRidesFragment;
 import com.crest.goyo.fragment.MyTicketsFragment;
-import com.crest.goyo.fragment.MainWalletFragment;
 import com.crest.goyo.fragment.NotificationsFragment;
 import com.crest.goyo.fragment.PromotionCodeFragment;
 import com.crest.goyo.fragment.ReferralCodeFragment;
@@ -53,6 +57,8 @@ import com.crest.goyo.school.MyKids;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import okhttp3.HttpUrl;
 
@@ -89,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     BookYourRideFragment bookYourRideFragment;
     TermsAndConditionsFragment termsAndConditionsFragment;
-
+    String latestVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,11 +186,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         getMessageFromNotification();
 //        rideCancelByDriverNotify();
-        if(Constant.isOnline(MainActivity.this))
-        {
+        if (Constant.isOnline(MainActivity.this)) {
             getUserProfileAPI();
         }
-
+        GetLatestVersion task = new GetLatestVersion();
+        task.execute();
+        if (!GetThisVersion().equals(latestVersion)) {
+            ShowUpdateDialog();
+        }
     }
 
     private void rideCancelByDriverNotify() {
@@ -388,17 +397,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         navItemIndex = 0;
                         actionbar_title.setText(R.string.nav_book_my_ride);
                 }
+
                 if (menuItem.isChecked()) {
                     menuItem.setChecked(false);
                 } else {
                     menuItem.setChecked(true);
                 }
+
                 menuItem.setChecked(true);
                 loadHomeFragment();
                 return true;
             }
         });
-
 
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.openDrawer, R.string.closeDrawer) {
             @Override
@@ -448,8 +458,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(mIntent);
                 break;
             case R.id.logout:
-                if(Constant.isOnline(MainActivity.this))
-                {
+                if (Constant.isOnline(MainActivity.this)) {
                     user_logout();
                 }
                 break;
@@ -633,5 +642,67 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }*/
 
+    private class GetLatestVersion extends AsyncTask<String, String, JSONObject> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
 
+        @Override
+        protected JSONObject doInBackground(String... params) {
+            try {
+                String urlOfAppFromPlayStore = "https://play.google.com/store/apps/details?id=com.crest.goyo&hl=en";
+                //It retrieves the latest version by scraping the content of current version from play store at runtime
+                Document doc = Jsoup.connect(urlOfAppFromPlayStore).get();
+                latestVersion = doc.getElementsByAttributeValue("itemprop", "softwareVersion").first().text();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return new JSONObject();
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject jsonObject) {
+            super.onPostExecute(jsonObject);
+        }
+    }
+
+    String GetThisVersion() {
+        PackageManager pm = this.getPackageManager();
+        PackageInfo pInfo = null;
+
+        try {
+            pInfo = pm.getPackageInfo(this.getPackageName(), 0);
+
+        } catch (PackageManager.NameNotFoundException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+        assert pInfo != null;
+        return pInfo.versionName;
+    }
+
+    void ShowUpdateDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Update Available");
+        builder.setMessage("Are you sure to update to new version?");
+        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + getPackageName())));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.crest.goyo" + getPackageName() + "&hl=en")));
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+    }
 }

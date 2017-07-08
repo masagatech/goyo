@@ -255,7 +255,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         });
     }
 
-
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
     public boolean checkLocationPermission() {
@@ -357,7 +356,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                 startActivity(phoneIntent);
                 break;
         }
-
     }
 
     @Override
@@ -391,7 +389,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                 onMapReadyGettingLocation();
             }
         }
-
 
         mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
@@ -502,6 +499,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                     mContext.startActivity(intent);
                 }
             });
+
             alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
@@ -2190,6 +2188,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                     }
                 })
         );
+
         rv_book_ride.addOnItemTouchListener(
                 new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
@@ -2220,8 +2219,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
             redMarker = mMap.addMarker(new MarkerOptions()
                     .position(dest)
                     .icon(BitmapDescriptorFactory.fromBitmap(Constant.setMarkerPin(getActivity(), R.drawable.marker_drop))));
-        } else {
-
         }
     }
 
