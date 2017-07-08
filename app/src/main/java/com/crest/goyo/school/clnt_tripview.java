@@ -58,11 +58,8 @@ import io.socket.emitter.Emitter;
 
 public class clnt_tripview extends AppCompatActivity implements OnMapReadyCallback {
 
-
     //UI
     TextView tvSpeed, tvLastloc, txtBatch;
-
-
     //socket
     private Socket mSocket;
     private boolean isSocConnected = false;
@@ -129,8 +126,6 @@ public class clnt_tripview extends AppCompatActivity implements OnMapReadyCallba
 
     }
 
-
-
     private void showTimeSpeed(String speed, String Time) {
         tvSpeed.setText(speed + " Km/h");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
@@ -149,8 +144,6 @@ public class clnt_tripview extends AppCompatActivity implements OnMapReadyCallba
         df.setTimeZone(TimeZone.getTimeZone("IN"));
         return df.format(utcDate);
     }
-
-
 
     private void googleMapInit() {
         SupportMapFragment mMap1 = (SupportMapFragment) getSupportFragmentManager()
@@ -184,7 +177,6 @@ public class clnt_tripview extends AppCompatActivity implements OnMapReadyCallba
         if (!status.equals("2"))
             SocketClient();
     }
-
 
     private void addMapListner() {
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -273,7 +265,6 @@ public class clnt_tripview extends AppCompatActivity implements OnMapReadyCallba
 
     }
 
-
     //pub sub socket client
     private void SocketClient() {
         SC_IOApplication app = new SC_IOApplication();
@@ -356,10 +347,11 @@ public class clnt_tripview extends AppCompatActivity implements OnMapReadyCallba
                             trackMarker(objTrp);
                             /*Toast.makeText(getApplicationContext(),
                                     d, Toast.LENGTH_LONG).show();*/
-                        }else if (data.get("evt").equals("stop")) {
-                           // JSONObject objTrp = (JSONObject) data.get("data");
-                            Toast.makeText(clnt_tripview.this, "Trip End", Toast.LENGTH_LONG).show();
                         }
+//                        else if (data.get("evt").equals("stop")) {
+//                           // JSONObject objTrp = (JSONObject) data.get("data");
+//                            Toast.makeText(clnt_tripview.this, "Trip End", Toast.LENGTH_LONG).show();
+//                        }
 
                     } catch (Exception e) {
                         //Log.e(TAG, e.getMessage());
