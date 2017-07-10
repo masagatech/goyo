@@ -191,9 +191,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         GetLatestVersion task = new GetLatestVersion();
         task.execute();
-        if (!GetThisVersion().equals(latestVersion)) {
-            ShowUpdateDialog();
-        }
     }
 
     private void rideCancelByDriverNotify() {
@@ -655,6 +652,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //It retrieves the latest version by scraping the content of current version from play store at runtime
                 Document doc = Jsoup.connect(urlOfAppFromPlayStore).get();
                 latestVersion = doc.getElementsByAttributeValue("itemprop", "softwareVersion").first().text();
+                android.util.Log.e("latestVersion", "latestVersion playstore: " + latestVersion);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -664,6 +662,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(JSONObject jsonObject) {
             super.onPostExecute(jsonObject);
+            if (!GetThisVersion().equals(latestVersion)) {
+                ShowUpdateDialog();
+            }
         }
     }
 
@@ -679,6 +680,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e1.printStackTrace();
         }
         assert pInfo != null;
+        android.util.Log.e("latestVersion", "latestVersion system" + pInfo.versionName);
         return pInfo.versionName;
     }
 
