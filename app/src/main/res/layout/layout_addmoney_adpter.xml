@@ -4,17 +4,23 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/imgAddMoneyType"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_action_cancel" />
+    <LinearLayout
+        android:id="@+id/layout_payments_methods"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/txtAddMoneyType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Pay U Money" />
+        <ImageView
+            android:id="@+id/imgViewAddMoneyType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:id="@+id/txtAddMoneyType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Pay U Money" />
+    </LinearLayout>
 </LinearLayout>

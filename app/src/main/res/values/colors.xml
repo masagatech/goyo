@@ -14,5 +14,8 @@
     <color name="colorDisable">#757575</color>
     <color name="background">#eeeeee</color>
     <color name="colorBrown">#795548</color>
+    <color name="transparent">#00795548</color>
+
+    <color name="transparent_white">#ccffffff</color>
 
 </resources>

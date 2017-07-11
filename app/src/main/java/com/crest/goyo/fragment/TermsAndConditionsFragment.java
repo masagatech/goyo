@@ -102,3 +102,4 @@ public class TermsAndConditionsFragment extends Fragment implements View.OnClick
         });
     }
 }
+

@@ -35,7 +35,7 @@
         android:layout_marginRight="20dp"
         android:background="@drawable/send_sms"
         android:padding="8dp"
-        android:tintMode="@color/gray" />
+        android:tintMode="@color/colorGrey" />
 
     <include
         layout="@layout/map_bottom_start_your_ride"

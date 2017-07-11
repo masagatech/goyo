@@ -1,9 +1,9 @@
 package com.crest.goyo.fragment;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -122,7 +123,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
     private Button bt_call;
     private ImageView ic_calender, ic_timer, img_driver_profile;
     private EditText et_reason, et_add_promocode;
-    private ProgressDialog pd;
+    private Dialog pd;
     private GoogleMap mMap;
     private View view;
     private Location location;
@@ -173,8 +174,9 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
     private Integer timeInMinutes;
     private TextView mCanclePromocode;
     private String promocode_code;
+    private ImageView mLoading;
     Location mLastLocation;
-
+    private String mSelectedType = "";
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -217,6 +219,76 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         getActivity().startService(new Intent(getActivity(),UpdateLocationService.class));
 
         return view;
+    }
+
+    private void initUI(View view) {
+        lay_ride_now = (LinearLayout) view.findViewById(R.id.lay_ride_now);
+        lay_book_your_ride = (LinearLayout) view.findViewById(R.id.lay_book_your_ride);
+        lay_book_your_ride_detail = (LinearLayout) view.findViewById(R.id.lay_book_your_ride_detail);
+        lay_confirm_booking = (LinearLayout) view.findViewById(R.id.lay_confirm_booking);
+        lay_cancel_booking = (LinearLayout) view.findViewById(R.id.lay_cancel_booking);
+        lay_ride_later = (LinearLayout) view.findViewById(R.id.lay_ride_later);
+        lay_schedule_your_ride = (LinearLayout) view.findViewById(R.id.lay_schedule_your_ride);
+        lay_schedule_cancel = (LinearLayout) view.findViewById(R.id.lay_schedule_cancel);
+        lay_booking_back = (LinearLayout) view.findViewById(R.id.lay_booking_back);
+        lay_cancel_book_ride = (LinearLayout) view.findViewById(R.id.lay_cancel_book_ride);
+        lay_schedule_now = (LinearLayout) view.findViewById(R.id.lay_schedule_now);
+        lay_pickup_from = (LinearLayout) view.findViewById(R.id.lay_pickup_from);
+        lay_drop_location = (LinearLayout) view.findViewById(R.id.lay_drop_location);
+        lay_map_selection_location = (LinearLayout) view.findViewById(R.id.lay_map_selection_location);
+        lay_map_saved_location = (LinearLayout) view.findViewById(R.id.lay_map_saved_location);
+        lay_total = (LinearLayout) view.findViewById(R.id.lay_total);
+        rv_book_ride = (RecyclerView) view.findViewById(R.id.rv_book_ride);
+        rv_schedule_ride = (RecyclerView) view.findViewById(R.id.rv_schedule_ride);
+        ic_calender = (ImageView) view.findViewById(R.id.ic_calender);
+        tv_pickup_date = (TextView) view.findViewById(R.id.tv_pickup_date);
+        tv_pickup_time = (TextView) view.findViewById(R.id.tv_pickup_time);
+        ic_timer = (ImageView) view.findViewById(R.id.ic_timer);
+        tv_pickup_from = (TextView) view.findViewById(R.id.tv_pickup_from);
+        tv_drop_location = (TextView) view.findViewById(R.id.tv_drop_location);
+        tv_enter_promocode = (LinearLayout) view.findViewById(R.id.ll_promocode);
+        tv_vehicle_type = (TextView) view.findViewById(R.id.tv_vehicle_type);
+        tv_saved_drop_location = (TextView) view.findViewById(R.id.tv_saved_drop_location);
+        tv_saved_pickup_from = (TextView) view.findViewById(R.id.tv_saved_pickup_from);
+        tv_total = (TextView) view.findViewById(R.id.tv_total);
+        tv_pin = (TextView) view.findViewById(R.id.tv_pin);
+        tv_surcharge = (TextView) view.findViewById(R.id.tv_surcharge);
+        tv_driver_name = (TextView) view.findViewById(R.id.tv_driver_name);
+        tv_vehicle_type_driver = (TextView) view.findViewById(R.id.tv_vehicle_type_driver);
+        tv_ph_no = (TextView) view.findViewById(R.id.tv_ph_no);
+        img_driver_profile = (ImageView) view.findViewById(R.id.img_driver_profile);
+        bt_call = (Button) view.findViewById(R.id.bt_call);
+        mCanclePromocode = (TextView) view.findViewById(R.id.txt_cancle_promocod);
+
+        mLoading = (ImageView) view.findViewById(R.id.loading);
+        Glide.with(this)
+                .load(R.drawable.gear2)
+                .asGif()
+                .placeholder(R.drawable.gear2)
+                .into(mLoading);
+
+
+        lay_ride_now.setOnClickListener(this);
+        lay_confirm_booking.setOnClickListener(this);
+        lay_cancel_booking.setOnClickListener(this);
+        lay_ride_later.setOnClickListener(this);
+        lay_schedule_your_ride.setOnClickListener(this);
+        lay_schedule_cancel.setOnClickListener(this);
+        lay_booking_back.setOnClickListener(this);
+        ic_calender.setOnClickListener(this);
+        ic_timer.setOnClickListener(this);
+        lay_schedule_now.setOnClickListener(this);
+        lay_pickup_from.setOnClickListener(this);
+        lay_drop_location.setOnClickListener(this);
+        tv_enter_promocode.setOnClickListener(this);
+        bt_call.setOnClickListener(this);
+        locationButton.setOnClickListener(this);
+
+
+        MarkerPoints = new ArrayList<>();
+        vehicleTypes = new ArrayList<RecyclerBookRideModel>();
+        vhicleCharges = new ArrayList<ChargesModel>();
+
     }
 
     private void removePrompcodeAPI() {
@@ -609,13 +681,13 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                 try {
                                     URL url = new URL(plotting_icon);
                                     final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                                    final Bitmap newBitmap = getResizedBitmap(bmp, 70, 70);
+                                    //final Bitmap newBitmap = getResizedBitmap(bmp, 70, 70);
                                     getActivity().runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             Marker dr = mMap.addMarker(new MarkerOptions()
                                                     .position(driver)
-                                                    .icon(BitmapDescriptorFactory.fromBitmap(newBitmap)));
+                                                    .icon(BitmapDescriptorFactory.fromBitmap(bmp)));
 
                                             Marker cu = mMap.addMarker(new MarkerOptions().position(customer).icon(BitmapDescriptorFactory.fromBitmap(Constant.setMarkerPin(getActivity(), R.drawable.marker_driver))));
                                             LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -1105,6 +1177,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         VolleyRequestClassNew.allRequest(mContext, newurl, new RequestInterface() {
             @Override
             public void onResult(JSONObject response) {
+                android.util.Log.e("Hector getVehicleTypeCharge", "respoce"+response);
                 final String success = response.optString("status").toString();
                 final String message = response.optString("message").toString();
                 String value = String.valueOf(success);
@@ -1127,11 +1200,13 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                         CHARGE_RIDE_TIME_PICKUP_CHARGE = charges.getString("ride_time_pick_charge");
                         CHARGE_RIDE_TIME_WAIT_CHARGE = charges.getString("ride_time_charge");
                         CHARGE_SERVICE_TAX = charges.getString("service_tax");
+
+                        saveRideAPI();
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
-
             }
         });
     }
@@ -1153,7 +1228,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         new GetConfirmRide().execute(newurl);
     }
 
-    private String getUrl(LatLng origin, LatLng dest) {
+    private String getUrl() {
         String str_origin = "origin=" + tv_pickup_from.getText().toString().trim();
         String str_dest = "destination=" + tv_drop_location.getText().toString().trim();
         String sensor = "sensor=true";
@@ -1302,20 +1377,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
     }
 
 
-    public String[] splitStringEvery(String s, int interval) {
-        int arrayLength = (int) Math.ceil(((s.length() / (double) interval)));
-        String[] result = new String[arrayLength];
-
-        int j = 0;
-        int lastIndex = result.length - 1;
-        for (int i = 0; i < lastIndex; i++) {
-            result[i] = s.substring(j, j + interval);
-            j += interval;
-        } //Add the last bit
-        result[lastIndex] = s.substring(j);
-        return result;
-    }
-
     private void getDriverLocationAPI() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_GET_DRIVER_LOCATIOIN).newBuilder();
         urlBuilder.addQueryParameter("device", "ANDROID");
@@ -1343,13 +1404,13 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                 try {
                                     URL url = new URL(vehicleTypes.get(posVehicleTypes).getPlotting_icon());
                                     final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                                    final Bitmap newBitmap = getResizedBitmap(bmp, 70, 70);
+                                    //final Bitmap newBitmap = getResizedBitmap(bmp, 70, 70);
                                     getActivity().runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             driverMarker = mMap.addMarker(new MarkerOptions()
                                                     .position(driver)
-                                                    .icon(BitmapDescriptorFactory.fromBitmap(newBitmap)));
+                                                    .icon(BitmapDescriptorFactory.fromBitmap(bmp)));
 
                                             customerMarker = mMap.addMarker(new MarkerOptions().position(customer).icon(BitmapDescriptorFactory.fromBitmap(Constant.setMarkerPin(getActivity(), R.drawable.marker_driver))));
                                             LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -1416,14 +1477,22 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                     } else {
                                         URL url = new URL(vehicleTypes.get(posVehicleTypes).getPlotting_icon());
                                         final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                                        final Bitmap newBitmap = getResizedBitmap(bmp, 70, 70);
+                                        //final Bitmap newBitmap = getResizedBitmap(bmp, 70, 70);
                                         getActivity().runOnUiThread(new Runnable() { // java.lang.NullPointerException: Attempt to invoke virtual method 'void android.support.v4.app.FragmentActivity.runOnUiThread(java.lang.Runnable)' on a null object reference // solved
                                             @Override
                                             public void run() {
+                                                if (driverMarker != null) {
+                                                    driverMarker.remove();
+                                                }
+
                                                 driverMarker = mMap.addMarker(new MarkerOptions()
                                                         .position(driver)
-                                                        .icon(BitmapDescriptorFactory.fromBitmap(newBitmap)));
-                                                customerMarker = mMap.addMarker(new MarkerOptions().position(customer).icon(BitmapDescriptorFactory.fromBitmap(Constant.setMarkerPin(getActivity(), R.drawable.marker_driver))));
+                                                        .icon(BitmapDescriptorFactory.fromBitmap(bmp)));
+
+                                                customerMarker = mMap.addMarker(new MarkerOptions()
+                                                        .position(customer)
+                                                        .icon(BitmapDescriptorFactory.fromBitmap(Constant.setMarkerPin(getActivity(), R.drawable.marker_driver))));
+
                                                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
                                                 builder.include(driverMarker.getPosition());
                                                 builder.include(customerMarker.getPosition());
@@ -1792,8 +1861,9 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
 
                         try {
                             if (Constant.isOnline(getContext())) {
+                                mSelectedType = vehicleTypes.get(posVehicleTypes).getType();
                                 getVehiclesListAPI(vehicleTypes.get(posVehicleTypes).getType());
-                                getVehicleTypeCharge(vehicleTypes.get(0).getType());
+                                //getVehicleTypeCharge(vehicleTypes.get(0).getType());
                             }
                         } catch (Exception e) {
 
@@ -1855,7 +1925,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
             public void onResult(JSONObject response) {
                 final String message = response.optString("message").toString();
                 vehicleStatus = response.optInt("status");
-                android.util.Log.e("Hector", "onResult: vehicaleListAPI " + vehicleStatus);
+                android.util.Log.e("Hector", "onResult: vehicaleListAPI " + response);
                 if (vehicleStatus == 0) {
                     updateVehicleList();
                     Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
@@ -1883,7 +1953,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                         android.util.Log.e("Vehicle Icon", "run: " + url);
                                         final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
 
-                                        final Bitmap newBitmap = getResizedBitmap(bmp, 70, 70);
+                                        //final Bitmap newBitmap = getResizedBitmap(bmp, 70, 70);
                                         if (getActivity() == null)
                                             return;
                                         getActivity().runOnUiThread(new Runnable() {
@@ -1896,7 +1966,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                                 /*Hector Change*/
                                                 vehicleMarker = mMap.addMarker(new MarkerOptions()
                                                         .position(point)
-                                                        .icon(BitmapDescriptorFactory.fromBitmap(newBitmap)));
+                                                        .icon(BitmapDescriptorFactory.fromBitmap(bmp)));
                                             }
                                         });
 
@@ -1977,7 +2047,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                         final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
 
                                         /*Hector image bitmap change*/
-                                        final Bitmap newBitmap = getResizedBitmap(bmp, 70, 70);
+                                        //final Bitmap newBitmap = getResizedBitmap(bmp, 70, 70);
                                         if (getActivity() == null)
                                             return;
                                         getActivity().runOnUiThread(new Runnable() {
@@ -1986,7 +2056,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
 
                                                 vehicleMarker = mMap.addMarker(new MarkerOptions()
                                                         .position(point)
-                                                        .icon(BitmapDescriptorFactory.fromBitmap(newBitmap)));
+                                                        .icon(BitmapDescriptorFactory.fromBitmap(bmp)));
                                                 mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
                                                 cameraPosition = new CameraPosition.Builder()
                                                         .target(point)
@@ -2017,7 +2087,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
 
 
     private void downloadUrl() {
-        String url1 = getUrl(origin, dest);
+        String url1 = getUrl();
         HttpUrl.Builder urlBuilder = HttpUrl.parse(url1).newBuilder();
         urlBuilder.addQueryParameter("device", "ANDROID");
         String url = urlBuilder.build().toString();
@@ -2091,7 +2161,8 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            saveRideAPI();
+                            getVehicleTypeCharge(mSelectedType);
+                            //saveRideAPI();
                         }
                     });
                 } catch (Exception e) {
@@ -2107,11 +2178,14 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         protected void onPreExecute() {
             // TODO Auto-generated method stub
             super.onPreExecute();
-            pd = new ProgressDialog(getActivity());
+            /*pd = new ProgressDialog(getActivity());
             pd.show();
             pd.setMessage("Please wait..!!");
-            pd.setCancelable(false);
+            pd.setCancelable(false);*/
 
+            //showCustomeProgressDialog(getActivity(),mProgressView);
+
+            showCustomeProgressDialog(getActivity(),mSelectedType);
         }
 
         @Override
@@ -2166,13 +2240,14 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         protected void onPostExecute(Void result) {
             // TODO Auto-generated method stub
             super.onPostExecute(result);
-            pd.dismiss();
+            //pd.dismiss();
+            hideCustomeProgressDialog();
 
         }
     }
 
     private void recyclerviewItemClick() {
-        rv_schedule_ride.addOnItemTouchListener(
+        /*rv_schedule_ride.addOnItemTouchListener(
                 new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
@@ -2181,13 +2256,14 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                         mMap.clear();
                         createPickupDropMarkers();
                         if (Constant.isOnline(getActivity())) {
+                            Toast.makeText(getActivity(),vehicleTypes.get(position).getType(),Toast.LENGTH_SHORT).show();
                             getVehiclesListAPI(vehicleTypes.get(position).getType());
                             if (vehicleTypes.get(position).getType().length() > 0)
                                 getVehicleTypeCharge(vehicleTypes.get(position).getType());
                         }
                     }
                 })
-        );
+        );*/
 
         rv_book_ride.addOnItemTouchListener(
                 new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
@@ -2198,9 +2274,10 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                         mMap.clear();
                         createPickupDropMarkers();
                         if (Constant.isOnline(getActivity())) {
+                            mSelectedType = vehicleTypes.get(position).getType();
                             getVehiclesListAPI(vehicleTypes.get(position).getType());
-                            if (vehicleTypes.get(position).getType().length() > 0)
-                                getVehicleTypeCharge(vehicleTypes.get(position).getType());
+                            /*if (vehicleTypes.get(position).getType().length() > 0)
+                                getVehicleTypeCharge(vehicleTypes.get(position).getType());*/
                         }
                     }
                 })
@@ -2212,8 +2289,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
             greenMarker = mMap.addMarker(new MarkerOptions()
                     .position(origin)
                     .icon(BitmapDescriptorFactory.fromBitmap(Constant.setMarkerPin(getActivity(), R.drawable.marker_pickup))));
-        } else {
-
         }
         if (redMarker != null) {
             redMarker = mMap.addMarker(new MarkerOptions()
@@ -2269,68 +2344,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    private void initUI(View view) {
-        lay_ride_now = (LinearLayout) view.findViewById(R.id.lay_ride_now);
-        lay_book_your_ride = (LinearLayout) view.findViewById(R.id.lay_book_your_ride);
-        lay_book_your_ride_detail = (LinearLayout) view.findViewById(R.id.lay_book_your_ride_detail);
-        lay_confirm_booking = (LinearLayout) view.findViewById(R.id.lay_confirm_booking);
-        lay_cancel_booking = (LinearLayout) view.findViewById(R.id.lay_cancel_booking);
-        lay_ride_later = (LinearLayout) view.findViewById(R.id.lay_ride_later);
-        lay_schedule_your_ride = (LinearLayout) view.findViewById(R.id.lay_schedule_your_ride);
-        lay_schedule_cancel = (LinearLayout) view.findViewById(R.id.lay_schedule_cancel);
-        lay_booking_back = (LinearLayout) view.findViewById(R.id.lay_booking_back);
-        lay_cancel_book_ride = (LinearLayout) view.findViewById(R.id.lay_cancel_book_ride);
-        lay_schedule_now = (LinearLayout) view.findViewById(R.id.lay_schedule_now);
-        lay_pickup_from = (LinearLayout) view.findViewById(R.id.lay_pickup_from);
-        lay_drop_location = (LinearLayout) view.findViewById(R.id.lay_drop_location);
-        lay_map_selection_location = (LinearLayout) view.findViewById(R.id.lay_map_selection_location);
-        lay_map_saved_location = (LinearLayout) view.findViewById(R.id.lay_map_saved_location);
-        lay_total = (LinearLayout) view.findViewById(R.id.lay_total);
-        rv_book_ride = (RecyclerView) view.findViewById(R.id.rv_book_ride);
-        rv_schedule_ride = (RecyclerView) view.findViewById(R.id.rv_schedule_ride);
-        ic_calender = (ImageView) view.findViewById(R.id.ic_calender);
-        tv_pickup_date = (TextView) view.findViewById(R.id.tv_pickup_date);
-        tv_pickup_time = (TextView) view.findViewById(R.id.tv_pickup_time);
-        ic_timer = (ImageView) view.findViewById(R.id.ic_timer);
-        tv_pickup_from = (TextView) view.findViewById(R.id.tv_pickup_from);
-        tv_drop_location = (TextView) view.findViewById(R.id.tv_drop_location);
-        tv_enter_promocode = (LinearLayout) view.findViewById(R.id.ll_promocode);
-        tv_vehicle_type = (TextView) view.findViewById(R.id.tv_vehicle_type);
-        tv_saved_drop_location = (TextView) view.findViewById(R.id.tv_saved_drop_location);
-        tv_saved_pickup_from = (TextView) view.findViewById(R.id.tv_saved_pickup_from);
-        tv_total = (TextView) view.findViewById(R.id.tv_total);
-        tv_pin = (TextView) view.findViewById(R.id.tv_pin);
-        tv_surcharge = (TextView) view.findViewById(R.id.tv_surcharge);
-        tv_driver_name = (TextView) view.findViewById(R.id.tv_driver_name);
-        tv_vehicle_type_driver = (TextView) view.findViewById(R.id.tv_vehicle_type_driver);
-        tv_ph_no = (TextView) view.findViewById(R.id.tv_ph_no);
-        img_driver_profile = (ImageView) view.findViewById(R.id.img_driver_profile);
-        bt_call = (Button) view.findViewById(R.id.bt_call);
-        mCanclePromocode = (TextView) view.findViewById(R.id.txt_cancle_promocod);
-
-
-        lay_ride_now.setOnClickListener(this);
-        lay_confirm_booking.setOnClickListener(this);
-        lay_cancel_booking.setOnClickListener(this);
-        lay_ride_later.setOnClickListener(this);
-        lay_schedule_your_ride.setOnClickListener(this);
-        lay_schedule_cancel.setOnClickListener(this);
-        lay_booking_back.setOnClickListener(this);
-        ic_calender.setOnClickListener(this);
-        ic_timer.setOnClickListener(this);
-        lay_schedule_now.setOnClickListener(this);
-        lay_pickup_from.setOnClickListener(this);
-        lay_drop_location.setOnClickListener(this);
-        tv_enter_promocode.setOnClickListener(this);
-        bt_call.setOnClickListener(this);
-        locationButton.setOnClickListener(this);
-
-
-        MarkerPoints = new ArrayList<>();
-        vehicleTypes = new ArrayList<RecyclerBookRideModel>();
-        vhicleCharges = new ArrayList<ChargesModel>();
-
-    }
 
     @Override
     public void onDestroyView() {
@@ -2353,6 +2366,35 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
     public void onStop() {
         super.onStop();
     }
+
+
+    public void hideCustomeProgressDialog(){
+        if (pd.isShowing()){
+            pd.dismiss();
+        }
+    }
+
+    public void showCustomeProgressDialog(Activity activity,String mType){
+        pd = new Dialog(activity);
+        pd.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        pd.setCancelable(false);
+        pd.setContentView(R.layout.cutom_loading_dialog);
+
+        ImageView mImage = (ImageView) pd.findViewById(R.id.loading);
+        TextView mText = (TextView) pd.findViewById(R.id.txt_loadig_text);
+
+        Glide.with(this)
+                .load(R.drawable.gear2)
+                .asGif()
+                .placeholder(R.drawable.gear2)
+                .into(mImage);
+
+        mText.setText("Findig nearby "+mType+" for you");
+
+        pd.show();
+    }
+
+
 }
 
 
