@@ -155,6 +155,12 @@ public class FileUtils {
         progressBar.setVisibility(View.VISIBLE);
 
     }
+
+    public static void hideProgressBar(Activity context,ProgressBar progressBar){
+        context.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        progressBar.setVisibility(View.GONE);
+    }
+
     public static String setDate(Context context,String mTimeStamp){
         String mTime = "";
         String date =  DateUtils.formatDateTime(context, Long.parseLong(mTimeStamp)
@@ -163,11 +169,6 @@ public class FileUtils {
                 DateUtils.FORMAT_SHOW_TIME);
         mTime = date +" At "+time;
         return mTime;
-    }
-
-    public static void hideProgressBar(Activity context,ProgressBar progressBar){
-        context.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        progressBar.setVisibility(View.GONE);
     }
     /**
      * @param uri The Uri to check.

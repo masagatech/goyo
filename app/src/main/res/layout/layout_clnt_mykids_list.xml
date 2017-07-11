@@ -28,7 +28,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
-                    android:background="@color/button_green"
+                    android:background="@color/colorGreen"
                     android:padding="8dp">
 
                     <TextView
@@ -116,7 +116,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
-                        android:background="@color/button_green"
+                        android:background="@color/colorGreen"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
                         app:srcCompat="@drawable/ic_icon_track" />
