@@ -147,6 +147,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 actionbar_title.setText(R.string.nav_my_wallet);
                 CURRENT_TAG = TAG_MY_WALLET;
                 fragmentTransaction.commitAllowingStateLoss();
+            } else if (menuFragment.equals("notifyUser_Add_Money")) {
+                setUpNavigationView();
+                MainWalletFragment myWalletFragment = new MainWalletFragment();
+                Fragment fragment = getHomeFragment();
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                        android.R.anim.fade_out);
+                FragmentTransaction replace = fragmentTransaction.replace(R.id.frame, myWalletFragment, CURRENT_TAG = TAG_MY_WALLET);
+                navItemIndex = 5;
+                activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
+                actionbar_title.setText(R.string.nav_my_wallet);
+                CURRENT_TAG = TAG_MY_WALLET;
+                fragmentTransaction.commitAllowingStateLoss();
             } else {
 
             }
@@ -176,7 +189,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     loadHomeFragment();
                 }
             }
-
         }
 
         setUpNavigationView();

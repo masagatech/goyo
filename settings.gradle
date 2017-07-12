@@ -1,1 +1,1 @@
-include ':app', ':payUMoneysdk', ':sdkui'
+include ':app', ':sdkui'

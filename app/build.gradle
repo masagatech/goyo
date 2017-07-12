@@ -62,7 +62,6 @@ dependencies {
     // Glide image library
 
     compile files('libs/httpmime-4.2.5.jar')
-    compile project(path: ':payUMoneysdk')
     compile project(':sdkui')
 
     //added pratik

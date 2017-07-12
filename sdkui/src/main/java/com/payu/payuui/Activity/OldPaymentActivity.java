@@ -1,3 +1,4 @@
+/*
 package com.payu.payuui.Activity;
 
 import android.app.Activity;
@@ -34,11 +35,13 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+*/
 /**
  * Created by Minie on 2/8/16.
  *
  * This class is deprecated. It is for CB version before 6.0.0
- */
+ *//*
+
 
 public class OldPaymentActivity  extends AppCompatActivity implements MagicRetryFragment.ActivityCallback{
     Bundle bundle;
@@ -57,9 +60,11 @@ public class OldPaymentActivity  extends AppCompatActivity implements MagicRetry
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        /**
+        */
+/**
          * when the device runing out of memory we dont want the user to restart the payment. rather we close it and redirect them to previous activity.
-         */
+         *//*
+
         if(savedInstanceState!=null){
             super.onCreate(null);
             finish();//call activity u want to as activity is being destroyed it is restarted
@@ -281,10 +286,12 @@ public class OldPaymentActivity  extends AppCompatActivity implements MagicRetry
             mWebView.postUrl(url, payuConfig.getData().getBytes());
         }
 
-        /*mWebView.getSettings().setJavaScriptEnabled(true);
+        */
+/*mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
         // url = payuConfig.getEnvironment() == PayuConstants.PRODUCTION_ENV?  PayuConstants.PRODUCTION_PAYMENT_URL : PayuConstants.MOBILE_TEST_PAYMENT_URL ;
-        mWebView.postUrl(url, EncodingUtils.getBytes(payuConfig.getData(), "base64"));*/
+        mWebView.postUrl(url, EncodingUtils.getBytes(payuConfig.getData(), "base64"));*//*
+
     }
 
     @Override
@@ -362,3 +369,4 @@ public class OldPaymentActivity  extends AppCompatActivity implements MagicRetry
         toggleFragmentVisibility(Util.HIDE_FRAGMENT);
     }
 }
+*/

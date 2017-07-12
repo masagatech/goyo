@@ -31,7 +31,9 @@ import com.crest.goyo.ModelClasses.PaymentModel;
 import com.crest.goyo.Utils.Constant;
 import com.crest.goyo.Utils.Preferences;
 import com.crest.goyo.VolleyLibrary.RequestInterface;
+import com.crest.goyo.VolleyLibrary.VolleyRequestClass;
 import com.crest.goyo.VolleyLibrary.VolleyRequestClassNew;
+import com.crest.goyo.VolleyLibrary.VolleyTAG;
 import com.payu.india.CallBackHandler.OnetapCallback;
 import com.payu.india.Extras.PayUChecksum;
 import com.payu.india.Interfaces.OneClickPaymentListener;
@@ -165,17 +167,7 @@ public class AddMoneyDetail extends AppCompatActivity implements View.OnClickLis
                  * PayU sends the same response to merchant server and in app. In response check the value of key "status"
                  * for identifying status of transaction. There are two possible status like, success or failure
                  * */
-                /*Log.e("Hector new ", "Success - Payment ID : " + data.getStringExtra(SdkConstants.PAYMENT_ID));*/
-                Log.e("Response", "onActivityResult: " + data.getStringExtra("payu_response"));
-                new AlertDialog.Builder(this)
-                        .setCancelable(false)
-                        .setMessage("Payu's Data : " + data.getStringExtra("payu_response") + "\n\n\n Merchant's Data: " + data.getStringExtra("result"))
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                dialog.dismiss();
-                            }
-                        }).show();
-
+                addMoneyApiCall("123");
             } else {
                 Toast.makeText(this, getString(R.string.could_not_receive_data), Toast.LENGTH_LONG).show();
             }
@@ -188,7 +180,7 @@ public class AddMoneyDetail extends AppCompatActivity implements View.OnClickLis
     public void navigateToBaseActivity(View view) {
 
         merchantKey = "gtKFFx";
-        String amount = "120";
+        String amount = mAmount;
         String email = "Hector@gmail.com";
 
         String value = "Test";
@@ -252,7 +244,7 @@ public class AddMoneyDetail extends AppCompatActivity implements View.OnClickLis
 
         //TODO It is recommended to generate hash from server only. Keep your key and salt in server side hash generation code.
         generateHashFromServer(mPaymentParams);
-        generateHashFromSDK(mPaymentParams, "13p0PXZk");
+        //generateHashFromSDK(mPaymentParams, "13p0PXZk");
     }
 
     /**
@@ -814,16 +806,16 @@ public class AddMoneyDetail extends AppCompatActivity implements View.OnClickLis
 
     /*End*/
 
-    /*private void addMoneyApiCall(String paymentId) {
+    private void addMoneyApiCall(String paymentId) {
+        Log.e("TAG", "addMoneyApiCall call");
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_ADD_MONEY).newBuilder();
         urlBuilder.addQueryParameter("device", "ANDROID");
         urlBuilder.addQueryParameter("lang", "en");
         urlBuilder.addQueryParameter("login_id", Preferences.getValue_String(getApplicationContext(), Preferences.USER_ID));
         urlBuilder.addQueryParameter("v_token", Preferences.getValue_String(getApplicationContext(), Preferences.USER_AUTH_TOKEN));
         urlBuilder.addQueryParameter("f_amount", mAmount);
-        urlBuilder.addQueryParameter("v_payment_mode", "payu");
+        urlBuilder.addQueryParameter("v_payment_type", paymentModel.getV_type());
         urlBuilder.addQueryParameter("transaction_id", paymentId);
-
 
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
@@ -832,15 +824,13 @@ public class AddMoneyDetail extends AppCompatActivity implements View.OnClickLis
             public void onResult(JSONObject response) {
                 try {
                     int responce_status = response.getInt(VolleyTAG.status);
-                    String message = response.getString(VolleyTAG.message);
                     if (responce_status == VolleyTAG.response_status) {
-                        JSONObject jsonObject = response.getJSONObject("data");
-                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         intent.putExtra("addMoney", "sucessAddMoney");
                         startActivity(intent);
                     } else {
-
+                        Intent intent = new Intent(getApplicationContext(), AddMoney.class);
+                        startActivity(intent);
                     }
 
                 } catch (JSONException e) {
@@ -848,7 +838,7 @@ public class AddMoneyDetail extends AppCompatActivity implements View.OnClickLis
                 }
             }
         }, true);
-    }*/
+    }
 
     private void initUI() {
         rb_debit_card = (RadioButton) findViewById(R.id.rb_debit_card);
@@ -1086,7 +1076,7 @@ public class AddMoneyDetail extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-    private void addMoneyApiCall(String paymentId) {
+    /*private void addMoneyApiCall(String paymentId) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.ADD_MONEY).newBuilder();
         urlBuilder.addQueryParameter("device", "ANDROID");
         urlBuilder.addQueryParameter("lang", "en");
@@ -1104,6 +1094,10 @@ public class AddMoneyDetail extends AppCompatActivity implements View.OnClickLis
                 try {
                     if (response.getInt("status") == 1) {
                         Toast.makeText(AddMoneyDetail.this, "Money Added Successfully!", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, "onResult: Money Added Successfully ");
+                        *//*finish();
+                        startActivity(new Intent(AddMoneyDetail.this, MainActivity.class));*//*
+
                     } else {
                         Log.e(TAG, "onResult: Null Response");
                     }
@@ -1112,7 +1106,7 @@ public class AddMoneyDetail extends AppCompatActivity implements View.OnClickLis
                 }
             }
         });
-    }
+    }*/
 
     @Override
     public HashMap<String, String> getAllOneClickHash(String userCredentials) {
@@ -1152,6 +1146,7 @@ public class AddMoneyDetail extends AppCompatActivity implements View.OnClickLis
         @Override
         public void onBindViewHolder(final CustomAdapter.MyViewHolder holder, final int position) {
             holder.txtAddMoneyType.setText(paymentMethodList.get(position).getV_name());
+            Log.e("getV_name", "onBindViewHolder: " + paymentMethodList.get(position).getV_name());
             Glide.with(AddMoneyDetail.this).load(paymentMethodList.get(position).getV_image().replaceAll("\'", "")).into(holder.imgAddMoneyType);
             holder.layout_payment.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1194,3 +1189,45 @@ public class AddMoneyDetail extends AppCompatActivity implements View.OnClickLis
         }
     }
 }
+/*
+* {
+"id":403993715516319791,
+"mode":"CC",
+"status":"success",
+"unmappedstatus":"captured",
+"key":"gtKFFx",
+"txnid":"1499841507561",
+"transaction_fee":"120.00",
+"amount":"120.00",
+"cardCategory":"domestic",
+"discount":"0.00",
+"additional_charges":"0.00",
+"addedon":"2017-07-12 12:08:51",
+"productinfo":"product_info",
+"firstname":"firstname",
+"email":"xyz@gmail.com",
+"udf1":"udf1",
+"udf2":"udf2",
+"udf3":"udf3",
+"udf4":"udf4",
+"udf5":"udf5",
+"hash":"f221b6e8023611f9ea3c403177c5330ab9f13002999a7331dcff603751d8b2c778543967685e58d5ce829eec5b43e5e60b63dc8ba8da766770efd20ff8302f45",
+"field1":"719320977673",
+"field2":"999999",
+"field3":"7100769081271931",
+"field4":"-1",
+"field9":"SUCCESS",
+"payment_source":"payu",
+"PG_TYPE":"HDFCPG",
+"bank_ref_no":"7100769081271931",
+"ibibo_code":"CC",
+"error_code":"E000",
+"Error_Message":"No Error",
+"name_on_card":"PayuUser",
+"card_no":"512345XXXXXX2346",
+"issuing_bank":"HDFC",
+"card_type":"MAST",
+"is_seamless":1,
+"surl":"https://payu.herokuapp.com/success",
+"furl":"https://payu.herokuapp.com/failure"
+}*/

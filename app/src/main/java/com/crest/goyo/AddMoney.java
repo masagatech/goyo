@@ -94,6 +94,7 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener 
                     Intent intent = new Intent(getApplicationContext(), AddMoneyDetail.class);
                     intent.putExtra("addMoneyAmount",tv_money.getText().toString());
                     startActivity(intent);
+                    finish();
                 }
 
                 break;

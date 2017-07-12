@@ -12,15 +12,18 @@
 
         <ImageView
             android:id="@+id/imgViewAddMoneyType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="0.8"
+            android:src="@drawable/payumoney_logo" />
 
         <TextView
             android:id="@+id/txtAddMoneyType"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_gravity="center_horizontal"
+            android:layout_weight="0.2"
             android:text="Pay U Money" />
     </LinearLayout>
 </LinearLayout>

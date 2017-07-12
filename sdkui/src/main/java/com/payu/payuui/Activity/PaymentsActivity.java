@@ -5,7 +5,9 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.webkit.WebView;
+
 import com.payu.custombrowser.Bank;
 import com.payu.custombrowser.CustomBrowser;
 import com.payu.custombrowser.PayUCustomBrowserCallback;
@@ -16,6 +18,7 @@ import com.payu.india.Model.PayuConfig;
 import com.payu.india.Payu.PayuConstants;
 import com.payu.magicretry.MagicRetryFragment;
 import com.payu.payuui.R;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +31,7 @@ public class PaymentsActivity extends FragmentActivity {
     private String merchantHash;
     private String txnId = null;
     private String merchantKey;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,11 +44,11 @@ public class PaymentsActivity extends FragmentActivity {
             if (payuConfig != null) {
                 url = payuConfig.getEnvironment() == PayuConstants.PRODUCTION_ENV ? PayuConstants.PRODUCTION_PAYMENT_URL : PayuConstants.TEST_PAYMENT_URL;
 
-                String[] list=null;
-                if(payuConfig.getData()!=null)
-                list = payuConfig.getData().split("&");
+                String[] list = null;
+                if (payuConfig.getData() != null)
+                    list = payuConfig.getData().split("&");
 
-                if(list != null) {
+                if (list != null) {
                     for (String item : list) {
                         String[] items = item.split("=");
                         if (items.length >= 2) {
@@ -84,12 +88,14 @@ public class PaymentsActivity extends FragmentActivity {
                         if (null != merchantHash) {
                             intent.putExtra(PayuConstants.MERCHANT_HASH, merchantHash);
                         }
+                        Log.e("Niks","A");
                         setResult(Activity.RESULT_CANCELED, intent);
                         finish();
                     }
 
                     @Override
                     public void onPaymentTerminate() {
+                        Log.e("Niks","B");
                         finish();
                     }
 
@@ -108,7 +114,10 @@ public class PaymentsActivity extends FragmentActivity {
                             intent.putExtra(PayuConstants.MERCHANT_HASH, merchantHash);
                         }
                         setResult(Activity.RESULT_OK, intent);
-                        finish();
+                        Log.e("Payments Activity", "onPaymentSuccess: close");
+
+                        Log.e("Niks","C");
+
                     }
 
                     @Override
@@ -145,8 +154,8 @@ public class PaymentsActivity extends FragmentActivity {
                     public void initializeMagicRetry(Bank payUCustomBrowser, WebView webview, MagicRetryFragment magicRetryFragment) {
                         webview.setWebViewClient(new PayUWebViewClient(payUCustomBrowser, magicRetryFragment, merchantKey));
                         Map<String, String> urlList = new HashMap<String, String>();
-                        if(payuConfig!=null)
-                        urlList.put(url, payuConfig.getData());
+                        if (payuConfig != null)
+                            urlList.put(url, payuConfig.getData());
                         payUCustomBrowser.setMagicRetry(urlList);
                     }
                 };
@@ -174,8 +183,8 @@ public class PaymentsActivity extends FragmentActivity {
                 //Set the first url to open in WebView
                 customBrowserConfig.setPostURL(url);
 
-                if (payuConfig!=null)
-                customBrowserConfig.setPayuPostData(payuConfig.getData());
+                if (payuConfig != null)
+                    customBrowserConfig.setPayuPostData(payuConfig.getData());
 
                 new CustomBrowser().addCustomBrowser(PaymentsActivity.this, customBrowserConfig, payUCustomBrowserCallback);
             }

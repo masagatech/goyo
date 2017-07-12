@@ -60,9 +60,7 @@ public class MyWalletFragment extends Fragment implements View.OnClickListener {
 
         initUI();
         historyList = new ArrayList<WalletHistoryModel>();
-        if (Constant.isOnline(getActivity())) {
-            getUserWalletAPI();
-        }
+
         return view;
     }
 
@@ -85,12 +83,12 @@ public class MyWalletFragment extends Fragment implements View.OnClickListener {
                         JSONObject data = response.getJSONObject("data");
                         JSONArray history = data.getJSONArray("wallet_history");
                         for (int i = 0; i < history.length(); i++) {
+                            historyList.clear();
                             JSONObject objData = history.getJSONObject(i);
 
                             {
                                 historyList.add(new WalletHistoryModel(objData.getString("message"), objData.getString("from")));
                             }
-
                             walletHistoryAdapter = new WalletHistoryAdapter(historyList);
                             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
                             rv_history.setLayoutManager(mLayoutManager);
@@ -126,5 +124,13 @@ public class MyWalletFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
         }
+    }
+
+    @Override
+    public void onStart() {
+        if (Constant.isOnline(getActivity())) {
+            getUserWalletAPI();
+        }
+        super.onStart();
     }
 }

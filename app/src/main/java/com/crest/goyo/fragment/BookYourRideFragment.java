@@ -118,7 +118,7 @@ import static android.view.View.VISIBLE;
 
 public class BookYourRideFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     // TODO: Rename parameter arguments, choose names that match
-    private TextView tv_surcharge, tv_pin, tv_driver_name, tv_vehicle_type_driver, tv_ph_no, tv_saved_drop_location, tv_saved_pickup_from, tv_total, tv_vehicle_type, tv_pickup_date, tv_pickup_time, tv_pickup_from, tv_drop_location;
+    private TextView tv_surcharge, tv_pin, tv_driver_name, txtVehicleno, tv_vehicle_type_driver, tv_ph_no, tv_saved_drop_location, tv_saved_pickup_from, tv_total, tv_vehicle_type, tv_pickup_date, tv_pickup_time, tv_pickup_from, tv_drop_location;
     private LinearLayout lay_total, lay_map_saved_location, lay_map_selection_location, lay_drop_location, lay_pickup_from, lay_ride_now, lay_book_your_ride_detail, tv_enter_promocode, lay_book_your_ride, lay_confirm_booking, lay_cancel_booking, lay_ride_later, lay_schedule_your_ride, lay_schedule_cancel, lay_booking_back, lay_cancel_book_ride, lay_schedule_now;
     private Button bt_call;
     private ImageView ic_calender, ic_timer, img_driver_profile;
@@ -216,7 +216,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
             }
         });
 
-        getActivity().startService(new Intent(getActivity(),UpdateLocationService.class));
+        getActivity().startService(new Intent(getActivity(), UpdateLocationService.class));
 
         return view;
     }
@@ -255,6 +255,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         tv_surcharge = (TextView) view.findViewById(R.id.tv_surcharge);
         tv_driver_name = (TextView) view.findViewById(R.id.tv_driver_name);
         tv_vehicle_type_driver = (TextView) view.findViewById(R.id.tv_vehicle_type_driver);
+        txtVehicleno = (TextView) view.findViewById(R.id.txtVehicleno);
         tv_ph_no = (TextView) view.findViewById(R.id.tv_ph_no);
         img_driver_profile = (ImageView) view.findViewById(R.id.img_driver_profile);
         bt_call = (Button) view.findViewById(R.id.bt_call);
@@ -626,6 +627,10 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                             JSONObject driver_data = jsonObject.getJSONObject("driver_data");
                             tv_pin.setText("Your trip confirmation PIN : " + jsonObject.getString("v_pin"));
                             tv_driver_name.setText(driver_data.getString("driver_name"));
+
+                            String vehicleNo = driver_data.getString("v_id");
+                            txtVehicleno.setText(vehicleNo);
+
                             tv_ph_no.setText(driver_data.getString("driver_phone"));
                             tv_vehicle_type_driver.setText(l_data.getString("vehicle_type"));
                             if (driver_data.getString("driver_image").equals("")) {
@@ -764,6 +769,8 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                 try {
                                     URL url = new URL(plotting_icon);
                                     final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                    if (getActivity() == null)
+                                        return;
                                     getActivity().runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -790,7 +797,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                 }
                             }
                         });
-                        thread.start();
+                        thread.start(); //Error Hear
                     } else {
                     }
                 } catch (JSONException e) {
@@ -824,7 +831,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                         String locality = addresses.get(0).getSubLocality();
                         String adminArea = addresses.get(0).getAdminArea();
                         cityCurrent = addresses.get(0).getLocality();
-                        Log.w("city","City = "+cityCurrent);
+                        Log.w("city", "City = " + cityCurrent);
                         Preferences.setValue(getActivity(), Preferences.CITY, cityCurrent);
                         tv_pickup_from.setText("" + address + ", " + locality + ", " + cityCurrent + ", " + adminArea);
                         greenMarker = mMap.addMarker(new MarkerOptions()
@@ -1177,7 +1184,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         VolleyRequestClassNew.allRequest(mContext, newurl, new RequestInterface() {
             @Override
             public void onResult(JSONObject response) {
-                android.util.Log.e("Hector getVehicleTypeCharge", "respoce"+response);
+                android.util.Log.e("Hector getVehicleTypeCharge", "respoce" + response);
                 final String success = response.optString("status").toString();
                 final String message = response.optString("message").toString();
                 String value = String.valueOf(success);
@@ -1333,7 +1340,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                             if (estimate_amount.equals("0.0")) {
                                 lay_total.setVisibility(View.GONE);
                             } else {
-                                tv_total.setText("\u20B9" + " " + estimate_amount);
+                                tv_total.setText("\u20B9" + " " + Math.round(Double.valueOf(estimate_amount)) + ":00");
                             }
                             tv_surcharge.setText(l_data.getJSONObject("charges").getString("surcharge") + "x");
                             tv_vehicle_type.setText(vehicle_type);
@@ -1469,7 +1476,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                         driverLong = jsonObject.getDouble("l_longitude");
                         final LatLng driver = new LatLng(driverLat, driverLong);
                         final LatLng customer = new LatLng(gpsLat, gpsLong);
-                        Thread thread = new Thread(new Runnable() {
+                        new Thread(new Runnable() {
                             @Override
                             public void run() {
                                 try {
@@ -1478,6 +1485,8 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                         URL url = new URL(vehicleTypes.get(posVehicleTypes).getPlotting_icon());
                                         final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                                         //final Bitmap newBitmap = getResizedBitmap(bmp, 70, 70);
+                                        if (getActivity() == null)
+                                            return;
                                         getActivity().runOnUiThread(new Runnable() { // java.lang.NullPointerException: Attempt to invoke virtual method 'void android.support.v4.app.FragmentActivity.runOnUiThread(java.lang.Runnable)' on a null object reference // solved
                                             @Override
                                             public void run() {
@@ -1511,8 +1520,8 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                     e.printStackTrace();
                                 }
                             }
-                        });
-                        thread.start();  // Error Here.
+                        }).start();
+                        //thread.start();  // 12 th july Error Here.
                     } else {
                     }
                 } catch (JSONException e) {
@@ -1931,7 +1940,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                     Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                 } else {
                     try {
-                        updateVehicleListLongTime();
+                        //updateVehicleListLongTime();
                         JSONArray data = response.getJSONArray("data");
                         if (vehicleMarker != null) {
                             vehicleMarker.remove();
@@ -1945,7 +1954,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                             MarkerPoints.add(point);
                             MarkerOptions options = new MarkerOptions();
                             options.position(point);
-                            Thread thread = new Thread(new Runnable() {
+                            new Thread(new Runnable() {
                                 @Override
                                 public void run() {
                                     try {
@@ -1976,9 +1985,8 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                         e.printStackTrace();
                                     }
                                 }
-                            });
-                            thread.start();
-
+                            }).start();                 // 12 july change error
+                            //thread.start();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -2039,7 +2047,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                             MarkerPoints.add(point);
                             MarkerOptions options = new MarkerOptions();
                             options.position(point);
-                            Thread thread = new Thread(new Runnable() {
+                            new Thread(new Runnable() {
                                 @Override
                                 public void run() {
                                     try {
@@ -2073,8 +2081,8 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                         e.printStackTrace();
                                     }
                                 }
-                            });
-                            thread.start();
+                            }).start();     // 12 th july change error
+                            //thread.start();
 
                         }
                     } catch (JSONException e) {
@@ -2185,7 +2193,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
 
             //showCustomeProgressDialog(getActivity(),mProgressView);
 
-            showCustomeProgressDialog(getActivity(),mSelectedType);
+            showCustomeProgressDialog(getActivity(), mSelectedType);
         }
 
         @Override
@@ -2368,13 +2376,13 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
     }
 
 
-    public void hideCustomeProgressDialog(){
-        if (pd.isShowing()){
+    public void hideCustomeProgressDialog() {
+        if (pd.isShowing()) {
             pd.dismiss();
         }
     }
 
-    public void showCustomeProgressDialog(Activity activity,String mType){
+    public void showCustomeProgressDialog(Activity activity, String mType) {
         pd = new Dialog(activity);
         pd.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         pd.setCancelable(false);
@@ -2389,12 +2397,10 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                 .placeholder(R.drawable.gear2)
                 .into(mImage);
 
-        mText.setText("Findig nearby "+mType+" for you");
+        mText.setText("Findig nearby " + mType + " for you");
 
         pd.show();
     }
-
-
 }
 
 

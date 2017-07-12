@@ -103,6 +103,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             if (mType.equalsIgnoreCase("user_manual_update")) {
                 sendNotificationUserManualUpdate();
             }
+            if (mType.equalsIgnoreCase("user_add_money")) {
+                sendNotificationUserAddMoney();
+            }
 
         } else {
             Log.e(TAG, "Notification Type = Null");
@@ -126,6 +129,25 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
 
 
+    }
+
+    private void sendNotificationUserAddMoney() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("from", "notifyUser_Add_Money");
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+                PendingIntent.FLAG_ONE_SHOT);
+      /*Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);*/
+        Uri defaultSoundUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification_tone_2);
+        NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_taxi)
+                .setContentTitle(mTitle)
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setContentIntent(pendingIntent);
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(8/* ID of notification */, notificationBuilder.build());
     }
 
 
