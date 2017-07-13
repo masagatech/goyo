@@ -1354,7 +1354,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                             JSONObject driver_data = jsonObject.getJSONObject("driver_data");
 
 
-//                            String[] textArray = splitStringEvery(strNumber, 4);
+//                          String[] textArray = splitStringEvery(strNumber, 4);
                             tv_pin.setText("Your trip confirmation PIN : " + jsonObject.getString("v_pin"));
                             tv_driver_name.setText(driver_data.getString("driver_name"));
                             tv_ph_no.setText(driver_data.getString("driver_phone"));
