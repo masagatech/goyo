@@ -96,6 +96,7 @@ public class CompleteMyRidesDetail extends AppCompatActivity {
                     if (responce_status == VolleyTAG.response_status) {
                         JSONObject jsonObject = response.getJSONObject("data");
                         JSONObject l_data = jsonObject.getJSONObject("l_data");
+                        JSONObject driver_rate= jsonObject.getJSONObject("driver_rate");
 
                           /*hector*/
                         JSONObject vehicle_type_data = jsonObject.getJSONObject("vehicle_type_data");
@@ -107,7 +108,9 @@ public class CompleteMyRidesDetail extends AppCompatActivity {
                         tv_drop_loc.setText(l_data.getString("destination_address"));
                         tv_total_fare.setText("\u20B9" + " " + l_data.getString("final_amount"));
                         tv_total_distance.setText(l_data.getString("actual_distance") + " km");
-                        rating_bar.setRating(Float.parseFloat(rate.getString("i_rate")));
+
+                        rating_bar.setRating(Float.parseFloat(driver_rate.getString("i_rate")));
+
                         tv_total_duration.setText(l_data.getString("trip_time_in_min") + " min");
                         if (rate.getString("rate_cmment").equals("")) {
                             tv_comment.setVisibility(View.GONE);

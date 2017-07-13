@@ -19,11 +19,15 @@ import org.json.JSONObject;
  */
 
 public class VolleyRequestClassNew {
+    static RequestQueue requestQueue;
 
     public static void allRequest(final Context applicationContext, final String newurl, final RequestInterface requestInterface) {
 
-        RequestQueue queue = Volley.newRequestQueue(applicationContext);
-        new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 48, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        if (requestQueue== null) {
+            requestQueue = Volley.newRequestQueue(applicationContext);
+            Log.e("requestQueue ","Setting a new request queue");
+        }
+        //new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 48, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
 
         JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.GET, newurl, null,
                 new Response.Listener<JSONObject>() {
@@ -47,6 +51,6 @@ public class VolleyRequestClassNew {
         );
         postRequest.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-        queue.add(postRequest);
+        requestQueue.add(postRequest);
     }
 }

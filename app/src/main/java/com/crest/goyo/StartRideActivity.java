@@ -81,7 +81,7 @@ import okhttp3.HttpUrl;
  */
 
 public class StartRideActivity extends AppCompatActivity implements View.OnClickListener, LocationSource.OnLocationChangedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-    private TextView actionbar_title, tv_dr_name, tv_type, tv_pin;
+    private TextView actionbar_title, tv_dr_name,txt_vehicle_no, tv_type, tv_pin;
     private ImageView iv_share, img_profile;
     private String mRideid, comeFrom;
     private Intent intent;
@@ -244,6 +244,7 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
         iv_share = (ImageView) findViewById(R.id.iv_share);
         img_profile = (ImageView) findViewById(R.id.img_profile);
         tv_dr_name = (TextView) findViewById(R.id.tv_dr_name);
+        txt_vehicle_no =(TextView) findViewById(R.id.txtVehicleno);
         tv_type = (TextView) findViewById(R.id.tv_type);
         tv_pin = (TextView) findViewById(R.id.tv_pin);
         bt_sos = (ImageButton) findViewById(R.id.bt_sos);
@@ -422,6 +423,10 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                         tv_pin.setText("Your trip confirmation PIN : " + jsonObject.getString("v_pin"));
                         tv_type.setText(l_data.getString("vehicle_type"));
                         tv_dr_name.setText(driver_data.getString("driver_name"));
+
+                        txt_vehicle_no.setText(driver_data.getString("v_id"));
+                        android.util.Log.e("vehicle_no", "onResult: "+ driver_data.getString("v_id"));
+
                         if (driver_data.getString("driver_image").equals("")) {
                             img_profile.setImageResource(R.drawable.no_user);
                         } else {

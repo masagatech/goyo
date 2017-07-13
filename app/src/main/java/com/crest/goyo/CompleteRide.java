@@ -1,7 +1,6 @@
 package com.crest.goyo;
 
 import android.content.BroadcastReceiver;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -111,30 +110,7 @@ public class CompleteRide extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
-        permissionDialog();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
-
-    private void permissionDialog() {
-        builder.setTitle("Close Ride?");
-        builder.setMessage("Are you sure you want to close the ride?");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                dialog.dismiss();
-            }
-        });
-        builder.setCancelable(false);
-        builder.setIcon(R.drawable.ic_cancel);
-        builder.show();
-    }
-
-
-
-
-
 }

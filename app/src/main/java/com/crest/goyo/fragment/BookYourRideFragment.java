@@ -255,7 +255,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         tv_surcharge = (TextView) view.findViewById(R.id.tv_surcharge);
         tv_driver_name = (TextView) view.findViewById(R.id.tv_driver_name);
         tv_vehicle_type_driver = (TextView) view.findViewById(R.id.tv_vehicle_type_driver);
-        txtVehicleno = (TextView) view.findViewById(R.id.txtVehicleno);
+        txtVehicleno = (TextView) view.findViewById(R.id.niks);
         tv_ph_no = (TextView) view.findViewById(R.id.tv_ph_no);
         img_driver_profile = (ImageView) view.findViewById(R.id.img_driver_profile);
         bt_call = (Button) view.findViewById(R.id.bt_call);
@@ -587,6 +587,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
     }
 
     private void getRideAPIForConfirmBooking() {
+        android.util.Log.e("Ride", "getRideAPIForConfirmBooking: ");
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_GET_RIDE).newBuilder();
         urlBuilder.addQueryParameter("device", "ANDROID");
         urlBuilder.addQueryParameter("lang", "en");
@@ -628,8 +629,9 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                             tv_pin.setText("Your trip confirmation PIN : " + jsonObject.getString("v_pin"));
                             tv_driver_name.setText(driver_data.getString("driver_name"));
 
-                            String vehicleNo = driver_data.getString("v_id");
-                            txtVehicleno.setText(vehicleNo);
+                            txtVehicleno.setText("" + driver_data.getString("v_id"));
+
+                            android.util.Log.e("Vehicle No", "onResult: " + driver_data.getString("v_id"));
 
                             tv_ph_no.setText(driver_data.getString("driver_phone"));
                             tv_vehicle_type_driver.setText(l_data.getString("vehicle_type"));
@@ -1306,6 +1308,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
     }
 
     private void getRideAPI() {
+        android.util.Log.e("Ride", "getRideAPI: ");
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_GET_RIDE).newBuilder();
         urlBuilder.addQueryParameter("device", "ANDROID");
         urlBuilder.addQueryParameter("lang", "en");
@@ -1327,10 +1330,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
 
                           /*hector*/
                         JSONObject vehicle_type_data = jsonObject.getJSONObject("vehicle_type_data");
-                        android.util.Log.e("Vehicle Image", "BookYourFragment" + vehicle_type_data.getString("plotting_icon"));
                         Preferences.setValue(getContext(), Preferences.VEHICLES_IMG, vehicle_type_data.getString("plotting_icon"));
-
-
                         JSONObject estimation = l_data.getJSONObject("estimation");
                         String vehicle_type = l_data.getString("vehicle_type");
                         String estimate_amount = estimation.getString("final_total");
@@ -1340,7 +1340,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                             if (estimate_amount.equals("0.0")) {
                                 lay_total.setVisibility(View.GONE);
                             } else {
-                                tv_total.setText("\u20B9" + " " + Math.round(Double.valueOf(estimate_amount)) + ":00");
+                                tv_total.setText("\u20B9" + " " + Math.round(Double.valueOf(estimate_amount)) + ".00");
                             }
                             tv_surcharge.setText(l_data.getJSONObject("charges").getString("surcharge") + "x");
                             tv_vehicle_type.setText(vehicle_type);
@@ -1352,16 +1352,14 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                             ((MainActivity) getActivity()).getSupportActionBar().setTitle("PICKUP ARRIVING");
                             Preferences.setValue(getActivity(), Preferences.DRIVER_ID, jsonObject.getString("i_driver_id").toString());
                             JSONObject driver_data = jsonObject.getJSONObject("driver_data");
-                            String strNumber = jsonObject.getString("v_pin");
 
 
 //                            String[] textArray = splitStringEvery(strNumber, 4);
-
-
                             tv_pin.setText("Your trip confirmation PIN : " + jsonObject.getString("v_pin"));
                             tv_driver_name.setText(driver_data.getString("driver_name"));
                             tv_ph_no.setText(driver_data.getString("driver_phone"));
                             tv_vehicle_type_driver.setText(l_data.getString("vehicle_type"));
+                            txtVehicleno.setText("Vehicle No : "+jsonObject.getJSONObject("driver_data").getString("v_id"));
                             if (driver_data.getString("driver_image").equals("")) {
                                 img_driver_profile.setImageResource(R.drawable.no_user);
                             } else {
@@ -1382,7 +1380,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
             }
         });
     }
-
 
     private void getDriverLocationAPI() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_GET_DRIVER_LOCATIOIN).newBuilder();
@@ -1959,7 +1956,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                 public void run() {
                                     try {
                                         URL url = new URL(vehicleTypes.get(posVehicleTypes).getPlotting_icon());
-                                        android.util.Log.e("Vehicle Icon", "run: " + url);
                                         final Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
 
                                         //final Bitmap newBitmap = getResizedBitmap(bmp, 70, 70);
@@ -2029,7 +2025,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
 
                 final String message = response.optString("message").toString();
                 vehicleStatus = response.optInt("status");
-                android.util.Log.e("Hector", "onResult: vehicleListAPIThread " + vehicleStatus);
                 if (vehicleStatus == 0) {
                     android.util.Log.e("Hector", "onResult: Vehicle Status is 0");
                 } else {

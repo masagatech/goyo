@@ -307,7 +307,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="RATED TRIP"
+                            android:text="TRIP RATED By Driver"
                             android:textColor="@color/colorGrey"
                             android:textSize="@dimen/text_title" />
 
@@ -325,6 +325,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
+                        android:visibility="gone"
                         android:orientation="vertical">
 
                         <TextView

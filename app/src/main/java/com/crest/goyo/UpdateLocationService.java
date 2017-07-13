@@ -130,12 +130,11 @@ public class UpdateLocationService extends Service implements GoogleApiClient.Co
                 this.stopSelf();
             }
         }
-
-
+        
         mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(10000)
-                .setFastestInterval(10000);
+                .setInterval(1000 * 60)
+                .setFastestInterval(1000 * 60);
         Log.i("LOG_TAG", "onStartCommand-->" + startId);
         googleApiClient.connect();
         return START_NOT_STICKY;
@@ -160,7 +159,7 @@ public class UpdateLocationService extends Service implements GoogleApiClient.Co
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i("TAG","onDestroy");
+        Log.i("TAG", "onDestroy");
         if (googleApiClient != null && googleApiClient.isConnected()) {
             stopLocationUpdates();
             googleApiClient.disconnect();
@@ -169,7 +168,7 @@ public class UpdateLocationService extends Service implements GoogleApiClient.Co
     }
 
     public void stopLocationUpdates() {
-        if(googleApiClient.isConnected()){
+        if (googleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
         }
     }
@@ -200,8 +199,7 @@ public class UpdateLocationService extends Service implements GoogleApiClient.Co
             gpsLat = location.getLatitude();
             gpsLong = location.getLongitude();
             Log.e("UpdateLocation", "onLocationChanged: " + gpsLat + " " + gpsLong);
-            if(Constant.isOnline(UpdateLocationService.this))
-            {
+            if (Constant.isOnline(UpdateLocationService.this)) {
                 update_location(gpsLat, gpsLong);
             }
         }

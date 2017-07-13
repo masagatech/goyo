@@ -51,7 +51,6 @@ public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.MyView> 
         holder.tv_drop.setText("" + list.get(position).getDestination_address());
 
         holder.tv_ride_code.setText("Ride Code : " + list.get(position).getV_ride_code());
-        holder.tv_driver_id.setText("Driver Id : " + list.get(position).getDriver_v_id());
 
         String date = DateUtils.formatDateTime(context, Long.parseLong(list.get(position).getRide_time()), DateUtils.FORMAT_SHOW_DATE);
         String time = DateUtils.formatDateTime(context, Long.parseLong(list.get(position).getRide_time()), DateUtils.FORMAT_SHOW_TIME);
@@ -113,7 +112,7 @@ public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.MyView> 
     }
 
     public class MyView extends RecyclerView.ViewHolder {
-        TextView tv_dr_name, tv_vehicle_detail, tv_ride_status, tv_date_time, tv_pickup, tv_drop, tv_ride_code, tv_driver_id;
+        TextView tv_dr_name, tv_vehicle_detail, tv_ride_status, tv_date_time, tv_pickup, tv_drop, tv_ride_code;
         LinearLayout lay_my_rides;
         View view_status;
 
@@ -129,7 +128,6 @@ public class MyRidesAdapter extends RecyclerView.Adapter<MyRidesAdapter.MyView> 
             lay_my_rides = (LinearLayout) itemView.findViewById(R.id.lay_my_rides);
             view_status = (View) itemView.findViewById(R.id.view_status);
             tv_ride_code = (TextView) itemView.findViewById(R.id.tv_ride_code);
-            tv_driver_id = (TextView) itemView.findViewById(R.id.tv_driver_id);
 
         }
     }
