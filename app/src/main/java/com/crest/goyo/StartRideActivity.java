@@ -81,7 +81,7 @@ import okhttp3.HttpUrl;
  */
 
 public class StartRideActivity extends AppCompatActivity implements View.OnClickListener, LocationSource.OnLocationChangedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-    private TextView actionbar_title, tv_dr_name,txt_vehicle_no, tv_type, tv_pin;
+    private TextView actionbar_title, tv_dr_name, txt_vehicle_no, tv_type, tv_pin;
     private ImageView iv_share, img_profile;
     private String mRideid, comeFrom;
     private Intent intent;
@@ -121,9 +121,9 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
             comeFrom = getIntent().getExtras().getString("comeFrom", "");
         }
 
-        Log.e("TAG","stopService()");
+        Log.e("TAG", "stopService()");
 
-        stopService(new Intent(StartRideActivity.this,UpdateLocationService.class));
+        stopService(new Intent(StartRideActivity.this, UpdateLocationService.class));
 
         initUI();
 
@@ -144,8 +144,7 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
         bt_track.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Constant.isOnline(StartRideActivity.this))
-                {
+                if (Constant.isOnline(StartRideActivity.this)) {
                     sendTrackableLink();
                 }
             }
@@ -178,8 +177,7 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                 } else if (phone.length() != 10) {
                     mPhoneNo.setError("Please enter correct phone number");
                 } else {
-                    if(Constant.isOnline(StartRideActivity.this))
-                    {
+                    if (Constant.isOnline(StartRideActivity.this)) {
                         send_sharable_linl_api(mRideid, phone, progressBar11, dialog);
                     }
                 }
@@ -244,7 +242,7 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
         iv_share = (ImageView) findViewById(R.id.iv_share);
         img_profile = (ImageView) findViewById(R.id.img_profile);
         tv_dr_name = (TextView) findViewById(R.id.tv_dr_name);
-        txt_vehicle_no =(TextView) findViewById(R.id.txtVehicleno);
+        txt_vehicle_no = (TextView) findViewById(R.id.txtVehicleno);
         tv_type = (TextView) findViewById(R.id.tv_type);
         tv_pin = (TextView) findViewById(R.id.tv_pin);
         bt_sos = (ImageButton) findViewById(R.id.bt_sos);
@@ -305,8 +303,7 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
 
         h1.postDelayed(new Runnable() {
             public void run() {
-                if(Constant.isOnline(StartRideActivity.this))
-                {
+                if (Constant.isOnline(StartRideActivity.this)) {
                     getDriverLocationAPIThread();
                 }
                 h1.postDelayed(this, 3000); //now is every 2 minutes
@@ -425,7 +422,7 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                         tv_dr_name.setText(driver_data.getString("driver_name"));
 
                         txt_vehicle_no.setText(driver_data.getString("v_id"));
-                        android.util.Log.e("vehicle_no", "onResult: "+ driver_data.getString("v_id"));
+                        android.util.Log.e("vehicle_no", "onResult: " + driver_data.getString("v_id"));
 
                         if (driver_data.getString("driver_image").equals("")) {
                             img_profile.setImageResource(R.drawable.no_user);
@@ -440,8 +437,7 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                         pickupLatLng = new LatLng(pickup_latitude, pickup_longitude);
                         dropLatLng = new LatLng(destination_latitude, destination_longitude);
                         drawRoot(googleMap, pickupLatLng, dropLatLng);
-                        if(Constant.isOnline(StartRideActivity.this))
-                        {
+                        if (Constant.isOnline(StartRideActivity.this)) {
                             getDriverLocationAPI();
                         }
                     }
@@ -578,14 +574,7 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_share:
-                String uri = "geo:" + latitude + ","
-                        + longitude + "?q=" + latitude
-                        + "," + longitude;
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, Uri.parse(uri));
-                intent.setType("text/plain");
-                startActivity(intent);
+                ShareLocation();
                 break;
 
             case R.id.bt_sos:

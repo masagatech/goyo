@@ -1359,7 +1359,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                             tv_driver_name.setText(driver_data.getString("driver_name"));
                             tv_ph_no.setText(driver_data.getString("driver_phone"));
                             tv_vehicle_type_driver.setText(l_data.getString("vehicle_type"));
-                            txtVehicleno.setText("Vehicle No : "+jsonObject.getJSONObject("driver_data").getString("v_id"));
+                            txtVehicleno.setText("Vehicle No : " + jsonObject.getJSONObject("driver_data").getString("v_id"));
                             if (driver_data.getString("driver_image").equals("")) {
                                 img_driver_profile.setImageResource(R.drawable.no_user);
                             } else {
@@ -1402,7 +1402,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                         driverLong = jsonObject.getDouble("l_longitude");
                         final LatLng driver = new LatLng(driverLat, driverLong);
                         final LatLng customer = new LatLng(gpsLat, gpsLong);
-                        Thread thread = new Thread(new Runnable() {
+                        new Thread(new Runnable() {
                             @Override
                             public void run() {
                                 try {
@@ -1436,8 +1436,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                                     e.printStackTrace();
                                 }
                             }
-                        });
-                        thread.start();
+                        }).start();
                     } else {
                     }
                 } catch (JSONException e) {
