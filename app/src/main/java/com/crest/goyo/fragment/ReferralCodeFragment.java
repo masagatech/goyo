@@ -4,13 +4,13 @@ package com.crest.goyo.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crest.goyo.R;
 import com.crest.goyo.Utils.Constant;
@@ -30,6 +30,7 @@ public class ReferralCodeFragment extends Fragment implements View.OnClickListen
     private TextView actionbar_title, tv_code, tv_earn_money;
     private Button bt_invite;
     private View view;
+    String referral_message;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,6 @@ public class ReferralCodeFragment extends Fragment implements View.OnClickListen
 
 
     private void initUI() {
-
         actionbar_title = (TextView) view.findViewById(R.id.actionbar_title);
         tv_code = (TextView) view.findViewById(R.id.tv_code);
         tv_earn_money = (TextView) view.findViewById(R.id.tv_earn_money);
@@ -84,9 +84,12 @@ public class ReferralCodeFragment extends Fragment implements View.OnClickListen
                             bt_invite.setEnabled(false);
                         } else {
                             tv_code.setText(jsonObject.getString("v_referral_code"));
+                            referral_message = String.valueOf(Html.fromHtml(jsonObject.getString("referral_message")));
+                            Log.e("Code", "onResult: " + referral_message);
+                            /*tv_code.setText(Html.fromHtml(jsonObject.getString("referral_message")));
+                            tv_code.setMovementMethod(LinkMovementMethod.getInstance());*/
                             tv_earn_money.setText("Share your referral code and get " + "\u20B9" + " " + jsonObject.getString("earn_money") + ". So share your code and get your money.");
                         }
-
                     } else {
                         Log.e("Error", "onResult: Error response null");
                     }
@@ -102,14 +105,26 @@ public class ReferralCodeFragment extends Fragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_invite:
-
                 Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, tv_code.getText().toString());
                 intent.setType("text/plain");
+                intent.setAction(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_TEXT, referral_message);
                 startActivity(Intent.createChooser(intent, "Share"));
+        }
+    }
+}
 
-                /*BottomSheetDialog dialog = new BottomSheetDialog(getContext());
+
+
+
+
+
+
+
+
+
+
+ /*BottomSheetDialog dialog = new BottomSheetDialog(getContext());
                 dialog.setContentView(R.layout.layout_share_referral_dialog);
                 ImageView imgMassage = (ImageView) dialog.findViewById(R.id.imgViewMessage);
                 ImageView imgWhatsapp = (ImageView) dialog.findViewById(R.id.imgViewWhatsapp);
@@ -129,11 +144,10 @@ public class ReferralCodeFragment extends Fragment implements View.OnClickListen
                     }
                 });
                 dialog.show();
-                break;*/
-        }
-    }
 
-    void shareMessage() {
+               break;*/
+
+ /* void shareMessage() {
         Intent smsIntent = new Intent(Intent.ACTION_VIEW);
         smsIntent.setType("vnd.android-dir/mms-sms");
         Toast.makeText(getContext(), "There is no sms app available", Toast.LENGTH_SHORT).show();
@@ -148,5 +162,4 @@ public class ReferralCodeFragment extends Fragment implements View.OnClickListen
         intent.setType("text/plain");
         intent.setPackage("com.whatsapp");
         startActivity(intent);
-    }
-}
+    }*/

@@ -18,10 +18,10 @@ import org.json.JSONObject;
 
 import okhttp3.HttpUrl;
 
-public class ReferralCode extends AppCompatActivity implements View.OnClickListener{
-    private TextView actionbar_title,tv_code,tv_earn_money;
+public class ReferralCode extends AppCompatActivity implements View.OnClickListener {
+    private TextView actionbar_title, tv_code, tv_earn_money;
     private Button bt_invite;
-
+    String referral_message;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +30,7 @@ public class ReferralCode extends AppCompatActivity implements View.OnClickListe
 
         initUI();
 
-        if(Constant.isOnline(getApplicationContext())){
+        if (Constant.isOnline(getApplicationContext())) {
             getReferralCode();
         }
     }
@@ -39,8 +39,8 @@ public class ReferralCode extends AppCompatActivity implements View.OnClickListe
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_REFERRAL_CODE).newBuilder();
         urlBuilder.addQueryParameter("device", "ANDROID");
         urlBuilder.addQueryParameter("lang", "en");
-        urlBuilder.addQueryParameter("login_id",Preferences.getValue_String(getApplicationContext(),Preferences.USER_ID));
-        urlBuilder.addQueryParameter("v_token", Preferences.getValue_String(getApplicationContext(),Preferences.USER_AUTH_TOKEN));
+        urlBuilder.addQueryParameter("login_id", Preferences.getValue_String(getApplicationContext(), Preferences.USER_ID));
+        urlBuilder.addQueryParameter("v_token", Preferences.getValue_String(getApplicationContext(), Preferences.USER_AUTH_TOKEN));
         String url = urlBuilder.build().toString();
         String newurl = url.replaceAll(" ", "%20");
         VolleyRequestClass.allRequest(ReferralCode.this, newurl, new RequestInterface() {
@@ -51,6 +51,7 @@ public class ReferralCode extends AppCompatActivity implements View.OnClickListe
                     if (responce_status == VolleyTAG.response_status) {
                         JSONObject jsonObject = response.getJSONObject("data");
                         tv_code.setText(jsonObject.getString("v_referral_code"));
+                        referral_message = jsonObject.getString("referral_message");
                         tv_earn_money.setText(jsonObject.getString("message"));
                     } else {
 
@@ -64,10 +65,10 @@ public class ReferralCode extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initUI() {
-        actionbar_title=(TextView)findViewById(R.id.actionbar_title);
-        tv_code=(TextView)findViewById(R.id.tv_code);
-        tv_earn_money=(TextView)findViewById(R.id.tv_earn_money);
-        bt_invite=(Button)findViewById(R.id.bt_invite);
+        actionbar_title = (TextView) findViewById(R.id.actionbar_title);
+        tv_code = (TextView) findViewById(R.id.tv_code);
+        tv_earn_money = (TextView) findViewById(R.id.tv_earn_money);
+        bt_invite = (Button) findViewById(R.id.bt_invite);
         actionbar_title.setText(R.string.actionbar_referralcode);
 
 
@@ -78,8 +79,9 @@ public class ReferralCode extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.bt_invite:
+                //String raferralCode = "You have invitation for GoYo through " + tv_code.getText().toString() + " referral code !";
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_SEND);
                 intent.putExtra(Intent.EXTRA_TEXT, tv_code.getText().toString());
