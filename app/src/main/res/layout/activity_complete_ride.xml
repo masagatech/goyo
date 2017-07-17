@@ -85,6 +85,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_title"
+                android:text="wallet amount"
+                android:textAllCaps="true"
+                android:layout_marginTop="@dimen/margin_top"
+                android:textColor="@color/colorGrey"/>
+            <TextView
+                android:id="@+id/tv_wallet_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_detail"
+                android:textColor="@color/colorBlack"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_title"
                 android:text="payable amount"
                 android:textAllCaps="true"
                 android:layout_marginTop="@dimen/margin_top"

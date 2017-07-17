@@ -22,12 +22,13 @@ import org.json.JSONObject;
 import okhttp3.HttpUrl;
 
 public class CompleteRide extends AppCompatActivity implements View.OnClickListener {
-    private TextView actionbar_title, tv_start_point, end_point, tv_payable_amount;
+    private TextView actionbar_title, tv_start_point, end_point, tv_payable_amount, tv_wallet_amount;
     private Button bt_rate_ride;
     private float mAmount = 0;
     private AlertDialog.Builder builder;
     private String mRideid;
     private BroadcastReceiver mReceiveMessageFromNotification;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,16 +37,14 @@ public class CompleteRide extends AppCompatActivity implements View.OnClickListe
 
         initUI();
 
-        if(getIntent().getExtras()!=null){
-         mRideid=getIntent().getExtras().getString("i_ride_id");
+        if (getIntent().getExtras() != null) {
+            mRideid = getIntent().getExtras().getString("i_ride_id");
         }
 
         builder = new AlertDialog.Builder(CompleteRide.this, R.style.MyAlertDialogStyle);
         if (Constant.isOnline(getApplicationContext())) {
             completeRideAPI();
         }
-
-
     }
 
     private void completeRideAPI() {
@@ -66,15 +65,15 @@ public class CompleteRide extends AppCompatActivity implements View.OnClickListe
                     String message = response.getString(VolleyTAG.message);
                     if (responce_status == VolleyTAG.response_status) {
                         JSONObject data = response.getJSONObject("data");
-                        JSONObject ride=data.getJSONObject("ride");
-                        JSONObject l_data=ride.getJSONObject("l_data");
+                        JSONObject ride = data.getJSONObject("ride");
+                        JSONObject l_data = ride.getJSONObject("l_data");
                         JSONArray pay_data = data.getJSONArray("payment_data");
                         for (int i = 0; i < pay_data.length(); i++) {
                             JSONObject objData = pay_data.getJSONObject(i);
                             float totalAmount = Float.parseFloat(objData.getString("f_amount"));
                             mAmount = mAmount + totalAmount;
                         }
-                        tv_payable_amount.setText("\u20B9"+" " + mAmount);
+                        tv_wallet_amount.setText("\u20B9" + " " + mAmount);
                         tv_start_point.setText(l_data.getString("pickup_address"));
                         end_point.setText(l_data.getString("destination_address"));
                     } else {
@@ -92,9 +91,8 @@ public class CompleteRide extends AppCompatActivity implements View.OnClickListe
         tv_start_point = (TextView) findViewById(R.id.tv_start_point);
         end_point = (TextView) findViewById(R.id.end_point);
         tv_payable_amount = (TextView) findViewById(R.id.tv_payable_amount);
-
+        tv_wallet_amount = (TextView) findViewById(R.id.tv_wallet_amount);
         bt_rate_ride.setOnClickListener(this);
-
         actionbar_title.setText(R.string.actionbar_complete_ride);
     }
 

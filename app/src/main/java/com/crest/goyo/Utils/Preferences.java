@@ -17,7 +17,7 @@ public class Preferences {
     public static final String VEHICLES_IMG = "VEHICLES_IMG";
     public static final String V_ID = "V_ID";
     public static final String CITY = "CITY";
-
+    public static final String IS_RATED = "IS_RATED";
 
     public static void setValue(Context context, String Key, String Value) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
@@ -25,7 +25,6 @@ public class Preferences {
         editor.putString(Key, Value);
         editor.commit();
     }
-
     public static String getValue_String(Context context, String Key) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         return settings.getString(Key, "");

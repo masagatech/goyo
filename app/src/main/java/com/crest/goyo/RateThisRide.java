@@ -72,6 +72,7 @@ public class RateThisRide extends AppCompatActivity implements View.OnClickListe
                     int responce_status = response.getInt(VolleyTAG.status);
                     String message = response.getString(VolleyTAG.message);
                     if (responce_status == VolleyTAG.response_status) {
+                        //Preferences.setValue(getApplicationContext());
                         JSONObject data = response.getJSONObject("data");
                         JSONObject ride = data.getJSONObject("ride");
                         JSONObject l_data = ride.getJSONObject("l_data");
@@ -118,6 +119,7 @@ public class RateThisRide extends AppCompatActivity implements View.OnClickListe
                     String message = response.getString(VolleyTAG.message);
                     if (responce_status == VolleyTAG.response_status) {
                         Toast.makeText(RateThisRide.this, message, Toast.LENGTH_LONG).show();
+                        Preferences.setValue(getApplicationContext(),Preferences.IS_RATED,"0");
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
                     } else {

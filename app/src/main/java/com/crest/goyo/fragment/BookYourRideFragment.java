@@ -1340,7 +1340,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                             if (estimate_amount.equals("0.0")) {
                                 lay_total.setVisibility(View.GONE);
                             } else {
-                                tv_total.setText("\u20B9" + " " + Math.round(Double.valueOf(estimate_amount)) + ".00");
+                                tv_total.setText("Estimated Amount: " + "\u20B9" + " " + Math.round(Double.valueOf(estimate_amount)) + ".00");
                             }
                             tv_surcharge.setText(l_data.getJSONObject("charges").getString("surcharge") + "x");
                             tv_vehicle_type.setText(vehicle_type);

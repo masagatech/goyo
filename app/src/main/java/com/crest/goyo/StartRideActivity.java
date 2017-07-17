@@ -751,6 +751,7 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                         Intent in = new Intent(StartRideActivity.this, CompleteRide.class);
                         in.putExtra("i_ride_id", mRideid);
                         startActivity(in);
+                        Preferences.setValue(StartRideActivity.this,Preferences.IS_RATED,"1");
                         finishAffinity();
                     }
                 }

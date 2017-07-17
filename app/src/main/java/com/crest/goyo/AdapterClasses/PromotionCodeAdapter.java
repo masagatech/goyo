@@ -63,11 +63,16 @@ public class PromotionCodeAdapter extends RecyclerView.Adapter<PromotionCodeAdap
         holder.bt_copy_code.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myClipboard = (ClipboardManager) context.getSystemService(CLIPBOARD_SERVICE);
+                /*myClipboard = (ClipboardManager) context.getSystemService(CLIPBOARD_SERVICE);
                 String text = list.get(position).getCode();
                 myClip = ClipData.newPlainText("text", text);
-                myClipboard.setPrimaryClip(myClip);
-                Toast.makeText(context,"Copy code : "+text,Toast.LENGTH_SHORT).show();
+                myClipboard.setPrimaryClip(myClip);*/
+
+                String text = list.get(position).getCode();
+                ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("Promotion Code", text);
+                clipboard.setPrimaryClip(clip);
+                Toast.makeText(context, "Copy Code : " + text, Toast.LENGTH_SHORT).show();
             }
         });
 

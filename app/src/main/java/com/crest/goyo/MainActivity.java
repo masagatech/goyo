@@ -1,6 +1,7 @@
 package com.crest.goyo;
 
 
+import android.app.Dialog;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -28,7 +29,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -203,6 +206,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         GetLatestVersion task = new GetLatestVersion();
         task.execute();
+
+        if (Preferences.getValue_String(this, Preferences.IS_RATED).equals("1")) {
+            showRatingDialog();
+        }
+    }
+
+    private void showRatingDialog() {
+/*        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_rate_again);
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);*/
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Rate Ride");
+        builder.setMessage("Do you want to rate your last ride ?");
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.dismiss();
+            }
+        });
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(new Intent(MainActivity.this, RateThisRide.class));
+            }
+        });
+        builder.show();
     }
 
     private void rideCancelByDriverNotify() {
