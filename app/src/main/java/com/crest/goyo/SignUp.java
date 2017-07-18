@@ -213,7 +213,6 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         urlBuilder.addQueryParameter("i_city_id", cityList.get(spinner_city_list.getSelectedItemPosition()).getId());
         urlBuilder.addQueryParameter("v_imei_number", imei);
         String url = urlBuilder.build().toString();
-
         String newurl = url.replaceAll(" ", "%20");
         okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
         VolleyRequestClass.allRequest(SignUp.this, newurl, new RequestInterface() {
