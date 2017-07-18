@@ -56,7 +56,6 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_signup);
 
-
         /*hector*/
         if (!isNetworkAvailable()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
@@ -100,10 +99,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         et_referral_code = (EditText) findViewById(R.id.et_referral_code);
 
         bt_submit.setOnClickListener(this);
-
         actionbar_title.setText(R.string.actionbar_signup);
-
-
     }
 
     @Override
