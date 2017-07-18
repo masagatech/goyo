@@ -113,7 +113,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
                 TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                 imei = telephonyManager.getDeviceId();
-                Log.e("IMEI", "onClick: "+imei );
+                Log.e("IMEI", "onClick: " + imei);
                 userSignup();
 
                 break;
@@ -137,7 +137,9 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
             if (et_email.getText().toString().trim().equals("")) {
                 et_email.setError("Please enter email.");
             } else {
-                if (et_email.getText().toString().trim().matches(Constant.emailPattern)) {
+                /*if (et_email.getText().toString().trim().matches(Constant.emailPattern)) {*/
+                if (isValidEmail(et_email.getText().toString().trim())) {
+
                     if (et_mo_no.getText().toString().length() == 10) {
                         if (et_pasword.getText().toString().length() >= 6) {
                             if (et_pasword.getText().toString().matches(et_confirm_password.getText().toString())) {
@@ -145,8 +147,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                                     int selectedId = mGenderGrup.getCheckedRadioButtonId();
                                     mGender = (RadioButton) findViewById(selectedId);
                                     String gender = mGender.getText().toString();
-                                    if(Constant.isOnline(SignUp.this))
-                                    {
+                                    if (Constant.isOnline(SignUp.this)) {
                                         userSignupAPI(gender);
                                     }
                                 }
@@ -237,5 +238,8 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 }
             }
         }, true);
+    }
+    public static boolean isValidEmail(CharSequence target) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 }
