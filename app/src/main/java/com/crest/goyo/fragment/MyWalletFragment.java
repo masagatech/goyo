@@ -37,7 +37,7 @@ public class MyWalletFragment extends Fragment implements View.OnClickListener {
     private Button bt_add_money;
     private View view;
     private TextView tv_amount;
-    public static ArrayList<WalletHistoryModel> historyList;
+    public ArrayList<WalletHistoryModel> historyList;
     private WalletHistoryAdapter walletHistoryAdapter;
     private RecyclerView rv_history;
 
@@ -60,7 +60,6 @@ public class MyWalletFragment extends Fragment implements View.OnClickListener {
 
         initUI();
         historyList = new ArrayList<WalletHistoryModel>();
-
         return view;
     }
 
@@ -82,10 +81,9 @@ public class MyWalletFragment extends Fragment implements View.OnClickListener {
                     if (responce_status == VolleyTAG.response_status) {
                         JSONObject data = response.getJSONObject("data");
                         JSONArray history = data.getJSONArray("wallet_history");
+                        historyList.clear();
                         for (int i = 0; i < history.length(); i++) {
-                            historyList.clear();
                             JSONObject objData = history.getJSONObject(i);
-
                             {
                                 historyList.add(new WalletHistoryModel(objData.getString("message"), objData.getString("from")));
                             }

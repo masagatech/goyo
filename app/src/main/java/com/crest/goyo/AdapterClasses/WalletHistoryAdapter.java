@@ -48,8 +48,6 @@ public class WalletHistoryAdapter extends RecyclerView.Adapter<WalletHistoryAdap
 
     public class MyView extends RecyclerView.ViewHolder {
         TextView tv_title, tv_from;
-
-
         public MyView(View itemView) {
             super(itemView);
             tv_title = (TextView) itemView.findViewById(R.id.tv_title);

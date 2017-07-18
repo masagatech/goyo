@@ -106,16 +106,12 @@ public class ReferralCodeFragment extends Fragment implements View.OnClickListen
                 Intent intent = new Intent();
                 intent.setType("text/plain");
                 intent.setAction(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, referral_message);
+                //intent.putExtra(Intent.EXTRA_TEXT, referral_message);
+                intent.putExtra(Intent.EXTRA_TEXT, referral_message+" https://play.google.com/store/apps/details?id=com.crest.goyo&hl=en");
                 startActivity(Intent.createChooser(intent, "Share"));
         }
     }
 }
-
-
-
-
-
 
 
 

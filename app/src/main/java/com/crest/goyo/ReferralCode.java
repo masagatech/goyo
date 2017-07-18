@@ -1,3 +1,4 @@
+/*
 package com.crest.goyo;
 
 import android.content.Intent;
@@ -70,21 +71,20 @@ public class ReferralCode extends AppCompatActivity implements View.OnClickListe
         tv_earn_money = (TextView) findViewById(R.id.tv_earn_money);
         bt_invite = (Button) findViewById(R.id.bt_invite);
         actionbar_title.setText(R.string.actionbar_referralcode);
-
-
         bt_invite.setOnClickListener(this);
-
-
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_invite:
-                //String raferralCode = "You have invitation for GoYo through " + tv_code.getText().toString() + " referral code !";
+                */
+/*https://play.google.com/store/apps/details?id=com.crest.goyo&hl=en*//*
+
+
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, tv_code.getText().toString());
+                intent.putExtra(Intent.EXTRA_TEXT, referral_message+"https://play.google.com/store/apps/details?id=com.crest.goyo&hl=en");
                 intent.setType("text/plain");
                 startActivity(intent);
                 break;
@@ -92,3 +92,4 @@ public class ReferralCode extends AppCompatActivity implements View.OnClickListe
 
     }
 }
+*/
