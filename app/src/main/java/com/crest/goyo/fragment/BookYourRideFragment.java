@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
@@ -87,6 +88,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -177,6 +180,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
     private ImageView mLoading;
     Location mLastLocation;
     private String mSelectedType = "";
+    //String centerPointCircle;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -959,6 +963,8 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                 dest = place.getLatLng();
                 redLatLng = place.getLatLng();
                 tv_drop_location.setText(place.getAddress());
+                //centerPointCircle = String.valueOf(place.getLatLng());
+                android.util.Log.e("CenterPointCircle", "onActivityResult: "+ String.valueOf(place.getLatLng()));
                 if (redMarker != null) {
                     redMarker.remove();
                 }
@@ -1123,6 +1129,16 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         }
     }
 
+    /*void createBoundry()
+    {
+        Circle circle = mMap.addCircle(new CircleOptions()
+                .center(new LatLng(-33.87365, 151.20689))
+                .radius(10000)
+                .strokeColor(Color.RED)
+                .fillColor(Color.BLUE));
+    }*/
+
+
     private void selectPickupLocation() {
         try {
             AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
@@ -1133,6 +1149,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                             .setFilter(typeFilter)
                             .build(getActivity());
             startActivityForResult(intent, REQUEST_CODE_PICKUP);
+            android.util.Log.e("SelectPickupLocation", "selectPickupLocation: "+intent );
         } catch (GooglePlayServicesRepairableException e) {
             GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), e.getConnectionStatusCode(),
                     0 /* requestCode */).show();
