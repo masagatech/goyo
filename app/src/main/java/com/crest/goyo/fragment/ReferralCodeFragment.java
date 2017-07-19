@@ -82,10 +82,7 @@ public class ReferralCodeFragment extends Fragment implements View.OnClickListen
                             bt_invite.setEnabled(false);
                         } else {
                             tv_code.setText(jsonObject.getString("v_referral_code"));
-                            referral_message = String.valueOf(Html.fromHtml(jsonObject.getString("referral_message")));
-                            Log.e("Code", "onResult: " + referral_message);
-                            /*tv_code.setText(Html.fromHtml(jsonObject.getString("referral_message")));
-                            tv_code.setMovementMethod(LinkMovementMethod.getInstance());*/
+                            referral_message = jsonObject.getString("referral_message");
                             tv_earn_money.setText("Share your referral code and get " + "\u20B9" + " " + jsonObject.getString("earn_money") + ". So share your code and get your money.");
                         }
                     } else {
@@ -103,57 +100,14 @@ public class ReferralCodeFragment extends Fragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_invite:
+                /*https://play.google.com/store/apps/details?id=com.crest.goyo&hl=en*/
                 Intent intent = new Intent();
                 intent.setType("text/plain");
                 intent.setAction(Intent.ACTION_SEND);
-                //intent.putExtra(Intent.EXTRA_TEXT, referral_message);
-                intent.putExtra(Intent.EXTRA_TEXT, referral_message+" https://play.google.com/store/apps/details?id=com.crest.goyo&hl=en");
+                intent.putExtra(Intent.EXTRA_TEXT, referral_message);
+                //intent.putExtra(Intent.EXTRA_TEXT, contant);
                 startActivity(Intent.createChooser(intent, "Share"));
         }
     }
+    //private String contant = "Use my referral code (8160161683) to sing up for GoYo and get ₹50 on your first ride. \\r\\nDowload the App.Click here. https://play.google.com/store/apps/details?id=com.crest.goyo&hl=en";
 }
-
-
-
-
-
-
- /*BottomSheetDialog dialog = new BottomSheetDialog(getContext());
-                dialog.setContentView(R.layout.layout_share_referral_dialog);
-                ImageView imgMassage = (ImageView) dialog.findViewById(R.id.imgViewMessage);
-                ImageView imgWhatsapp = (ImageView) dialog.findViewById(R.id.imgViewWhatsapp);
-                assert imgMassage != null;
-                imgMassage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        shareMessage();
-                    }
-                });
-                assert imgWhatsapp != null;
-                imgWhatsapp.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        shareOnWhatsApp();
-                    }
-                });
-                dialog.show();
-
-               break;*/
-
- /* void shareMessage() {
-        Intent smsIntent = new Intent(Intent.ACTION_VIEW);
-        smsIntent.setType("vnd.android-dir/mms-sms");
-        Toast.makeText(getContext(), "There is no sms app available", Toast.LENGTH_SHORT).show();
-        smsIntent.putExtra("sms_body", tv_code.getText().toString().trim());
-        startActivity(smsIntent);
-    }
-
-    void shareOnWhatsApp() {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_TEXT, tv_code.getText().toString().trim());
-        intent.setType("text/plain");
-        intent.setPackage("com.whatsapp");
-        startActivity(intent);
-    }*/

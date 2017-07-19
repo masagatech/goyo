@@ -43,6 +43,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     double latitude, longitude;*/
     int REQUEST_INTERNET = 100;
     String imei;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -165,7 +166,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private void userLogin() {
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         imei = telephonyManager.getDeviceId();
-        Log.e("IMEI", "onClick: "+imei );
+        Log.e("IMEI", "onClick: " + imei);
         if (et_email.getText().toString().trim().equals("")) {
             et_email.setError("Please enter email or mobie no.");
         } else {
@@ -202,7 +203,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         Preferences.setValue(getApplicationContext(), Preferences.USER_ID, jsonObject.getString("id"));
                         Preferences.setValue(getApplicationContext(), Preferences.USER_AUTH_TOKEN, jsonObject.getString("v_token"));
                         Preferences.setValue(getApplicationContext(), Preferences.V_ID, jsonObject.getString("v_id"));
-                        Preferences.setValue(getApplicationContext(), Preferences.CITY, "Ahmedabad");
+                        Preferences.setValue(getApplicationContext(), Preferences.CITY, jsonObject.getString("city"));
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
 
