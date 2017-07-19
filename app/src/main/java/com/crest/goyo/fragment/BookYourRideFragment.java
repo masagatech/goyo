@@ -94,6 +94,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.TileOverlay;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -181,6 +182,8 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
     Location mLastLocation;
     private String mSelectedType = "";
     //String centerPointCircle;
+    Circle circle;
+    double radius, centerLat, centerLong;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -515,7 +518,8 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                 return true;
             }
         });
-
+        cityListAPI();
+        //createBoundary();
     }
 
     private void onMapReadyGettingLocationForConfirmBooking() {
@@ -963,8 +967,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                 dest = place.getLatLng();
                 redLatLng = place.getLatLng();
                 tv_drop_location.setText(place.getAddress());
-                //centerPointCircle = String.valueOf(place.getLatLng());
-                android.util.Log.e("CenterPointCircle", "onActivityResult: "+ String.valueOf(place.getLatLng()));
                 if (redMarker != null) {
                     redMarker.remove();
                 }
@@ -1129,15 +1131,46 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    /*void createBoundry()
-    {
-        Circle circle = mMap.addCircle(new CircleOptions()
-                .center(new LatLng(-33.87365, 151.20689))
-                .radius(10000)
-                .strokeColor(Color.RED)
-                .fillColor(Color.BLUE));
-    }*/
+    void createBoundary(double rd, double lat, double lng) {
+        circle = mMap.addCircle(new CircleOptions()
+                .center(new LatLng(lat, lng))
+                .radius(rd)
+                .strokeColor(Color.TRANSPARENT)
+                .fillColor(Color.TRANSPARENT));
+    }
 
+    private void cityListAPI() {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_CITY_TYPE).newBuilder();
+        String url = urlBuilder.build().toString();
+        String newurl = url.replaceAll(" ", "%20");
+        final okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
+        VolleyRequestClass.allRequest(getActivity(), newurl, new RequestInterface() {
+            @Override
+            public void onResult(JSONObject response) {
+                try {
+                    int responce_status = response.getInt(VolleyTAG.status);
+                    String msg = response.getString(VolleyTAG.message);
+                    if (responce_status == VolleyTAG.response_status) {
+                        JSONArray jsonArray = response.getJSONArray("data");
+                        JSONObject jsonObject;
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            jsonObject = jsonArray.getJSONObject(i);
+                            if (jsonObject.getString("v_name").equals(cityCurrent)) {
+                                JSONObject l_data = jsonObject.getJSONObject("l_data");
+                                radius = Double.parseDouble(l_data.getString("radius"));
+                                centerLat = Double.parseDouble(l_data.getString("latitude"));
+                                centerLong = Double.parseDouble(l_data.getString("longitude"));
+                            }
+                        }
+                        createBoundary(radius, centerLat, centerLong);
+                    } else {
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, false);
+    }
 
     private void selectPickupLocation() {
         try {
@@ -1149,7 +1182,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                             .setFilter(typeFilter)
                             .build(getActivity());
             startActivityForResult(intent, REQUEST_CODE_PICKUP);
-            android.util.Log.e("SelectPickupLocation", "selectPickupLocation: "+intent );
         } catch (GooglePlayServicesRepairableException e) {
             GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), e.getConnectionStatusCode(),
                     0 /* requestCode */).show();
@@ -1181,7 +1213,14 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                             h3.removeCallbacksAndMessages(null);
                         }
                         if (Constant.isOnline(getContext())) {
-                            downloadUrl();
+                            float[] distance = new float[2];
+                            Location.distanceBetween(redMarker.getPosition().latitude, redMarker.getPosition().longitude,
+                                    circle.getCenter().latitude, circle.getCenter().longitude, distance);
+                            if (distance[0] > circle.getRadius()) {
+                                Toast.makeText(getContext(), "Service Not Available", Toast.LENGTH_LONG).show();
+                            } else {
+                                downloadUrl();
+                            }
                         }
                     }
                 }
