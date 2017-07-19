@@ -127,12 +127,10 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
                         et_first_name.setText(jsonObject.getString("v_name"));
                         et_email.setText(jsonObject.getString("v_email"));
                         et_mo_number.setText(jsonObject.getString("v_phone"));
-                        if (jsonObject.get("v_gender").equals("Male")) {
-                            mMale.setChecked(true);
-                            mFemale.setChecked(false);
-                        } else {
+                        if (jsonObject.get("v_gender").equals("Female")) {
                             mFemale.setChecked(true);
-                            mMale.setChecked(false);
+                        } else {
+                            mMale.setChecked(true);
                         }
 
                         if (jsonObject.getString("v_image").equals("")) {
