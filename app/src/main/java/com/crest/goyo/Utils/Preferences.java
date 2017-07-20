@@ -17,7 +17,7 @@ public class Preferences {
     public static final String VEHICLES_IMG = "VEHICLES_IMG";
     public static final String V_ID = "V_ID";
     public static final String CITY = "CITY";
-    public static final String IS_RATED = "IS_RATED";
+    public static final String IS_RATED = null;
 
     public static void setValue(Context context, String Key, String Value) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);

@@ -1194,7 +1194,6 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
             Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
         }
     }
-
     private void rideRequestValidations() {
         if (tv_pickup_from.getText().toString().equals("")) {
             Toast.makeText(getActivity(), "Please enter pickup location", Toast.LENGTH_SHORT).show();

@@ -60,6 +60,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.TileOverlay;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -106,6 +107,7 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
     private LinearLayout mShare;
     GoogleApiClient mGoogleApiClient;
     LocationRequest mLocationRequest;
+    Marker redMarker;
     //private Geocoder geocoder;
     //private String cityCurrent;
     private LocationManager locManager;
@@ -437,6 +439,10 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                         pickupLatLng = new LatLng(pickup_latitude, pickup_longitude);
                         dropLatLng = new LatLng(destination_latitude, destination_longitude);
                         drawRoot(googleMap, pickupLatLng, dropLatLng);
+                        redMarker = mMap.addMarker(new MarkerOptions()
+                                .position(dropLatLng)
+                                .icon(BitmapDescriptorFactory.fromBitmap(Constant.setMarkerPin(getApplicationContext(), R.drawable.marker_drop))));
+
                         if (Constant.isOnline(StartRideActivity.this)) {
                             getDriverLocationAPI();
                         }
@@ -732,13 +738,11 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Toast.makeText(getApplicationContext(), " ConnectionFailed", Toast.LENGTH_SHORT).show();
     }
-
     @Override
     public void onLocationChanged(Location location) {
         latitude = location.getLatitude();
         longitude = location.getLongitude();
     }
-
     private void getMessageFromNotification() {
         mReceiveMessageFromNotification = new BroadcastReceiver() {
             @Override
@@ -748,11 +752,11 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                     android.util.Log.d(TAG, "data: " + "app open notif main activity");
                     if (intent.getExtras() != null) {
                         android.util.Log.d(TAG, "data: " + "app open notif main activity");
+                         Preferences.setValue(StartRideActivity.this,Preferences.IS_RATED,"1");
                         String mRideid = intent.getStringExtra("i_ride_id");
                         Intent in = new Intent(StartRideActivity.this, CompleteRide.class);
                         in.putExtra("i_ride_id", mRideid);
                         startActivity(in);
-                        Preferences.setValue(StartRideActivity.this,Preferences.IS_RATED,"1");
                         finishAffinity();
                     }
                 }
