@@ -624,6 +624,7 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setPadding(0,0,0,200);
         gps = new GPSTracker(StartRideActivity.this, StartRideActivity.this);
         if (gps.canGetLocation()) {
             latitude = gps.getLatitude();

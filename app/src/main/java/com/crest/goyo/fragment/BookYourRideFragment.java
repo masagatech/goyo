@@ -172,7 +172,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
     GoogleApiClient mGoogleApiClient;
     LocationRequest mLocationRequest;
     private boolean isChooseAddress = false;
-    private View locationButton;
+    //private View locationButton;
     private String updatedAddres = "";
     private Context mContext;
     private Integer timeInMinutes;
@@ -290,7 +290,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
         lay_drop_location.setOnClickListener(this);
         tv_enter_promocode.setOnClickListener(this);
         bt_call.setOnClickListener(this);
-        locationButton.setOnClickListener(this);
+        //locationButton.setOnClickListener(this);
 
 
         MarkerPoints = new ArrayList<>();
@@ -443,6 +443,8 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
 
         mMap = googleMap;
 //        getAvalableVehiclesAPI();
+        mMap.setMyLocationEnabled(true);
+        mMap.setPadding(0,200,0,0);
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             return;
@@ -889,11 +891,12 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
             SupportMapFragment mapFrag = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
             mapFrag.getMapAsync(this);
             View mapView = mapFrag.getView();
-            locationButton = ((View) mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
+            /*locationButton = ((View) mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
             RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
             rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
             rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
-            rlp.setMargins(0, 180, 180, 20);
+            rlp.setMargins(0, 180, 180, 20);*/
+
         }
     }
 
