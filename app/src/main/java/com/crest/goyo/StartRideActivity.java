@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.SyncStateContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -388,7 +389,6 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
         });
 
     }
-
     private void getRideAPI(final GoogleMap googleMap) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.URL_GET_RIDE).newBuilder();
         urlBuilder.addQueryParameter("device", "ANDROID");
@@ -626,7 +626,6 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
             }
         }, true);
     }
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -682,7 +681,6 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
 
         getRideAPI(mMap);
     }
-
     @Override
     public void onBackPressed() {
         if (h1 != null) {
@@ -719,7 +717,6 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
         builder.setIcon(R.drawable.ic_cancel);
         builder.show();
     }
-
 
     @Override
     public void onConnected(Bundle bundle) {
