@@ -78,7 +78,6 @@ public class AddMoneyDetail extends AppCompatActivity implements View.OnClickLis
     RecyclerView recyclerView;
 
 
-    /*Start -Hector Payment Code*/
     private String merchantKey, userCredentials;
     // These will hold all the payment parameters
     private PaymentParams mPaymentParams;
@@ -86,8 +85,6 @@ public class AddMoneyDetail extends AppCompatActivity implements View.OnClickLis
     private PayuConfig payuConfig;
     // Used when generating hash from SDK
     private PayUChecksum checksum;
-    /*End*/
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

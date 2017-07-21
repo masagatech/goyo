@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -20,6 +22,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.answers.LoginEvent;
 import com.crest.goyo.FCM.MyFirebaseInstanceIDService;
 import com.crest.goyo.Utils.Constant;
 import com.crest.goyo.Utils.CustomDialog;
@@ -80,20 +83,50 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         if (ActivityCompat.checkSelfPermission(Login.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-                //If the user has denied the permission previously your code will come to this block
-                //Here you can explain why you need this permission
-                //Explain here why you need this permission
-                Log.e("TAG", "checkSelfPermission in");
-            }
 
-            Log.e("TAG", "checkSelfPermission out");
-            //And finally ask for the permission
-            ActivityCompat.requestPermissions(Login.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
+            ActivityCompat.requestPermissions(Login.this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION,
                     android.Manifest.permission.READ_PHONE_STATE}, 05);
 
             return;
         }
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+            showPermissionDialog();
+            return;
+        }
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+            showPermissionDialog();
+            return;
+        }
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.READ_PHONE_STATE)) {
+            showPermissionDialog();
+            return;
+        }
+    }
+
+    private void showPermissionDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Allow permissions!");
+        builder.setMessage("Please allow the required permissions to use this application.");
+        builder.setPositiveButton("Setting", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        builder.show();
     }
 
     private void initUI() {
@@ -117,6 +150,23 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         bt_login.setOnClickListener(this);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 05: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    Log.e("Login", "onRequestPermissionsResult: Permission Allowed");
+                } else {
+                    finish();
+                }
+                return;
+            }
+        }
+    }
+
+
     /*hector*/
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
@@ -130,6 +180,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         super.onResume();
         startService(new Intent(Login.this, MyFirebaseInstanceIDService.class));
     }
+
 
     @Override
     public void onClick(View v) {
