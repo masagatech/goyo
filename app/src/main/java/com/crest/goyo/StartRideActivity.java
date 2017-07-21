@@ -423,8 +423,8 @@ public class StartRideActivity extends AppCompatActivity implements View.OnClick
                         tv_type.setText(l_data.getString("vehicle_type"));
                         tv_dr_name.setText(driver_data.getString("driver_name"));
 
-                        txt_vehicle_no.setText(driver_data.getString("v_id"));
-                        android.util.Log.e("vehicle_no", "onResult: " + driver_data.getString("v_id"));
+                        txt_vehicle_no.setText(driver_data.getString("vehicle_number"));
+                        android.util.Log.e("vehicle_no", "onResult: " + driver_data.getString("vehicle_number"));
 
                         if (driver_data.getString("driver_image").equals("")) {
                             img_profile.setImageResource(R.drawable.no_user);

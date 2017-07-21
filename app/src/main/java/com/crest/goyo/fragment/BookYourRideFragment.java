@@ -639,9 +639,9 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                             tv_pin.setText("Your trip confirmation PIN : " + jsonObject.getString("v_pin"));
                             tv_driver_name.setText(driver_data.getString("driver_name"));
 
-                            txtVehicleno.setText("" + driver_data.getString("v_id"));
+                            txtVehicleno.setText("" + driver_data.getString("vehicle_number"));
 
-                            android.util.Log.e("Vehicle No", "onResult: " + driver_data.getString("v_id"));
+                            android.util.Log.e("Vehicle No", "onResult: " + driver_data.getString("vehicle_number"));
 
                             tv_ph_no.setText(driver_data.getString("driver_phone"));
                             tv_vehicle_type_driver.setText(l_data.getString("vehicle_type"));
@@ -1417,7 +1417,7 @@ public class BookYourRideFragment extends Fragment implements View.OnClickListen
                             tv_driver_name.setText(driver_data.getString("driver_name"));
                             tv_ph_no.setText(driver_data.getString("driver_phone"));
                             tv_vehicle_type_driver.setText(l_data.getString("vehicle_type"));
-                            txtVehicleno.setText("Vehicle No : " + jsonObject.getJSONObject("driver_data").getString("v_id"));
+                            txtVehicleno.setText("Vehicle No : " + jsonObject.getJSONObject("driver_data").getString("vehicle_number"));
                             if (driver_data.getString("driver_image").equals("")) {
                                 img_driver_profile.setImageResource(R.drawable.no_user);
                             } else {
