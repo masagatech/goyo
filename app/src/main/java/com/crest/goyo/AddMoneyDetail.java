@@ -1,8 +1,6 @@
 package com.crest.goyo;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -856,172 +854,10 @@ public class AddMoneyDetail extends AppCompatActivity implements View.OnClickLis
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
-    //onClickListener (Do not find for the Click Listener its has been already set From XML)
-    /*public void makePayment(View view) {
-        String phone = paymentModel.getPhone();
-        String productName = paymentModel.getProductName();
-        String firstName = paymentModel.getFirstName();
-        String txnId = "0nf7" + System.currentTimeMillis();
-        String email = paymentModel.getEmail();
-        String sUrl = paymentModel.getsUrl();
-        String fUrl = paymentModel.getfUrl();
-        String udf1 = "";
-        String udf2 = "";
-        String udf3 = "";
-        String udf4 = "";
-        String udf5 = "";
-        boolean isDebug = true;
-        String key = paymentModel.getKey(); //need to be registered in the PayuMoney.com from wherer you will get the key
-        String merchantId = paymentModel.getMerchantId(); // as above from where you can get the MerchantID
-        PayUmoneySdkInitilizer.PaymentParam.Builder builder = new PayUmoneySdkInitilizer.PaymentParam.Builder();
-        builder.setAmount(getAmount())
-                .setTnxId(txnId)
-                .setPhone(phone)
-                .setProductName(productName)
-                .setFirstName(firstName)
-                .setEmail(email)
-                .setsUrl(sUrl)
-                .setfUrl(fUrl)
-                .setUdf1(udf1)
-                .setUdf2(udf2)
-                .setUdf3(udf3)
-                .setUdf4(udf4)
-                .setUdf5(udf5)
-                .setIsDebug(isDebug)
-                .setKey(key)
-                .setMerchantId(merchantId);
-        PayUmoneySdkInitilizer.PaymentParam paymentParam = builder.build();
-        calculateServerSideHashAndInitiatePayment(paymentParam);
-    }*/
-/*
-    private void calculateServerSideHashAndInitiatePayment(final PayUmoneySdkInitilizer.PaymentParam paymentParam) {
-
-        // Replace your server side hash generator API URL
-        String url = "https://test.payumoney.com/payment/op/calculateHashForTest";
-
-        Toast.makeText(this, "Please wait... Generating hash from server ... ", Toast.LENGTH_LONG).show();
-        StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    if (jsonObject.has(SdkConstants.STATUS)) {
-                        String status = jsonObject.optString(SdkConstants.STATUS);
-                        if (status != null || status.equals("1")) {
-
-                            String hash = jsonObject.getString(SdkConstants.RESULT);
-                            Log.i("app_activity", "Server calculated Hash :  " + hash);
-
-                            paymentParam.setMerchantHash(hash);
-
-                            PayUmoneySdkInitilizer.startPaymentActivityForResult(AddMoneyDetail.this, paymentParam);
-                        } else {
-                            Toast.makeText(AddMoneyDetail.this,
-                                    jsonObject.getString(SdkConstants.RESULT),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                if (error instanceof NoConnectionError) {
-                    Toast.makeText(AddMoneyDetail.this,
-                            AddMoneyDetail.this.getString(R.string.connect_to_internet),
-                            Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(AddMoneyDetail.this,
-                            error.getMessage(),
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                return paymentParam.getParams();
-            }
-        };
-        Volley.newRequestQueue(this).add(jsonObjectRequest);
-    }
-
-    private double getAmount() {
-        Double amount = Double.valueOf(mAmount);
-        if (isDouble(String.valueOf(amount))) {
-            amount = Double.parseDouble(String.valueOf(amount));
-            return amount;
-        } else {
-            Toast.makeText(getApplicationContext(), "Paying Default Amount ₹10", Toast.LENGTH_LONG).show();
-            return amount;
-        }
-    }
-
-    private boolean isDouble(String str) {
-        try {
-            Double.parseDouble(str);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }*/
-
-    /*protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if (requestCode == PayUmoneySdkInitilizer.PAYU_SDK_PAYMENT_REQUEST_CODE) {
-
-            if (resultCode == RESULT_OK) {
-                Log.i(TAG, "Success - Payment ID : " + data.getStringExtra(SdkConstants.PAYMENT_ID));
-                String paymentId = data.getStringExtra(SdkConstants.PAYMENT_ID);
-                if(Constant.isOnline(AddMoneyDetail.this))
-                {
-                    addMoneyApiCall(paymentId);
-                }
-            } else if (resultCode == RESULT_CANCELED) {
-                Log.i(TAG, "failure");
-                showDialogMessage("cancelled");
-                String paymentId = data.getStringExtra(SdkConstants.PAYMENT_ID);
-            } else if (resultCode == PayUmoneySdkInitilizer.RESULT_FAILED) {
-                Log.i("app_activity", "failure");
-                String paymentId = data.getStringExtra(SdkConstants.PAYMENT_ID);
-                if (data != null) {
-                    if (data.getStringExtra(SdkConstants.RESULT).equals("cancel")) {
-                    } else {
-                        showDialogMessage("failure");
-                    }
-                }
-                //Write your code if there's no result
-            } else if (resultCode == PayUmoneySdkInitilizer.RESULT_BACK) {
-                Log.i(TAG, "User returned without login");
-                showDialogMessage("User returned without login");
-            }
-        }
-    }*/
-
-    private void showDialogMessage(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(TAG);
-        builder.setMessage(message);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.show();
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_add_money:
-                /*makePayment(v);*/
                 navigateToBaseActivity(v);
                 break;
         }
@@ -1072,38 +908,6 @@ public class AddMoneyDetail extends AppCompatActivity implements View.OnClickLis
             }
         });
     }
-
-    /*private void addMoneyApiCall(String paymentId) {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constant.ADD_MONEY).newBuilder();
-        urlBuilder.addQueryParameter("device", "ANDROID");
-        urlBuilder.addQueryParameter("lang", "en");
-        urlBuilder.addQueryParameter("login_id", Preferences.getValue_String(this, Preferences.USER_ID));
-        urlBuilder.addQueryParameter("v_token", Preferences.getValue_String(this, Preferences.USER_AUTH_TOKEN));
-        urlBuilder.addQueryParameter("f_amount", mAmount);
-        urlBuilder.addQueryParameter("v_payment_type", paymentModel.getV_type());
-        urlBuilder.addQueryParameter("transaction_id", paymentId);
-        String url = urlBuilder.build().toString();
-        String newurl = url.replaceAll(" ", "%20");
-        final okhttp3.Request request = new okhttp3.Request.Builder().url(newurl).build();
-        VolleyRequestClassNew.allRequest(this, newurl, new RequestInterface() {
-            @Override
-            public void onResult(JSONObject response) {
-                try {
-                    if (response.getInt("status") == 1) {
-                        Toast.makeText(AddMoneyDetail.this, "Money Added Successfully!", Toast.LENGTH_SHORT).show();
-                        Log.e(TAG, "onResult: Money Added Successfully ");
-                        *//*finish();
-                        startActivity(new Intent(AddMoneyDetail.this, MainActivity.class));*//*
-
-                    } else {
-                        Log.e(TAG, "onResult: Null Response");
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }*/
 
     @Override
     public HashMap<String, String> getAllOneClickHash(String userCredentials) {
