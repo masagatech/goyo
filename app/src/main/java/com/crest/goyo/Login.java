@@ -22,7 +22,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crashlytics.android.answers.LoginEvent;
 import com.crest.goyo.FCM.MyFirebaseInstanceIDService;
 import com.crest.goyo.Utils.Constant;
 import com.crest.goyo.Utils.CustomDialog;
@@ -149,7 +148,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         bt_signup.setOnClickListener(this);
         bt_login.setOnClickListener(this);
     }
-
+    //Code For Permission
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
