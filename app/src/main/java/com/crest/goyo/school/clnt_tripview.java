@@ -69,6 +69,7 @@ public class clnt_tripview extends AppCompatActivity implements OnMapReadyCallba
     private boolean isRecenter = true;
     private List<HashMap<String, Marker>> driverOnMap = new ArrayList<HashMap<String, Marker>>();
     private String tripid = "0";
+    private String vhid = "0";
     private List<model_tripdata> lstMytripdata;
     private float tilt = 0;
     private float zoom = 17f;
@@ -337,9 +338,9 @@ public class clnt_tripview extends AppCompatActivity implements OnMapReadyCallba
 
                         JSONObject data = ((JSONObject) args[0]);
                         if (data.get("evt").equals("regreq")) {
-                            mSocket.emit("register", tripid);
+                            mSocket.emit("reg_v", vhid);
                         } else if (data.get("evt").equals("registered")) {
-                            JSONObject objTrp = (JSONObject) data.get("tripid");
+                            //JSONObject objTrp = (JSONObject) data.get("data");
                             Toast.makeText(getApplicationContext(),
                                     "registered", Toast.LENGTH_LONG).show();
                         } else if (data.get("evt").equals("data")) {
@@ -367,7 +368,7 @@ public class clnt_tripview extends AppCompatActivity implements OnMapReadyCallba
         String lat = objTrp.get("lat").toString();
         String lon = objTrp.get("lon").toString();
         String speed = objTrp.get("speed").toString();
-        String bearing = objTrp.get("bearng").toString();
+        String bearing = objTrp.get("bearing").toString();
         String servertm = objTrp.get("sertm").toString();
 
 
@@ -376,11 +377,11 @@ public class clnt_tripview extends AppCompatActivity implements OnMapReadyCallba
             HashMap<String, Marker> l = driverOnMap.get(i);
             if (l.containsKey(trpid)) {
                 Marker mrk = l.get(trpid);
-                moveMarker(mrk, lat, lon, bearing, speed, servertm);
+                moveMarker(mrk, lon, lat, bearing, speed, servertm);
                 return;
             }
         }
-        addMarkerToMap(new LatLng(Double.parseDouble(lat), Double.parseDouble(lon)), trpid.toString(), "", trpid, bearing, speed, servertm);
+        addMarkerToMap(new LatLng(Double.parseDouble(lon), Double.parseDouble(lat)), trpid.toString(), "", trpid, bearing, speed, servertm);
 
     }
 
@@ -391,6 +392,7 @@ public class clnt_tripview extends AppCompatActivity implements OnMapReadyCallba
         }
         tripid = bundle.get("tripid").toString();
         status = bundle.get("status").toString();
+        vhid = bundle.get("vhid").toString();
         googleMapInit();
         getKidsOnTrip();
     }
@@ -414,7 +416,7 @@ public class clnt_tripview extends AppCompatActivity implements OnMapReadyCallba
 
     private void moveMarker(Marker mrk, String lat, String lon, String bearing, String speed, String Servertm) {
 
-        LatLng latlon = new LatLng(Double.parseDouble(lat), Double.parseDouble(lon));
+        LatLng latlon = new LatLng(Double.parseDouble(lon), Double.parseDouble(lat));
         mrk.setRotation(Float.parseFloat(bearing));
         LatLngInterpolator latLngInterpolator = new LatLngInterpolator.Spherical();
         MarkerAnimation.animateMarker(mrk, latlon, latLngInterpolator);
@@ -428,7 +430,8 @@ public class clnt_tripview extends AppCompatActivity implements OnMapReadyCallba
 
     private void getLastKnownLocation() {
         JsonObject json = new JsonObject();
-        json.addProperty("tripid", tripid);
+        json.addProperty("ismob", "true");
+        json.addProperty("vhids",  vhid );
         Ion.with(this)
                 .load(Global.urls.getlastknownloc.value)
 

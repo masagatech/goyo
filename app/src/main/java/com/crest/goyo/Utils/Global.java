@@ -15,8 +15,8 @@ import java.lang.reflect.Modifier;
 public class Global {
 
 //public static String DOMAIN_URL = "http://192.168.1.16:8081/goyoapi";
-//    public final static String REST_URL = "http://192.168.43.10:8082/goyoapi";
-//    public static final String SOCKET_URL = "http://192.168.43.10:8082/";
+//    public final static String REST_URL = "http://192.168.1.105:8082/goyoapi";
+//    public static final String SOCKET_URL = "http://192.168.1.105:8082/";
 
     //server
     public final static String REST_URL = "http://35.154.230.244:8082/goyoapi";
@@ -28,7 +28,7 @@ public class Global {
 
     public enum urls {
         getmykids("getmykids", REST_URL + "/cust/getmykids"),
-        getlastknownloc("getlastknownloc", REST_URL + "/tripapi/getdelta"),
+        getlastknownloc("getlastknownloc", REST_URL + "/tripapi/getvahicleupdates"),
         activatekid("activatekid", REST_URL + "/cust/activatekid");
 
         public String key;

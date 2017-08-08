@@ -22,8 +22,8 @@ android {
         applicationId "com.crest.goyo"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 23
-        versionName "3.0"
+        versionCode 38
+        versionName "3.7"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

@@ -101,6 +101,7 @@ public class clnt_mykids_listAdapter extends BaseAdapter  implements PinnedSecti
                     }
                     Intent in = new Intent(context, clnt_tripview.class);
                     in.putExtra("tripid", mykid.tripid);
+                    in.putExtra("vhid", mykid.vhid);
                     in.putExtra("status", mykid.stsi);
                     context.startActivity(in);
                 }
@@ -118,7 +119,7 @@ public class clnt_mykids_listAdapter extends BaseAdapter  implements PinnedSecti
 
         }
         if (mykid.pd.equalsIgnoreCase("p")) {
-            mViewHolder.txtSideColor.setBackgroundColor(Color.parseColor("#18b400"));
+            mViewHolder.txtSideColor.setBackgroundColor(Color.parseColor("#f1cd8c"));
             mViewHolder.povTitle.setText(_pickup);
             mViewHolder.povTitle.setTextColor(Color.parseColor("#18b400"));
         } else {

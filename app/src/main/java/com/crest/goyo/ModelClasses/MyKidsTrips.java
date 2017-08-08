@@ -42,6 +42,10 @@ public class MyKidsTrips {
     @SerializedName("trpid")
     public String tripid;
 
+    @SerializedName("vhid")
+    public String vhid;
+
+
     public int Type;
 
     public MyKidsTrips()
