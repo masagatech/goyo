@@ -59,7 +59,8 @@ public class Constant {
     public static final String CREATE_TICKET = BASE_URL + "ticketCreate";
     public static final String GET_FAQ_TYPES = BASE_URL + "faqGetTypes";
     public static final String GET_PAYMENT_METHODS = BASE_URL + "getPaymentMethods";
-    public static final String ADD_MONEY= BASE_URL + "addMoney";
+    public static final String GET_PayUBiz_Hash= BASE_URL + "getPayuBizHashes";
+    //public static final String ADD_MONEY= BASE_URL + "addMoney";
 
 
     public static boolean CHECK_GPS = true;
