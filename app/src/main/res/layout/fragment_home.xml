@@ -1,0 +1,272 @@
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:context="com.crest.goyo.fragment.HomeFragment"
+        android:orientation="vertical">
+    <RelativeLayout
+        android:layout_weight="5"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true" />
+        <me.relex.circleindicator.CircleIndicator
+            android:id="@+id/indicator"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+           />
+    </RelativeLayout>
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_weight="12"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/bgHomeBack"
+        android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    app:cardElevation="1dp"
+                    android:background="@color/white">
+
+                    <TextView
+                        android:paddingTop="10dp"
+                        android:id="@+id/home_ride_auto"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="?selectableItemBackground"
+                        android:drawableTop="@drawable/book_car"
+                        android:gravity="center"
+                        android:text="Auto" />
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    app:cardElevation="1dp"
+                    android:background="@color/white">
+                    <TextView
+                        android:paddingTop="10dp"
+                        android:id="@+id/home_ride_bike"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="?selectableItemBackground"
+                        android:drawableTop="@drawable/book_bike"
+                        android:gravity="center"
+                        android:text="Bike" />
+
+                </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        app:cardElevation="1dp"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:paddingTop="10dp"
+                            android:id="@+id/home_ride_truck"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="?selectableItemBackground"
+                            android:drawableTop="@drawable/book_truck"
+                            android:gravity="center"
+                            android:text="Truck" />
+
+                    </android.support.v7.widget.CardView>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    app:cardElevation="1dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:paddingTop="10dp"
+                        android:id="@+id/home_order_food"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="?selectableItemBackground"
+                        android:drawableTop="@drawable/order_food"
+                        android:gravity="center"
+                        android:text="Food" />
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    app:cardElevation="1dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:paddingTop="10dp"
+                        android:id="@+id/home_order_gloss"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="?selectableItemBackground"
+                        android:drawableTop="@drawable/order_glossary"
+                        android:gravity="center"
+                        android:text="Glossary" />
+                </android.support.v7.widget.CardView>
+
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    app:cardElevation="1dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:paddingTop="10dp"
+                        android:id="@+id/home_messenger_parcel"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="?selectableItemBackground"
+                        android:drawableTop="@drawable/messages_parcel"
+                        android:gravity="center"
+                        android:text="Parcel" />
+                </android.support.v7.widget.CardView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    app:cardElevation="1dp"
+                    android:layout_weight="1">
+                    <TextView
+                        android:paddingTop="10dp"
+                        android:id="@+id/home_track_school"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="?selectableItemBackground"
+                        android:drawableTop="@drawable/home_school"
+                        android:gravity="center"
+                        android:text="School" />
+
+                </android.support.v7.widget.CardView>
+
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:cardElevation="1dp"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:paddingTop="10dp"
+                        android:id="@+id/home_track_empl"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="?selectableItemBackground"
+                        android:drawableTop="@drawable/home_track_employee"
+                        android:gravity="center"
+                        android:text="Employee" />
+                </android.support.v7.widget.CardView>
+
+                <!--<android.support.v7.widget.CardView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--app:cardElevation="1dp"-->
+                    <!--android:layout_margin="5dp"-->
+                    <!--android:layout_weight="1">-->
+
+                   <!---->
+                <!--</android.support.v7.widget.CardView>-->
+
+            </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                app:cardElevation="1dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/home_messenger_medi"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?selectableItemBackground"
+                    android:drawableTop="@drawable/messages_medicine"
+                    android:gravity="center"
+                    android:paddingTop="10dp"
+                    android:text="Medicine" />
+
+
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                app:cardElevation="1dp"
+                android:layout_weight="1">
+                <TextView
+                    android:paddingTop="10dp"
+                    android:id="@+id/home_messenger_food"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?selectableItemBackground"
+                    android:drawableTop="@drawable/messenger_food"
+                    android:gravity="center"
+                    android:text="Partners" />
+
+            </android.support.v7.widget.CardView>
+
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

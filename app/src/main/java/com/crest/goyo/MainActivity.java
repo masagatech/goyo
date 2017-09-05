@@ -43,10 +43,15 @@ import com.crest.goyo.VolleyLibrary.VolleyTAG;
 import com.crest.goyo.fragment.BookYourRideFragment;
 import com.crest.goyo.fragment.FAQFragment;
 import com.crest.goyo.fragment.FeedbackFragment;
+import com.crest.goyo.fragment.HomeFragment;
 import com.crest.goyo.fragment.MainWalletFragment;
+import com.crest.goyo.fragment.MessengerFood;
+import com.crest.goyo.fragment.MessengerMedicine;
+import com.crest.goyo.fragment.MessengerParcel;
 import com.crest.goyo.fragment.MyRidesFragment;
 import com.crest.goyo.fragment.MyTicketsFragment;
 import com.crest.goyo.fragment.NotificationsFragment;
+import com.crest.goyo.fragment.OrderGrocery;
 import com.crest.goyo.fragment.PromotionCodeFragment;
 import com.crest.goyo.fragment.ReferralCodeFragment;
 import com.crest.goyo.fragment.TariffCardFragment;
@@ -75,21 +80,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private BroadcastReceiver mReceiveMessageFromNotification;
     boolean doubleBackToExitPressedOnce = false;
     private TextView txtName, edit_profile, actionbar_title, logout;
-    private static final String TAG_BOOK_YOUR_RIDE = "BOOK YOUR RIDE";
-    private static final String TAG_MY_RIDES = "MY RIDES";
-    private static final String TAG_TARIFF_CARD = "TARIFF CARD";
-    private static final String TAG_PROMOTION_CODE = "PROMOTION CODE";
-    private static final String TAG_REFERRAL_CODE = "REFERRAL CODE";
-    private static final String TAG_MY_WALLET = "MY WALLET";
-    private static final String TAG_NOTIFICATIONS = "NOTIFICATIONS";
-    private static final String TAG_FEEDBACK = "FEEDBACK";
-    private static final String TAG_TERMS_CONDITIONS = "TERMS AND CONDITIONS";
-    private static final String TAG_MY_KIDS = "MY KID";
-    private static final String TAG_MY_TICKET = "MY TICKET";
-    private static final String TAG_FAQ = "FAQ";
+    public static final String TAG_HOME = "HOME";
+    public static final String TAG_BOOK_YOUR_RIDE = "BOOK YOUR RIDE";
+    public static final String TAG_MY_RIDES = "MY RIDES";
+    public static final String TAG_TARIFF_CARD = "TARIFF CARD";
+    public static final String TAG_PROMOTION_CODE = "PROMOTION CODE";
+    public static final String TAG_REFERRAL_CODE = "REFERRAL CODE";
+    public static final String TAG_MY_WALLET = "MY WALLET";
+    public static final String TAG_NOTIFICATIONS = "NOTIFICATIONS";
+    public static final String TAG_FEEDBACK = "FEEDBACK";
+    public static final String TAG_TERMS_CONDITIONS = "TERMS AND CONDITIONS";
+    public static final String TAG_MY_KIDS = "MY KID";
+    public static final String TAG_MY_TICKET = "MY TICKET";
+    public static final String TAG_FAQ = "FAQ";
+    public static final String TAG_MESSENGER_FOOD = "FOOD";
+    public static final String TAG_MESSENGER_MEDICINE = "MEDICINE";
+    public static final String TAG_ORDER_GROCERY = "GROCERY";
+    public static final String TAG_MESSENGER_PARCEL = "PARCEL";
     private AlertDialog.Builder builder;
     private String TAG = "MainActivity";
-    public static String CURRENT_TAG = TAG_BOOK_YOUR_RIDE;
+    public static String CURRENT_TAG = TAG_HOME;
     NotificationManager mNotificationManager;
     private FragmentManager mFragmentManager;
 
@@ -181,12 +191,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             } else {
                 activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
-                actionbar_title.setText(R.string.nav_book_my_ride);
+                actionbar_title.setText(R.string.nav_home);
                 setUpNavigationView();
                 if (savedInstanceState == null) {
                     navItemIndex = 0;
-                    CURRENT_TAG = TAG_BOOK_YOUR_RIDE;
+                    CURRENT_TAG = TAG_HOME;
                     loadHomeFragment();
+                    navigationView.getMenu().getItem(0).setChecked(true);
                 }
             }
         }
@@ -318,42 +329,57 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Fragment getHomeFragment() {
         switch (navItemIndex) {
             case 0:
+                HomeFragment homeFragment = new HomeFragment();
+                return homeFragment;
+            case 1:
                 BookYourRideFragment bookYourRideFragment = new BookYourRideFragment();
 //                Preferences.setValue(getApplicationContext(),"comeFromm","MyRides");
                 return bookYourRideFragment;
-            case 1:
+            case 2:
                 MyRidesFragment myRidesFragment = new MyRidesFragment();
                 return myRidesFragment;
-            case 2:
-                TariffCardFragment tariffCardFragment = new TariffCardFragment();
-                return tariffCardFragment;
             case 3:
-                PromotionCodeFragment promotionCodeFragment = new PromotionCodeFragment();
-                return promotionCodeFragment;
-            case 4:
-                ReferralCodeFragment referralCodeFragment = new ReferralCodeFragment();
-                return referralCodeFragment;
-            case 5:
-                MainWalletFragment myWalletFragment = new MainWalletFragment();
-                return myWalletFragment;
-            case 6:
-                NotificationsFragment notificationsFragment = new NotificationsFragment();
-                return notificationsFragment;
-            case 7:
-                FeedbackFragment feedbackFragment = new FeedbackFragment();
-                return feedbackFragment;
-            case 8:
-                MyTicketsFragment myTicketsFragment = new MyTicketsFragment();
-                return myTicketsFragment;
-            case 9:
-                FAQFragment faqFragment = new FAQFragment();
-                return faqFragment;
-            case 10:
-                TermsAndConditionsFragment termsAndConditionsFragment = new TermsAndConditionsFragment();
-                return termsAndConditionsFragment;
-            case 11:
                 MyKids mykidsFragment = new MyKids();
                 return mykidsFragment;
+            case 4:
+                TariffCardFragment tariffCardFragment = new TariffCardFragment();
+                return tariffCardFragment;
+            case 5:
+                PromotionCodeFragment promotionCodeFragment = new PromotionCodeFragment();
+                return promotionCodeFragment;
+            case 6:
+                ReferralCodeFragment referralCodeFragment = new ReferralCodeFragment();
+                return referralCodeFragment;
+            case 7:
+                MainWalletFragment myWalletFragment = new MainWalletFragment();
+                return myWalletFragment;
+            case 8:
+                NotificationsFragment notificationsFragment = new NotificationsFragment();
+                return notificationsFragment;
+            case 9:
+                FeedbackFragment feedbackFragment = new FeedbackFragment();
+                return feedbackFragment;
+            case 10:
+                MyTicketsFragment myTicketsFragment = new MyTicketsFragment();
+                return myTicketsFragment;
+            case 11:
+                FAQFragment faqFragment = new FAQFragment();
+                return faqFragment;
+            case 12:
+                TermsAndConditionsFragment termsAndConditionsFragment = new TermsAndConditionsFragment();
+                return termsAndConditionsFragment;
+            case 13:
+                MessengerFood messengerFood = new MessengerFood();
+                return messengerFood;
+            case 14:
+                MessengerMedicine messengerMedicine = new MessengerMedicine();
+                return messengerMedicine;
+            case 15:
+                OrderGrocery orderGrocery = new OrderGrocery();
+                return orderGrocery;
+            case 16:
+                MessengerParcel messengerParcel = new MessengerParcel();
+                return messengerParcel;
             default:
                 return new BookYourRideFragment();
         }
@@ -371,69 +397,97 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
-                    case R.id.nav_book_my_ride:
+                    case R.id.nav_home:
                         navItemIndex = 0;
+                        actionbar_title.setText(R.string.nav_home);
+                        CURRENT_TAG = TAG_HOME;
+                        break;
+                    case R.id.nav_book_my_ride:
+                        navItemIndex = 1;
                         actionbar_title.setText(R.string.nav_book_my_ride);
                         CURRENT_TAG = TAG_BOOK_YOUR_RIDE;
                         break;
                     case R.id.nav_my_rides:
-                        navItemIndex = 1;
+                        navItemIndex = 2;
                         actionbar_title.setText(R.string.nav_my_rides);
                         CURRENT_TAG = TAG_MY_RIDES;
                         break;
+                    case R.id.nav_my_kids:
+                        navItemIndex = 3;
+                        actionbar_title.setText(R.string.nav_my_kids);
+                        CURRENT_TAG = TAG_MY_KIDS;
+                        break;
+
                     case R.id.nav_tariff_card:
-                        navItemIndex = 2;
+                        navItemIndex = 4;
                         actionbar_title.setText(R.string.nav_tariff_card);
                         CURRENT_TAG = TAG_TARIFF_CARD;
                         break;
                     case R.id.nav_promotion_code:
-                        navItemIndex = 3;
+                        navItemIndex = 5;
                         actionbar_title.setText(R.string.nav_promotion_code);
                         CURRENT_TAG = TAG_PROMOTION_CODE;
                         break;
                     case R.id.nav_referral_code:
-                        navItemIndex = 4;
+                        navItemIndex = 6;
                         actionbar_title.setText(R.string.nav_referral_code);
                         CURRENT_TAG = TAG_REFERRAL_CODE;
                         break;
                     case R.id.nav_my_wallet:
-                        navItemIndex = 5;
+                        navItemIndex = 7;
                         actionbar_title.setText(R.string.nav_my_wallet);
                         CURRENT_TAG = TAG_MY_WALLET;
                         break;
                     case R.id.nav_notifications:
-                        navItemIndex = 6;
+                        navItemIndex = 8;
                         actionbar_title.setText(R.string.nav_notifications);
                         CURRENT_TAG = TAG_NOTIFICATIONS;
                         break;
                     case R.id.nav_feedback:
-                        navItemIndex = 7;
+                        navItemIndex = 9;
                         actionbar_title.setText(R.string.nav_Feedback);
                         CURRENT_TAG = TAG_FEEDBACK;
                         break;
                     case R.id.nav_mytickets:
-                        navItemIndex = 8;
+                        navItemIndex = 10;
                         actionbar_title.setText(R.string.nav_mytickets);
                         CURRENT_TAG = TAG_MY_TICKET;
                         break;
                     case R.id.nav_faq:
-                        navItemIndex = 9;
+                        navItemIndex = 11;
                         actionbar_title.setText(R.string.nav_faq);
                         CURRENT_TAG = TAG_FAQ;
                         break;
                     case R.id.nav_terms_conditions:
-                        navItemIndex = 10;
+                        navItemIndex = 12;
                         actionbar_title.setText(R.string.nav_terms);
                         CURRENT_TAG = TAG_TERMS_CONDITIONS;
                         break;
-                    case R.id.nav_my_kids:
-                        navItemIndex = 11;
-                        actionbar_title.setText(R.string.nav_my_kids);
-                        CURRENT_TAG = TAG_MY_KIDS;
+
+                    case R.id.nav_messenger_food:
+                        navItemIndex = 13;
+                        actionbar_title.setText(R.string.nav_messenger_food);
+                        CURRENT_TAG = TAG_MESSENGER_FOOD;
                         break;
+                    case R.id.nav_messenger_medicine:
+                        navItemIndex = 14;
+                        actionbar_title.setText(R.string.nav_messenger_medicine);
+                        CURRENT_TAG = TAG_MESSENGER_MEDICINE;
+                        break;
+                    case R.id.nav_order_grocery:
+                        navItemIndex = 15;
+                        actionbar_title.setText(R.string.nav_order_grocery);
+                        CURRENT_TAG = TAG_ORDER_GROCERY;
+                        break;
+                    case R.id.nav_messenger_parcel:
+                        navItemIndex = 16;
+                        actionbar_title.setText(R.string.nav_messenger_parcel);
+                        CURRENT_TAG = TAG_MESSENGER_PARCEL;
+                        break;
+
                     default:
                         navItemIndex = 0;
-                        actionbar_title.setText(R.string.nav_book_my_ride);
+                        actionbar_title.setText(R.string.nav_home);
                 }
 
                 if (menuItem.isChecked()) {
@@ -474,8 +528,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     android.R.anim.fade_out);
             FragmentTransaction replace = fragmentTransaction.replace(R.id.frame, bookYourRideFragment, CURRENT_TAG = TAG_BOOK_YOUR_RIDE);
             navItemIndex = 0;
-            actionbar_title.setText(R.string.nav_book_my_ride);
-            CURRENT_TAG = TAG_BOOK_YOUR_RIDE;
+            actionbar_title.setText(R.string.nav_home);
+            CURRENT_TAG = TAG_HOME;
+            navigationView.getMenu().getItem(0).setChecked(true);
             fragmentTransaction.commitAllowingStateLoss();
         } else {
             if (doubleBackToExitPressedOnce) {

@@ -1,0 +1,335 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.crest.goyo.fragment.MessengerFood">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.crest.goyo.fragment.MessengerFood">
+    <TextView
+        android:textStyle="bold"
+        android:textColor="#000"
+        android:padding="5dp"
+        android:gravity="center"
+        android:fontFamily="sans-serif-light"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="GoYo is Happy to mollify your hunger through our Partners!"/>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <!-- TODO: Update blank fragment layout -->
+    <android.support.v7.widget.CardView
+        android:layout_margin="10dp"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+    <com.wajahatkarim3.easyflipview.EasyFlipView
+        android:layout_width="match_parent"
+        android:background="?selectableItemBackground"
+        android:layout_height="100dp"
+        app:flipOnTouch="true"
+        app:flipEnabled="true"
+        android:id="@+id/pizzhut"
+        app:flipDuration="400">
+
+        <!-- Back Layout Goes Here -->
+        <include layout="@layout/flip_back"/>
+
+        <!-- Front Layout Goes Here -->
+        <include layout="@layout/flip_front"/>
+
+    </com.wajahatkarim3.easyflipview.EasyFlipView>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_margin="10dp"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+    <com.wajahatkarim3.easyflipview.EasyFlipView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        app:flipOnTouch="true"
+        android:background="?selectableItemBackground"
+        app:flipEnabled="true"
+        android:id="@+id/fasoos"
+        app:flipDuration="400">
+
+        <!-- Back Layout Goes Here -->
+        <include layout="@layout/flip_back"/>
+
+        <!-- Front Layout Goes Here -->
+        <include layout="@layout/fasoos_front"/>
+
+    </com.wajahatkarim3.easyflipview.EasyFlipView>
+    </android.support.v7.widget.CardView>
+</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <!-- TODO: Update blank fragment layout -->
+        <android.support.v7.widget.CardView
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+        <com.wajahatkarim3.easyflipview.EasyFlipView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="?selectableItemBackground"
+            app:flipOnTouch="true"
+            android:id="@+id/punjabking"
+            app:flipEnabled="true"
+            app:flipDuration="400">
+
+            <!-- Back Layout Goes Here -->
+            <include layout="@layout/flip_back"/>
+
+            <!-- Front Layout Goes Here -->
+            <include layout="@layout/punjabking_front"/>
+            </com.wajahatkarim3.easyflipview.EasyFlipView>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+        <com.wajahatkarim3.easyflipview.EasyFlipView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:flipOnTouch="true"
+            android:id="@+id/kabir"
+            android:background="?selectableItemBackground"
+            app:flipEnabled="true"
+            app:flipDuration="400">
+
+            <!-- Back Layout Goes Here -->
+            <include layout="@layout/flip_back"/>
+
+            <!-- Front Layout Goes Here -->
+            <include layout="@layout/kabir_front" />
+
+
+        </com.wajahatkarim3.easyflipview.EasyFlipView>
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <!-- TODO: Update blank fragment layout -->
+        <android.support.v7.widget.CardView
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+        <com.wajahatkarim3.easyflipview.EasyFlipView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:flipOnTouch="true"
+            android:id="@+id/toritos"
+            android:background="?selectableItemBackground"
+            app:flipEnabled="true"
+            app:flipDuration="400">
+
+            <!-- Back Layout Goes Here -->
+            <include layout="@layout/flip_back"/>
+
+            <!-- Front Layout Goes Here -->
+            <include layout="@layout/toritos_front"/>
+
+        </com.wajahatkarim3.easyflipview.EasyFlipView>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+        <com.wajahatkarim3.easyflipview.EasyFlipView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:flipOnTouch="true"
+            android:background="?selectableItemBackground"
+            app:flipEnabled="true"
+            android:id="@+id/kfc"
+            app:flipDuration="400">
+
+            <!-- Back Layout Goes Here -->
+            <include layout="@layout/flip_back"/>
+
+            <!-- Front Layout Goes Here -->
+            <include layout="@layout/kfc_front"/>
+
+        </com.wajahatkarim3.easyflipview.EasyFlipView>
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <!-- TODO: Update blank fragment layout -->
+        <android.support.v7.widget.CardView
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+        <com.wajahatkarim3.easyflipview.EasyFlipView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:flipDuration="400"
+            android:background="?selectableItemBackground"
+            app:flipEnabled="true"
+            android:id="@+id/momon"
+            app:flipOnTouch="true">
+
+            <!-- Back Layout Goes Here -->
+            <include layout="@layout/flip_back" />
+
+            <!-- Front Layout Goes Here -->
+            <include layout="@layout/momoman_front"/>
+
+
+        </com.wajahatkarim3.easyflipview.EasyFlipView>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+        <com.wajahatkarim3.easyflipview.EasyFlipView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:flipDuration="400"
+            android:background="?selectableItemBackground"
+            app:flipEnabled="true"
+            android:id="@+id/twistedmazo"
+            app:flipOnTouch="true">
+
+            <!-- Back Layout Goes Here -->
+            <include layout="@layout/flip_back" />
+
+            <!-- Front Layout Goes Here -->
+            <include layout="@layout/twisted_mazzo" />
+
+        </com.wajahatkarim3.easyflipview.EasyFlipView>
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <!-- TODO: Update blank fragment layout -->
+        <android.support.v7.widget.CardView
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+        <com.wajahatkarim3.easyflipview.EasyFlipView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:flipOnTouch="true"
+            android:id="@+id/pizavilla"
+            android:background="?selectableItemBackground"
+            app:flipEnabled="true"
+            app:flipDuration="400">
+
+            <!-- Back Layout Goes Here -->
+            <include layout="@layout/flip_back"/>
+
+            <!-- Front Layout Goes Here -->
+            <include layout="@layout/pizza_villa_front"/>
+
+        </com.wajahatkarim3.easyflipview.EasyFlipView>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+        <com.wajahatkarim3.easyflipview.EasyFlipView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:flipOnTouch="true"
+            android:background="?selectableItemBackground"
+            app:flipEnabled="true"
+            android:id="@+id/tiffity"
+            app:flipDuration="400">
+
+            <!-- Back Layout Goes Here -->
+            <include layout="@layout/flip_back"/>
+
+            <!-- Front Layout Goes Here -->
+            <include layout="@layout/tiffinity_front"/>
+
+        </com.wajahatkarim3.easyflipview.EasyFlipView>
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <!-- TODO: Update blank fragment layout -->
+        <android.support.v7.widget.CardView
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+        <com.wajahatkarim3.easyflipview.EasyFlipView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="?selectableItemBackground"
+            app:flipOnTouch="true"
+            app:flipEnabled="true"
+            android:id="@+id/applewood"
+            app:flipDuration="400">
+
+            <!-- Back Layout Goes Here -->
+            <include layout="@layout/flip_back"/>
+
+            <!-- Front Layout Goes Here -->
+            <include layout="@layout/applewood_front"/>
+
+        </com.wajahatkarim3.easyflipview.EasyFlipView>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+        <com.wajahatkarim3.easyflipview.EasyFlipView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:flipOnTouch="true"
+            android:id="@+id/blueoven"
+            android:background="?selectableItemBackground"
+            app:flipEnabled="true"
+            app:flipDuration="400">
+
+            <!-- Back Layout Goes Here -->
+            <include layout="@layout/flip_back"/>
+
+            <!-- Front Layout Goes Here -->
+            <include layout="@layout/blue_oven_front"/>
+
+        </com.wajahatkarim3.easyflipview.EasyFlipView>
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+</LinearLayout>
+</ScrollView>

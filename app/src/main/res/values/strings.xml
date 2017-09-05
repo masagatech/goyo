@@ -75,6 +75,12 @@
     <string name="nav_Feedback">Feedback</string>
     <string name="nav_terms">Terms and Conditions</string>
 
+    <string name="nav_home">Home</string>
+    <string name="nav_messenger_food">Food</string>
+    <string name="nav_messenger_medicine">Medicine</string>
+    <string name="nav_order_grocery">Grocery</string>
+    <string name="nav_messenger_parcel">Parcel</string>
+
     <!-- Toolbar titles when navigation menu item is selected -->
     <string-array name="nav_item_activity_titles">
         <item>Book Your Ride</item>

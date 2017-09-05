@@ -2,6 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_icon_home"
+            android:title="@string/nav_home" />
+
         <item
             android:id="@+id/nav_book_my_ride"
             android:icon="@drawable/ic_book_my_ride"
@@ -52,6 +58,24 @@
             android:id="@+id/nav_terms_conditions"
             android:icon="@drawable/t_c_logo"
             android:title="@string/nav_terms" />
+        <item
+            android:id="@+id/nav_messenger_food"
+            android:icon="@drawable/nav_messenger_food"
+            android:title="@string/nav_messenger_food" />
+
+        <item
+            android:id="@+id/nav_messenger_medicine"
+            android:icon="@drawable/nav_medicine"
+            android:title="@string/nav_messenger_medicine" />
+        <item
+            android:id="@+id/nav_order_grocery"
+            android:icon="@drawable/grocery"
+            android:title="@string/nav_order_grocery" />
+        <item
+            android:id="@+id/nav_messenger_parcel"
+            android:icon="@drawable/nav_parcel"
+            android:title="@string/nav_messenger_parcel" />
+
     </group>
 
 
